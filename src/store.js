@@ -13,7 +13,9 @@ const middleware = [
   thunk
 ];
 
-if (ENV === 'develop') middleware.push(logger);
+// TODO: react -> react-native
+// if (ENV === 'develop')
+    middleware.push(logger);
 
 const createStoreWithMiddleware = applyMiddleware(
   ...middleware

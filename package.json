@@ -4,6 +4,11 @@
   "private": true,
   "description": "Pixel editor that comes in handy when creating pixel art images and animations",
   "scripts": {
+    "rn": "adb reverse tcp:8081 tcp:8081; node node_modules/react-native/local-cli/cli.js start",
+    "rn-fresh": "adb reverse tcp:8081 tcp:8081; watchman watch-del-all; rm -rf /tmp/react-*; rm -rf /tmp/npm-*; rm -rf /tmp/haste-*; rm -rf /tmp/metro-*; node node_modules/react-native/local-cli/cli.js start --reset-cache",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android --no-jetifier",
+    "fast-android": "./android/gradlew installDebug --offline -x lint -x lintVitalRelease -p ./android/",
+    "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
     "clean": "rimraf ./dist",
     "prestart": "npm run clean",
     "start": "webpack-dev-server",

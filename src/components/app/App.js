@@ -1,19 +1,19 @@
-import './app.styl';
+import styles from './app.style.js';
 
-import React, { Component } from 'react';
-import Toolbar from '../../containers/toolbar/Toolbar';
-import Surface from '../../containers/surface/Surface';
-import Sidebar from '../../containers/sidebar/Sidebar';
-import Framebar from '../../containers/framebar/Framebar';
-import Apptoolbox from '../../containers/apptoolbox/Apptoolbox';
+import React, {Component} from 'react';
+import {Dimensions, View} from 'react-native';
+// import Toolbar from '../../containers/toolbar/Toolbar';
+// import Surface from '../../containers/surface/Surface';
+// import Sidebar from '../../containers/sidebar/Sidebar';
+// import Framebar from '../../containers/framebar/Framebar';
+// import Apptoolbox from '../../containers/apptoolbox/Apptoolbox';
 
 class App extends Component {
-  constructor (...args) {
-    super(...args);
-  }
-
-  applyConstraints () {
-    this.props.setSurfaceConstraints(window.document.body.clientWidth, window.document.body.clientHeight);
+  applyConstraints() {
+    this.props.setSurfaceConstraints(
+      Dimensions.get('window').width,
+      Dimensions.get('window').height,
+    );
   }
 
   componentDidMount () {
@@ -24,17 +24,23 @@ class App extends Component {
     this.applyConstraints();
   }
 
-  render () {
+  render() {
     return (
-      <div className="app" data-guid={this.props.guid}>
+      <View style={styles.app} data-guid={this.props.guid}>
+        {/*
         <Toolbar />
-        <div className="app__content">
+        */}
+        <View style={styles.appContent}>
+          {/*
           <Apptoolbox />
           <Surface />
           <Framebar />
-        </div>
+          */}
+        </View>
+        {/*
         <Sidebar />
-      </div>
+        */}
+      </View>
     );
   }
 }

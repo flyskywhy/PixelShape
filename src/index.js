@@ -1,17 +1,20 @@
-import React from 'react';
-import { render } from 'react-dom';
+import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 
 import createStore from './store';
 
-import App from './containers/app/App';
-
-import './styles/main.styl';
+import PixelArtEditor from './containers/app/App';
 
 const store = createStore();
 
-render(
-  <Provider store={store}>
-    <App />
-  </Provider>
-, document.getElementById('root'));
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <PixelArtEditor />
+      </Provider>
+    );
+  }
+}
+
+export default App;

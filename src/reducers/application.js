@@ -16,9 +16,9 @@ import { uuid } from '../utils/uuid';
 // TODO: move this to defaults
 const defaultConsts = {
   margins: {
-    vertical: 120,
-    horizontal: 300
-  }
+    vertical: 300,
+    horizontal: 120,
+  },
 };
 
 const initialState = {
