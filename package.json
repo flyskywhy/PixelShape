@@ -9,6 +9,8 @@
     "android": "node node_modules/react-native/local-cli/cli.js run-android --no-jetifier",
     "fast-android": "./android/gradlew installDebug --offline -x lint -x lintVitalRelease -p ./android/",
     "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+    "web": "react-app-rewired start",
+    "build-web": "react-app-rewired build",
     "clean": "rimraf ./dist",
     "prestart": "npm run clean",
     "start": "webpack-dev-server",
@@ -18,6 +20,7 @@
     "test-runner": "babel-node node_modules/blue-tape/bin/blue-tape -r ./test/requireHook.js test/**/*.spec.js",
     "pretest": "npm run lint",
     "test": "npm run test-runner",
+    "test-web": "react-app-rewired test --env=jsdom",
     "test:dev": "npm run test-runner | tap-spec || true",
     "coverage": "cross-env NODE_ENV=test nyc tape -r ./test/requireHook.js -- test/**/*.spec.js | tap-spec",
     "postcoverage": "nyc report --reporter=html"
@@ -29,7 +32,6 @@
   "bugs": {
     "url": "https://github.com/Convicted202/PixelShape/issues"
   },
-  "homepage": "https://github.com/Convicted202/PixelShape#readme",
   "keywords": [
     "pixel",
     "artwork",
@@ -45,56 +47,55 @@
     "hyperscript": "^2.0.2",
     "jszip": "^3.1.3",
     "keyboardjs": "^2.3.3",
+    "modal-enhanced-react-native-web": "^0.2.0",
     "pako": "^1.0.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-web": "^0.17.5",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "redux-undo": "^1.0.0-beta9-7"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/runtime": "^7.16.3",
     "@react-native-community/eslint-config": "^3.0.1",
     "File": "^0.10.2",
     "atob": "^2.0.3",
-    "babel-jest": "^27.4.2",
+    "babel-jest": "^24.9.0",
     "blue-tape": "^1.0.0",
     "classnames": "^2.2.5",
     "coveralls": "^2.12.0",
     "cross-env": "^2.0.1",
-    "css-loader": "^0.25.0",
-    "eslint": "7.6.0",
-    "eslint-loader": "^1.5.0",
-    "exports-loader": "^0.6.4",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "file-loader": "^0.9.0",
+    "eslint": "^6.6.0",
     "filereader": "^0.10.3",
-    "html-webpack-plugin": "^2.22.0",
-    "imports-loader": "^0.7.1",
-    "jest": "^27.4.3",
-    "metro-react-native-babel-preset": "^0.66.2",
+    "jest": "^24.9.0",
     "nyc": "^10.1.2",
     "open": "0.0.5",
     "prettier": "2.1.1",
+    "react-app-rewired": "^2.1.8",
+    "react-scripts": "^3.4.3",
     "react-test-renderer": "16.13.1",
     "redux-logger": "^2.6.1",
     "rimraf": "^2.5.4",
     "sinon": "^1.17.6",
-    "style-loader": "^0.13.1",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^2.3.1",
     "tap-spec": "^4.1.1",
     "tiny-worker": "^2.0.3",
-    "url-loader": "^0.5.7",
-    "w3c-blob": "0.0.1",
-    "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.15.1",
-    "worker-loader": "^0.7.1"
+    "w3c-blob": "0.0.1"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

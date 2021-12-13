@@ -6,3 +6,5 @@
 ### [Live demo](https://convicted202.github.io/PixelShape/)
 
 Web-based pixel drawing tool.
+
+Use `npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser; use `npm run build-web` to generate files in `build/` for production, and can use `npx http-server build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser.
