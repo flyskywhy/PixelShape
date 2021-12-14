@@ -7,5 +7,5 @@ export const ANCHORS = {
   oE: [1, 2],
   SW: [2, 0],
   So: [2, 1],
-  SE: [2, 2]
+  SE: [2, 2],
 };

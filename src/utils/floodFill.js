@@ -5,31 +5,31 @@ import {
   getPixelFromImageData,
   putColor,
   equallyColored,
-  colorsEqual
+  colorsEqual,
 } from './colorUtils';
 
 const WEST = 'WEST',
-      EAST = 'EAST',
-      NORTH = 'NORTH',
-      SOUTH = 'SOUTH';
+  EAST = 'EAST',
+  NORTH = 'NORTH',
+  SOUTH = 'SOUTH';
 
 const getPixelPosition = (imageData, direction, pixelIndex) => {
   const directionShifts = {
-    WEST :  1,
-    EAST :  -1,
-    NORTH:  -imageData.width,
-    SOUTH:  imageData.width
+    WEST: 1,
+    EAST: -1,
+    NORTH: -imageData.width,
+    SOUTH: imageData.width,
   };
 
   return pixelIndex + directionShifts[direction] * RGBA;
 };
 
 /**
-* https://en.wikipedia.org/wiki/Flood_fill
-*/
+ * https://en.wikipedia.org/wiki/Flood_fill
+ */
 export default (imageData, fillColor, x, y) => {
   const queue = [],
-        rgbaColor = hexToRGBA(stringToHex(fillColor));
+    rgbaColor = hexToRGBA(stringToHex(fillColor));
 
   [x, y] = [Math.round(x), Math.round(y)];
 
@@ -37,7 +37,9 @@ export default (imageData, fillColor, x, y) => {
 
   const initialColor = imageData.data.slice(pixelIndex, pixelIndex + RGBA);
 
-  if (colorsEqual(rgbaColor, initialColor)) return;
+  if (colorsEqual(rgbaColor, initialColor)) {
+    return;
+  }
 
   queue.push(pixelIndex);
 
@@ -51,7 +53,7 @@ export default (imageData, fillColor, x, y) => {
         getPixelPosition(imageData, WEST, pixelIndex),
         getPixelPosition(imageData, EAST, pixelIndex),
         getPixelPosition(imageData, NORTH, pixelIndex),
-        getPixelPosition(imageData, SOUTH, pixelIndex)
+        getPixelPosition(imageData, SOUTH, pixelIndex),
       );
     }
   }

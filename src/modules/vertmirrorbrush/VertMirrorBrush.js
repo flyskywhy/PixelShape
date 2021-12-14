@@ -1,11 +1,11 @@
 import MirrorBrush from '../mirrorbrush/MirrorBrush';
 
 class VertMirrorBrush extends MirrorBrush {
-  constructor (...args) {
+  constructor(...args) {
     super(...args);
     this.shift = {
       x: true,
-      y: false
+      y: false,
     };
   }
 }

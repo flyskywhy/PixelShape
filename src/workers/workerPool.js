@@ -1,70 +1,76 @@
-const workerPool = {}, messageQueue = [];
-let workerIds = [], partsTotal = 0, currentPart = 0;
+const workerPool = {},
+  messageQueue = [];
+let workerIds = [],
+  partsTotal = 0,
+  currentPart = 0;
 
 export default class WorkerPool {
-  constructor ({ amount, worker }) {
+  constructor({amount, worker}) {
     this.amount = amount || 5;
     this.Worker = worker;
   }
 
-  spawnWorkers () {
+  spawnWorkers() {
     workerIds = [...Array(this.amount)].map((i, v) => {
       let webWorker = new this.Worker();
 
-      workerPool[v] = { worker: webWorker };
+      workerPool[v] = {worker: webWorker};
 
       webWorker.addEventListener('message', () => {
         // console.log(`Freed worker #${v}`);
         workerIds.push(v);
 
-        if (messageQueue.length) this.postMessage(messageQueue.pop());
+        if (messageQueue.length) {
+          this.postMessage(messageQueue.pop());
+        }
       });
 
       return v;
     });
   }
 
-  terminateWorkers () {
-    Object.keys(workerPool)
-      .forEach(id => workerPool[id].worker.terminate());
+  terminateWorkers() {
+    Object.keys(workerPool).forEach((id) => workerPool[id].worker.terminate());
   }
 
-  executeWhenAvailable (callback, data) {
-    if (workerIds.length) return callback(workerIds.pop());
+  executeWhenAvailable(callback, data) {
+    if (workerIds.length) {
+      return callback(workerIds.pop());
+    }
 
     return messageQueue.push(data);
   }
 
-  postMessage (data) {
-    setTimeout(() =>
-      this.executeWhenAvailable(id => {
-        let worker = workerPool[id].worker;
+  postMessage(data) {
+    setTimeout(
+      () =>
+        this.executeWhenAvailable((id) => {
+          let worker = workerPool[id].worker;
 
-        // console.log("postMessage with worker #" + id);
-        worker.postMessage(data);
-      }, data),
-      0
+          // console.log("postMessage with worker #" + id);
+          worker.postMessage(data);
+        }, data),
+      0,
     );
   }
 
-  addEventListener (event, callback) {
-    Object.keys(workerPool)
-      .forEach(i =>
-        workerPool[i].worker.addEventListener(event, e => {
-          // updating current progress to keep track from outside
-          e.data.partsTotal = partsTotal;
-          e.data.currentPart = currentPart++;
-          callback(e);
-        })
-      );
+  addEventListener(event, callback) {
+    Object.keys(workerPool).forEach((i) =>
+      workerPool[i].worker.addEventListener(event, (e) => {
+        // updating current progress to keep track from outside
+        e.data.partsTotal = partsTotal;
+        e.data.currentPart = currentPart++;
+        callback(e);
+      }),
+    );
   }
 
-  get freeWorkers () {
+  get freeWorkers() {
     return workerIds;
   }
 
   // these two needed to set initial state to track percentage of work done
-  startOver (length) {
+  startOver(length) {
     currentPart = 0;
     partsTotal = length;
   }

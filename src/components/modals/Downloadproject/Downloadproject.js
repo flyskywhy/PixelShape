@@ -1,89 +1,95 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
 import Downloader from '../../../fileloaders/Downloader';
-import { combineImageDataToCanvas } from '../../../utils/canvasUtils';
-import { getAllActiveColors } from '../../../utils/colorUtils';
+import {combineImageDataToCanvas} from '../../../utils/canvasUtils';
+import {getAllActiveColors} from '../../../utils/colorUtils';
 import StateLoader from '../../../statemanager/StateLoader';
 
-import { Files } from '../../../defaults/constants';
+import {Files} from '../../../defaults/constants';
 
 import generatePalette from '../../../htmlgenerators/paletteGenerator';
 
 class DownloadProjectModal extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
   }
 
-  combineGifData () {
-    return this.props.framesOrder.map(
-      el => this.props.gifFramesData[el]
-    ).join('');
+  combineGifData() {
+    return this.props.framesOrder
+      .map((el) => this.props.gifFramesData[el])
+      .join('');
   }
 
-  prepareProject () {
+  prepareProject() {
     const state = this.props.getProjectState();
     return StateLoader.prepareForDownload(state, Files.NAME.PROJECT);
   }
 
-  prepareGif () {
+  prepareGif() {
     const combinedData = this.combineGifData();
     return Downloader.prepareGIFBlobAsync(combinedData, Files.NAME.ANIMATION);
   }
 
-  prepareSpritesheet () {
+  prepareSpritesheet() {
     const spritesImageDataArray = this.props.framesOrder.map(
-      el => this.props.framesCollection[el].naturalImageData
+      (el) => this.props.framesCollection[el].naturalImageData,
     );
     return Downloader.prepareCanvasBlobAsync(
       combineImageDataToCanvas(
         spritesImageDataArray,
         spritesImageDataArray[0].width,
-        spritesImageDataArray[0].height
+        spritesImageDataArray[0].height,
       ),
-      Files.NAME.SPRITES
+      Files.NAME.SPRITES,
     );
   }
 
-  preparePalette () {
+  preparePalette() {
     const spritesImageDataArray = this.props.framesOrder.map(
-      el => this.props.framesCollection[el].naturalImageData
+      (el) => this.props.framesCollection[el].naturalImageData,
     );
 
     return Downloader.prepareHTMLBlobAsync(
-      generatePalette(
-        getAllActiveColors(spritesImageDataArray)
-      ),
-      Files.NAME.PALETTE
+      generatePalette(getAllActiveColors(spritesImageDataArray)),
+      Files.NAME.PALETTE,
     );
   }
 
-  confirm () {
+  confirm() {
     const blobs = [];
 
-    if (this.props.includeGif) blobs.push(this.prepareGif());
-    if (this.props.includePalette) blobs.push(this.preparePalette());
-    if (this.props.includeProject) blobs.push(this.prepareProject());
-    if (this.props.includeSpritesheet) blobs.push(this.prepareSpritesheet());
-    if (!blobs.length) return;
-
+    if (this.props.includeGif) {
+      blobs.push(this.prepareGif());
+    }
+    if (this.props.includePalette) {
+      blobs.push(this.preparePalette());
+    }
+    if (this.props.includeProject) {
+      blobs.push(this.prepareProject());
+    }
+    if (this.props.includeSpritesheet) {
+      blobs.push(this.prepareSpritesheet());
+    }
+    if (!blobs.length) {
+      return;
+    }
     Downloader.asZIP(blobs, Files.NAME.PACKAGE);
     this.props.closeModal();
   }
 
-  cancel () {
+  cancel() {
     this.props.closeModal();
   }
 
-  render () {
+  render() {
     return (
       <ModalWindow
         title="Download project"
-        ok={{ text: 'Download', action: this.confirm.bind(this) }}
-        cancel={{ text: 'Cancel', action: this.cancel.bind(this) }}
+        ok={{text: 'Download', action: this.confirm.bind(this)}}
+        cancel={{text: 'Cancel', action: this.cancel.bind(this)}}
         isShown={this.props.isShown}>
-
         <ToggleCheckbox
           value={this.props.includeGif}
           onChange={this.props.toggleIncludeGif.bind(this)}>
@@ -104,7 +110,6 @@ class DownloadProjectModal extends Component {
           onChange={this.props.toggleIncludeProject.bind(this)}>
           Include project
         </ToggleCheckbox>
-
       </ModalWindow>
     );
   }

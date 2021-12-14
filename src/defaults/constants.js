@@ -5,13 +5,13 @@ export const Files = {
     JSON: 'application/json',
     HTML: 'text/html',
     GIF: 'image/gif',
-    PNG: 'image/png'
+    PNG: 'image/png',
   },
   NAME: {
     PALETTE: 'palette.html',
     SPRITES: 'sprites.png',
     ANIMATION: 'animation.gif',
     PROJECT: 'project' + projectExtension,
-    PACKAGE: 'PixelShapeApp.zip'
-  }
+    PACKAGE: 'PixelShapeApp.zip',
+  },
 };

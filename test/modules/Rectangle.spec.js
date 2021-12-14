@@ -14,7 +14,10 @@ test('Rectangle =>', (expect) => {
   expect.test('::constructor', (expect) => {
     before();
 
-    expect.ok(rectangle instanceof Boundshape, 'Should extend Boundshape class functionality');
+    expect.ok(
+      rectangle instanceof Boundshape,
+      'Should extend Boundshape class functionality',
+    );
     expect.end();
   });
 
@@ -24,7 +27,11 @@ test('Rectangle =>', (expect) => {
 
     rectangle.state.size = 20;
     coords = rectangle.shiftByHalfSize(100, 100);
-    expect.deepEqual(coords, { x: 110, y: 110 }, 'Should shift coords by half size set on tool state');
+    expect.deepEqual(
+      coords,
+      {x: 110, y: 110},
+      'Should shift coords by half size set on tool state',
+    );
     expect.end();
   });
 
@@ -34,7 +41,10 @@ test('Rectangle =>', (expect) => {
     Boundshape.prototype.draw = sinon.spy();
 
     rectangle.draw(rectangle._ctx, 0, 0, 10, 10);
-    expect.ok(Boundshape.prototype.draw.called, 'Should call super draw method');
+    expect.ok(
+      Boundshape.prototype.draw.called,
+      'Should call super draw method',
+    );
     // expect.ok(rectangle._ctx.strokeRect.called, 'Should draw rect on rendering context');
     expect.end();
   });

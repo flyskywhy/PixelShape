@@ -16,11 +16,11 @@ class App extends Component {
     );
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.applyConstraints();
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.applyConstraints();
   }
 

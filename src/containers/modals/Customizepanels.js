@@ -1,36 +1,40 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import {
   getToolbarVisibility,
   getSidebarVisibility,
-  getFramebarVisibility
+  getFramebarVisibility,
 } from '../../selectors';
 
-import { toggleToolbar, toggleSidebar, toggleFramebar } from '../../actions/panels';
+import {
+  toggleToolbar,
+  toggleSidebar,
+  toggleFramebar,
+} from '../../actions/panels';
 
 import CustomizePanelsModal from '../../components/modals/Customizepanels/Customizepanels';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   toolbarVisible: getToolbarVisibility(state),
   sidebarVisible: getSidebarVisibility(state),
-  framebarVisible: getFramebarVisibility(state)
+  framebarVisible: getFramebarVisibility(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  toggleFramebar () {
+const mapDispatchToProps = (dispatch) => ({
+  toggleFramebar() {
     return dispatch(toggleFramebar());
   },
-  toggleSidebar () {
+  toggleSidebar() {
     return dispatch(toggleSidebar());
   },
-  toggleToolbar () {
+  toggleToolbar() {
     return dispatch(toggleToolbar());
-  }
+  },
 });
 
 const CustomizePanelsModalContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(CustomizePanelsModal);
 
 export default CustomizePanelsModalContainer;

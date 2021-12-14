@@ -1,8 +1,9 @@
-import { getPixelFromImageData, putColor, getColor } from './colorUtils';
+import {getPixelFromImageData, putColor, getColor} from './colorUtils';
 
 export default class ImageDataExtended {
-  constructor () {
-    let args = [...arguments], initial;
+  constructor() {
+    let args = [...arguments],
+      initial;
 
     if (arguments.length < 2) {
       throw new TypeError(`
@@ -10,7 +11,9 @@ export default class ImageDataExtended {
       `);
     }
 
-    if (args.length > 2) initial = args.shift();
+    if (args.length > 2) {
+      initial = args.shift();
+    }
 
     if (initial && !(initial instanceof Uint8ClampedArray)) {
       throw new TypeError(`
@@ -29,9 +32,12 @@ export default class ImageDataExtended {
     this.data = initial || new Uint8ClampedArray(4 * this.width * this.height);
   }
 
-  getImageData (sx, sy, sw, sh) {
+  getImageData(sx, sy, sw, sh) {
     let iData = new ImageData(sw, sh),
-        i, j, index, color;
+      i,
+      j,
+      index,
+      color;
 
     for (i = 0; i < sw; i++) {
       for (j = 0; j < sh; j++) {
@@ -45,11 +51,17 @@ export default class ImageDataExtended {
     return iData;
   }
 
-  putImageData (imagedata, dx, dy) {
-    let index, color, i, j,
-        width = imagedata.width, height = imagedata.height;
+  putImageData(imagedata, dx, dy) {
+    let index,
+      color,
+      i,
+      j,
+      width = imagedata.width,
+      height = imagedata.height;
 
-    if (dx > this.width || dy > this.height) return this;
+    if (dx > this.width || dy > this.height) {
+      return this;
+    }
 
     for (i = 0; i < width; i++) {
       for (j = 0; j < height; j++) {
@@ -65,7 +77,7 @@ export default class ImageDataExtended {
 
   // the only thing so far needed
   // clears entire imagedata object
-  clearRect () {
+  clearRect() {
     this.data.fill(0);
   }
 }

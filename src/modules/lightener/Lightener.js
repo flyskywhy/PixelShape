@@ -1,7 +1,7 @@
 import ColorAdjust from '../coloradjust/ColorAdjust';
 
 class Lightener extends ColorAdjust {
-  constructor (...args) {
+  constructor(...args) {
     super(...args);
     this.shadingPercentage = 0.01;
   }

@@ -4,10 +4,10 @@ import pako from 'pako';
 export default class ImageDataCompressor {
   // imageData could be an object instead of an ImageData entity
   // so for the sake of compatibility need to have width and height provided
-  static compress (imageData, width, height) {
+  static compress(imageData, width, height) {
     let iData = imageData.data,
-        iDataArray,
-        deflated;
+      iDataArray,
+      deflated;
 
     // 1. first convert object to Uint8ClampedArray
     // 2. then deflate
@@ -24,10 +24,10 @@ export default class ImageDataCompressor {
   }
 
   // imageData is an array, so need to know what width and height are
-  static decompress (imageData, width, height) {
+  static decompress(imageData, width, height) {
     let iData = imageData.data,
-        iDataArray,
-        inflated;
+      iDataArray,
+      inflated;
 
     iDataArray = Uint8Array.from(iData);
 

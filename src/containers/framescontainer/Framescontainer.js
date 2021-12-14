@@ -9,18 +9,18 @@ import {
   getUnscaledSurfaceHeight,
   getModifiedFramesArray,
   getGifFramesData,
-  getImageSize
+  getImageSize,
 } from '../../selectors';
 
 import {
   addFrame,
   setCurrentFrame,
-  updateFrameGIFData
+  updateFrameGIFData,
 } from '../../actions/frames';
 
 import Framescontainer from '../../components/framescontainer/Framescontainer';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentUUID: getCurrentFrameUUID(state),
   modifiedFrames: getModifiedFramesArray(state),
   gifFramesData: getGifFramesData(state),
@@ -29,24 +29,24 @@ const mapStateToProps = state => ({
   fps: getFPS(state),
   imageSize: getImageSize(state),
   surfaceHeight: getUnscaledSurfaceHeight(state),
-  surfaceWidth: getUnscaledSurfaceWidth(state)
+  surfaceWidth: getUnscaledSurfaceWidth(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  addFrame (width, height) {
+const mapDispatchToProps = (dispatch) => ({
+  addFrame(width, height) {
     return dispatch(addFrame(width, height));
   },
-  setCurrentFrame (frame) {
+  setCurrentFrame(frame) {
     return dispatch(setCurrentFrame(frame));
   },
-  updateFrameGIFData (frameUUID, framesData) {
+  updateFrameGIFData(frameUUID, framesData) {
     return dispatch(updateFrameGIFData(frameUUID, framesData));
-  }
+  },
 });
 
 const FramescontainerConnected = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Framescontainer);
 
 export default FramescontainerConnected;

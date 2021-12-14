@@ -10,14 +10,14 @@ import {
   getSurfaceHeight,
   getImageSize,
   getGridState,
-  getProjectGuid
+  getProjectGuid,
 } from '../../selectors';
 import {setTempColor} from '../../actions/palette';
 import {updateFrameImageData} from '../../actions/frames';
 
 import Surface from '../../components/surface/Surface';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   projectGuid: getProjectGuid(state),
   tool: getTool(state),
   toolSettings: getToolSettings(state),
@@ -27,21 +27,18 @@ const mapStateToProps = state => ({
   pixelSize: getPixelSize(state),
   surfaceWidth: getSurfaceWidth(state),
   surfaceHeight: getSurfaceHeight(state),
-  gridShown: getGridState(state)
+  gridShown: getGridState(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  setTempColor (color) {
+const mapDispatchToProps = (dispatch) => ({
+  setTempColor(color) {
     return dispatch(setTempColor(color));
   },
-  updateFrameImageData (frameUUID, naturalImageData) {
+  updateFrameImageData(frameUUID, naturalImageData) {
     return dispatch(updateFrameImageData(frameUUID, naturalImageData));
-  }
+  },
 });
 
-const SurfaceContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Surface);
+const SurfaceContainer = connect(mapStateToProps, mapDispatchToProps)(Surface);
 
 export default SurfaceContainer;

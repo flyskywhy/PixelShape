@@ -18,56 +18,59 @@ export const updateSize = (width, height, anchor, stretch) => ({
   width,
   height,
   anchor,
-  stretch
+  stretch,
 });
 
 export const setSurfaceConstraints = (width, height) => ({
   type: SET_SURFACE_CONSTRAINTS,
   width,
-  height
+  height,
 });
 
-export const setExpandAnchor = anchor => ({
+export const setExpandAnchor = (anchor) => ({
   type: SET_EXPAND_ANCHOR,
-  anchor
+  anchor,
 });
 
 export const toggleResetPalette = () => ({
-  type: TOGGLE_RESET_PALETTE
+  type: TOGGLE_RESET_PALETTE,
 });
 
 export const toggleGrid = () => ({
-  type: TOGGLE_GRID
+  type: TOGGLE_GRID,
 });
 
 export const toggleStretch = () => ({
-  type: TOGGLE_STRETCH
+  type: TOGGLE_STRETCH,
 });
 
 export const toggleIncludeGif = () => ({
-  type: TOGGLE_INCLUDE_GIF
+  type: TOGGLE_INCLUDE_GIF,
 });
 
 export const toggleIncludeSpritesheet = () => ({
-  type: TOGGLE_INCLUDE_SPRITESHEET
+  type: TOGGLE_INCLUDE_SPRITESHEET,
 });
 
 export const toggleIncludeProject = () => ({
-  type: TOGGLE_INCLUDE_PROJECT
+  type: TOGGLE_INCLUDE_PROJECT,
 });
 
 export const toggleIncludePalette = () => ({
-  type: TOGGLE_INCLUDE_PALETTE
+  type: TOGGLE_INCLUDE_PALETTE,
 });
 
-export const processSizeChange = (width, height, stretch) => (dispatch, getState) => {
+export const processSizeChange = (width, height, stretch) => (
+  dispatch,
+  getState,
+) => {
   const anchor = getState().undoables.present.application.anchor;
   dispatch(updateSize(width, height, anchor, stretch));
 };
 
 export const getStore = () => (dispatch, getState) => getState();
 
-export const uploadStore = state => ({
+export const uploadStore = (state) => ({
   type: UPLOAD_STORE,
-  state
+  state,
 });

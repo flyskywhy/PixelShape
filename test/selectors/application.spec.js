@@ -20,7 +20,7 @@ import {
   getSpritesheetDownloadOption,
   getGifDownloadOption,
   getProjectDownloadOption,
-  getPaletteDownloadOption
+  getPaletteDownloadOption,
 } from '../../src/selectors/application';
 
 const state = {
@@ -30,13 +30,13 @@ const state = {
         projectGuid: 'random',
         size: {
           width: 32,
-          height: 32
+          height: 32,
         },
         pixelSize: 10,
         optimalPixelSize: 20,
         surfaceConstraints: {
           width: 2000,
-          height: 2000
+          height: 2000,
         },
         resetPalette: false,
         grid: false,
@@ -46,11 +46,11 @@ const state = {
           includeGif: true,
           includeSpritesheet: true,
           includeProject: true,
-          includePalette: true
-        }
-      }
-    }
-  }
+          includePalette: true,
+        },
+      },
+    },
+  },
 };
 
 test('application =>', (expect) => {
@@ -58,9 +58,9 @@ test('application =>', (expect) => {
     const next = getApplication({
       undoables: {
         present: {
-          application: 'app'
-        }
-      }
+          application: 'app',
+        },
+      },
     });
 
     expect.equal(next, 'app', 'Should return present state of application');
@@ -112,7 +112,11 @@ test('application =>', (expect) => {
   expect.test('::getImageSize', (expect) => {
     const next = getImageSize(state);
 
-    expect.deepEqual(next, { width: 32, height: 32 }, 'Should return current image size');
+    expect.deepEqual(
+      next,
+      {width: 32, height: 32},
+      'Should return current image size',
+    );
     expect.end();
   });
 
@@ -147,35 +151,54 @@ test('application =>', (expect) => {
   expect.test('::getSurfaceWidth', (expect) => {
     const next = getSurfaceWidth(state);
 
-    expect.equal(next, 320, 'Should return pixel size multiplied by surface width');
+    expect.equal(
+      next,
+      320,
+      'Should return pixel size multiplied by surface width',
+    );
     expect.end();
   });
 
   expect.test('::getSurfaceHeight', (expect) => {
     const next = getSurfaceHeight(state);
 
-    expect.equal(next, 320, 'Should return pixel size multiplied by surface height');
+    expect.equal(
+      next,
+      320,
+      'Should return pixel size multiplied by surface height',
+    );
     expect.end();
   });
 
   expect.test('::getUnscaledSurfaceWidth', (expect) => {
     const next = getUnscaledSurfaceWidth(state);
 
-    expect.equal(next, 640, 'Should return optimal pixel size multiplied by surface width');
+    expect.equal(
+      next,
+      640,
+      'Should return optimal pixel size multiplied by surface width',
+    );
     expect.end();
   });
 
   expect.test('::getUnscaledSurfaceHeight', (expect) => {
     const next = getUnscaledSurfaceHeight(state);
 
-    expect.equal(next, 640, 'Should return optimal pixel size multiplied by surface height');
+    expect.equal(
+      next,
+      640,
+      'Should return optimal pixel size multiplied by surface height',
+    );
     expect.end();
   });
 
   expect.test('::getSpritesheetDownloadOption', (expect) => {
     const next = getSpritesheetDownloadOption(state);
 
-    expect.true(next, 'Should return current status of download spritesheet toggle');
+    expect.true(
+      next,
+      'Should return current status of download spritesheet toggle',
+    );
     expect.end();
   });
 
@@ -189,14 +212,20 @@ test('application =>', (expect) => {
   expect.test('::getProjectDownloadOption', (expect) => {
     const next = getProjectDownloadOption(state);
 
-    expect.true(next, 'Should return current status of download project toggle');
+    expect.true(
+      next,
+      'Should return current status of download project toggle',
+    );
     expect.end();
   });
 
   expect.test('::getPaletteDownloadOption', (expect) => {
     const next = getPaletteDownloadOption(state);
 
-    expect.true(next, 'Should return current status of download palette toggle');
+    expect.true(
+      next,
+      'Should return current status of download palette toggle',
+    );
     expect.end();
   });
 

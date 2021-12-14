@@ -1,6 +1,6 @@
 import './framebar.styl';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import decorateWithKeyBindings from '../../helpers/KeyBindings';
 
 import FrameButton from '../framebutton/Framebutton';
@@ -11,12 +11,11 @@ import classNames from 'classnames';
 import debounce from '../../utils/debounce';
 
 class Framebar extends Component {
-
-  constructor (...args) {
+  constructor(...args) {
     super(...args);
     this.state = {
       fps: 2,
-      maximized: true
+      maximized: true,
     };
     this.setFPS = debounce(this.props.setFPS, 300);
 
@@ -25,144 +24,160 @@ class Framebar extends Component {
 
     this.bindKeys({
       'alt + left': this.goLeft,
-      'alt + right': this.goRight
+      'alt + right': this.goRight,
     });
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (this.state.fps !== nextProps.fps) this.setState({ fps: nextProps.fps });
+  componentWillReceiveProps(nextProps) {
+    if (this.state.fps !== nextProps.fps) {
+      this.setState({fps: nextProps.fps});
+    }
   }
 
-  removeCurrentFrame () {
+  removeCurrentFrame() {
     this.props.removeFrame(this.props.currentFrameUUID);
   }
 
-  moveCurrentFrameRight () {
+  moveCurrentFrameRight() {
     this.props.moveFrameRight(this.props.currentFrameUUID);
   }
 
-  moveCurrentFrameLeft () {
+  moveCurrentFrameLeft() {
     this.props.moveFrameLeft(this.props.currentFrameUUID);
   }
 
-  duplicateCurrentFrame () {
+  duplicateCurrentFrame() {
     this.props.duplicateFrame(this.props.currentFrameUUID);
   }
 
-  goLeft () {
+  goLeft() {
     this.props.setCurrentFrame(this.props.previousFrameUUID);
   }
 
-  goRight () {
+  goRight() {
     this.props.setCurrentFrame(this.props.nextFrameUUID);
   }
 
-  onChange (ev) {
+  onChange(ev) {
     // setting just state, to make slider movable
-    this.setState({ fps: ev.target.value });
+    this.setState({fps: ev.target.value});
     // and then setting actual fps debounced to apply changes
     this.setFPS(ev.target.value);
   }
 
-  saveCurrentFrameName () {
-    this.props.updateFrameName(this.props.currentFrameUUID, this._nameInput.value);
+  saveCurrentFrameName() {
+    this.props.updateFrameName(
+      this.props.currentFrameUUID,
+      this._nameInput.value,
+    );
   }
 
-  getMaximizedControls () {
+  getMaximizedControls() {
     return [
       <div className="framebar__gif-controls" key="maxgifcontrols">
         <input
           className="framebar__gif-slider"
-          ref={s => this._fpsSlider = s}
-          type="range" step="1" min="1" max="24"
+          ref={(s) => (this._fpsSlider = s)}
+          type="range"
+          step="1"
+          min="1"
+          max="24"
           value={this.state.fps}
           /* UNFORTUNATELY IE11 DOESN'T HANDLE ONCHANGE EVENT, SO NEED TO SUBSCRIBE TO ONMOUSEUP AS WELL */
           onMouseUp={this.onChange.bind(this)}
-          onChange={this.onChange.bind(this)} />
+          onChange={this.onChange.bind(this)}
+        />
       </div>,
 
       <ul className="framebar__frames-controls" key="maxcontrols">
         <FrameButton
           btnTooltip="Duplicate"
           icon="duplicate"
-          doAction={this.duplicateCurrentFrame.bind(this)} />
+          doAction={this.duplicateCurrentFrame.bind(this)}
+        />
         <FrameButton
           btnTooltip="Remove"
           icon="remove"
-          doAction={this.removeCurrentFrame.bind(this)} />
+          doAction={this.removeCurrentFrame.bind(this)}
+        />
         <FrameButton
           btnTooltip="Move left"
           icon="move-left"
-          doAction={this.moveCurrentFrameLeft.bind(this)} />
+          doAction={this.moveCurrentFrameLeft.bind(this)}
+        />
         <FrameButton
           btnTooltip="Move right"
           icon="move-right"
-          doAction={this.moveCurrentFrameRight.bind(this)} />
+          doAction={this.moveCurrentFrameRight.bind(this)}
+        />
       </ul>,
 
       <div className="framebar__framename" key="maxframename">
         <input
           className="framebar__framename-input"
-          ref={inp => this._nameInput = inp}
+          ref={(inp) => (this._nameInput = inp)}
           key={this.props.currentFrameName}
           defaultValue={this.props.currentFrameName}
-          onBlur={this.saveCurrentFrameName.bind(this)} />
-      </div>
+          onBlur={this.saveCurrentFrameName.bind(this)}
+        />
+      </div>,
     ];
   }
 
-  getMinimizedControls () {
+  getMinimizedControls() {
     return [
       <div className="framebar__frame-counter" key="mincounter">
-        <span>{ this.props.currentFrameIndex + 1 } of </span>
-        <span>{ this.props.framesCount }</span>
+        <span>{this.props.currentFrameIndex + 1} of </span>
+        <span>{this.props.framesCount}</span>
       </div>,
 
-      <ul className="framebar__frames-controls framebar__frames-controls-big" key="mincontrols">
+      <ul
+        className="framebar__frames-controls framebar__frames-controls-big"
+        key="mincontrols">
         <FrameButtonBig
           btnTooltip="Go left"
           btnShortcut="(ALT + LEFT)"
           icon="left-min"
-          doAction={this.goLeft} />
+          doAction={this.goLeft}
+        />
         <FrameButtonBig
           btnTooltip="Go right"
           btnShortcut="(ALT + RIGHT)"
           icon="right-min"
-          doAction={this.goRight} />
-      </ul>
+          doAction={this.goRight}
+        />
+      </ul>,
     ];
   }
 
-  toggleMinimize () {
+  toggleMinimize() {
     this.setState({
-      maximized: !this.state.maximized
+      maximized: !this.state.maximized,
     });
   }
 
-  render () {
-    const classes = classNames(
-      'framebar',
-      {
-        'minimized': !this.state.maximized
-      }
-    );
+  render() {
+    const classes = classNames('framebar', {
+      minimized: !this.state.maximized,
+    });
 
     return (
-      <aside className={classes} style={{display: this.props.visible ? 'block' : 'none'}}>
+      <aside
+        className={classes}
+        style={{display: this.props.visible ? 'block' : 'none'}}>
         <div className="framebar__controls">
-          {
-            this.state.maximized
-              ? this.getMaximizedControls()
-              : this.getMinimizedControls()
-          }
+          {this.state.maximized
+            ? this.getMaximizedControls()
+            : this.getMinimizedControls()}
           <div className="framebar__minimize">
-            <div className="framebar__minimize-button" onClick={this.toggleMinimize.bind(this)}>
-              { this.state.maximized ? 'Minimize' : 'Maximize' }
+            <div
+              className="framebar__minimize-button"
+              onClick={this.toggleMinimize.bind(this)}>
+              {this.state.maximized ? 'Minimize' : 'Maximize'}
             </div>
           </div>
         </div>
-        <FramesContainer
-          hidden={!this.state.maximized} />
+        <FramesContainer hidden={!this.state.maximized} />
       </aside>
     );
   }

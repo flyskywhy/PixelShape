@@ -6,7 +6,7 @@ let colorreplace;
 
 const before = () => {
   const rndrCtx = new RenderingContext2d(5, 5),
-        bfrCtx = new RenderingContext2d(5, 5);
+    bfrCtx = new RenderingContext2d(5, 5);
 
   colorreplace = new ColorReplace();
   colorreplace._buffer = bfrCtx;
@@ -31,9 +31,19 @@ test('ColorReplace =>', (expect) => {
     colorreplace.handleGhostPixelMove = sinon.spy();
     colorreplace.onMouseMove(1, 1);
 
-    expect.equal(colorreplace.state.size, 1, 'Should set pixel size to minimum of 1');
-    expect.ok(colorreplace.handleGhostPixelMove.called, 'Should do the drawing of ghost pixel on mouseMove');
-    expect.false(colorreplace.mouseDown, 'Should unset mouseDown toggle to false');
+    expect.equal(
+      colorreplace.state.size,
+      1,
+      'Should set pixel size to minimum of 1',
+    );
+    expect.ok(
+      colorreplace.handleGhostPixelMove.called,
+      'Should do the drawing of ghost pixel on mouseMove',
+    );
+    expect.false(
+      colorreplace.mouseDown,
+      'Should unset mouseDown toggle to false',
+    );
     expect.end();
   });
 
@@ -42,11 +52,17 @@ test('ColorReplace =>', (expect) => {
 
     colorreplace.mouseDown = true;
     colorreplace.onMouseUp(1, 1);
-    expect.false(colorreplace.mouseDown, 'Should unset mouseDown toggle to false');
+    expect.false(
+      colorreplace.mouseDown,
+      'Should unset mouseDown toggle to false',
+    );
 
     colorreplace.mouseDown = false;
     colorreplace.onMouseUp(1, 1);
-    expect.false(colorreplace.mouseDown, 'Should not modify mouseDown toggle if previously set to false');
+    expect.false(
+      colorreplace.mouseDown,
+      'Should not modify mouseDown toggle if previously set to false',
+    );
     expect.end();
   });
 
@@ -54,10 +70,19 @@ test('ColorReplace =>', (expect) => {
     before();
 
     colorreplace.state.color = '#ffffff';
-    colorreplace._naturalImageData = new ImageData(new Uint8ClampedArray([0, 0, 0, 255]), 1, 1);
-    colorreplace._ctx.getImageData = () => new ImageData(new Uint8ClampedArray([0, 0, 0, 255]), 1, 1);
+    colorreplace._naturalImageData = new ImageData(
+      new Uint8ClampedArray([0, 0, 0, 255]),
+      1,
+      1,
+    );
+    colorreplace._ctx.getImageData = () =>
+      new ImageData(new Uint8ClampedArray([0, 0, 0, 255]), 1, 1);
     colorreplace.draw(colorreplace._ctx, 1, 1);
-    expect.deepEqual(colorreplace._naturalImageData.data, new Uint8ClampedArray([255, 255, 255, 255]), 'Should replace all pixels in given imageData with the state color');
+    expect.deepEqual(
+      colorreplace._naturalImageData.data,
+      new Uint8ClampedArray([255, 255, 255, 255]),
+      'Should replace all pixels in given imageData with the state color',
+    );
     expect.end();
   });
 

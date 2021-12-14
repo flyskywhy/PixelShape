@@ -1,28 +1,27 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
 class CustomizePanelModal extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
   }
 
-  confirm () {
+  confirm() {
     this.props.closeModal();
   }
 
-  cancel () {
+  cancel() {
     this.props.closeModal();
   }
 
-  render () {
+  render() {
     return (
       <ModalWindow
         title="Customize panels"
-        ok={{ text: 'Ok', action: this.confirm.bind(this) }}
-        cancel={{ text: 'Cancel', action: this.cancel.bind(this) }}
+        ok={{text: 'Ok', action: this.confirm.bind(this)}}
+        cancel={{text: 'Cancel', action: this.cancel.bind(this)}}
         isShown={this.props.isShown}>
-
         <ToggleCheckbox
           value={this.props.toolbarVisible}
           onChange={this.props.toggleToolbar.bind(this)}>
@@ -38,7 +37,6 @@ class CustomizePanelModal extends Component {
           onChange={this.props.toggleFramebar.bind(this)}>
           Show framebar
         </ToggleCheckbox>
-
       </ModalWindow>
     );
   }

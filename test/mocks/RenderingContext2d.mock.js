@@ -2,16 +2,25 @@ import sinon from 'sinon';
 import ImageData from './ImageData.mock';
 
 const methods = [
-  'fillRect',     'clearRect',
-  'putImageData', 'setTransform',
-  'drawImage',    'save',
-  'fillText',     'restore',
-  'beginPath',    'moveTo',
-  'lineTo',       'closePath',
-  'stroke',       'translate',
-  'scale',        'rotate',
-  'arc',          'fill',
-  'strokeRect'
+  'fillRect',
+  'clearRect',
+  'putImageData',
+  'setTransform',
+  'drawImage',
+  'save',
+  'fillText',
+  'restore',
+  'beginPath',
+  'moveTo',
+  'lineTo',
+  'closePath',
+  'stroke',
+  'translate',
+  'scale',
+  'rotate',
+  'arc',
+  'fill',
+  'strokeRect',
 ];
 
 class RenderingContext2d {
@@ -19,12 +28,16 @@ class RenderingContext2d {
     this.canvas = {
       width,
       height,
-      toDataURL: (type, quality) => "data:image/png;base64,iVBORw0"
+      toDataURL: (type, quality) => 'data:image/png;base64,iVBORw0',
     };
   }
-  getImageData(x, y, w, h) { return new ImageData(w || 100, h || 100) }
-  createImageData() { return []; }
-};
+  getImageData(x, y, w, h) {
+    return new ImageData(w || 100, h || 100);
+  }
+  createImageData() {
+    return [];
+  }
+}
 
 // adding spies replacing all available CanvasRenderingContext2D methods
 methods.forEach((method) => {

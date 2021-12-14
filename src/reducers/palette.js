@@ -1,25 +1,21 @@
-import {
-  ADD_COLOR,
-  SET_TEMP_COLOR,
-  RESET_USER_COLORS
-} from '../actions/palette';
+import {ADD_COLOR, SET_TEMP_COLOR, RESET_USER_COLORS} from '../actions/palette';
 
 const initialState = {
   tempColor: '',
-  colors: []
+  colors: [],
 };
 
-function userPalette (state = initialState, action) {
+function userPalette(state = initialState, action) {
   let userColors;
 
   switch (action.type) {
     case ADD_COLOR:
-      userColors = [...state.colors, { color: action.color }];
-      return { ...state, colors: userColors };
+      userColors = [...state.colors, {color: action.color}];
+      return {...state, colors: userColors};
     case SET_TEMP_COLOR:
-      return { ...state, tempColor: action.color };
+      return {...state, tempColor: action.color};
     case RESET_USER_COLORS:
-      return { ...initialState };
+      return {...initialState};
     default:
       return state;
   }

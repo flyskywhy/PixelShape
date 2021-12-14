@@ -1,45 +1,51 @@
 import Downloader from '../fileloaders/Downloader';
 import Uploader from '../fileloaders/Uploader';
-import { StateConverter } from './StateConverter';
+import {StateConverter} from './StateConverter';
 import GifLoader from '../libs/GifLoader';
 
 class StateLoader {
-  serializeForDownload (state) {
+  serializeForDownload(state) {
     return StateConverter.convertToExport(state);
   }
 
-  prepareForDownload (state, fileName) {
+  prepareForDownload(state, fileName) {
     const serialized = this.serializeForDownload(state);
 
     return Downloader.prepareJSONBlobAsync(serialized, fileName);
   }
 
-  prepareAfterUploadAsync (data) {
+  prepareAfterUploadAsync(data) {
     const subState = StateConverter.convertToImport(data.json);
 
-    return Promise.resolve({ file: data.file, json: subState });
+    return Promise.resolve({file: data.file, json: subState});
   }
 
   // calls calback with { file, json }
-  upload (file, callback) {
+  upload(file, callback) {
     Uploader.asJSONAsync(file)
       .then(this.prepareAfterUploadAsync.bind(this))
       .then(callback);
   }
 
-  uploadGif (gif, callback, stepCallback) {
-    const loader = new GifLoader({ gif });
+  uploadGif(gif, callback, stepCallback) {
+    const loader = new GifLoader({gif});
 
-    loader.load(stepCallback)
-      .then(frames => {
+    loader
+      .load(stepCallback)
+      .then((frames) => {
         const frame = frames[0],
-              fps = Math.min(Math.round(100 / frame.delay), 24),
-              width = frame.data.width,
-              height = frame.data.height;
+          fps = Math.min(Math.round(100 / frame.delay), 24),
+          width = frame.data.width,
+          height = frame.data.height;
 
-        const subState = StateConverter.createStateFromFramesData(frames, fps, width, height);
+        const subState = StateConverter.createStateFromFramesData(
+          frames,
+          fps,
+          width,
+          height,
+        );
 
-        return Promise.resolve({ file: gif, json: subState });
+        return Promise.resolve({file: gif, json: subState});
       })
       .then(callback);
   }

@@ -6,21 +6,18 @@ import rootReducer from './reducers/index';
 
 const logger = createLogger({
   duration: true,
-  collapsed: true
+  collapsed: true,
 });
 
-const middleware = [
-  thunk
-];
+const middleware = [thunk];
 
 if (__DEV__) {
   middleware.push(logger);
 }
 
-const createStoreWithMiddleware = applyMiddleware(
-  ...middleware
-)(createStore);
+const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
 
-const createAppStore = (state = {}) => createStoreWithMiddleware(rootReducer, state);
+const createAppStore = (state = {}) =>
+  createStoreWithMiddleware(rootReducer, state);
 
 export default createAppStore;

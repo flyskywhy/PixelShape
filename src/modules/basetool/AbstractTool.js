@@ -1,14 +1,14 @@
-import { fillRectImageData, stringToRGBA } from '../../utils/colorUtils';
+import {fillRectImageData, stringToRGBA} from '../../utils/colorUtils';
 
 const ACTION = {
   DRAW: 'fillRect',
-  CLEAR: 'clearRect'
+  CLEAR: 'clearRect',
 };
 
-const getCellCount = (val, cellSize) => val / cellSize | 0;
+const getCellCount = (val, cellSize) => (val / cellSize) | 0;
 
 class AbstractTool {
-  constructor () {
+  constructor() {
     // TODO: take default settings from defaults
     this.state = {
       size: 1,
@@ -20,45 +20,50 @@ class AbstractTool {
       tool: 'abstract',
       ghostData: {
         color: '#000000',
-        alpha: 0.4
-      }
+        alpha: 0.4,
+      },
     };
     this._ctx = null;
     this._buffer = null;
     this._naturalImageData = null;
   }
 
-  _assignBufferContext (ctx) {
+  _assignBufferContext(ctx) {
     this._buffer = ctx;
     // prevent artifacts from previous tools to appear
-    this._buffer.clearRect(0, 0, this._buffer.canvas.width, this._buffer.canvas.height);
+    this._buffer.clearRect(
+      0,
+      0,
+      this._buffer.canvas.width,
+      this._buffer.canvas.height,
+    );
     // this implies that new state was already set up
     this.useStateOn(this._buffer);
   }
 
-  _assignRenderingContext (ctx) {
+  _assignRenderingContext(ctx) {
     this._ctx = ctx;
     // this implies that new state was already set up
     this.useStateOn(this._ctx);
   }
 
-  _applyNaturalImageData (imageData) {
+  _applyNaturalImageData(imageData) {
     this._naturalImageData = imageData;
   }
 
-  get size () {
+  get size() {
     return this.state.size * this.state.pixelSize;
   }
 
-  applyState (state) {
+  applyState(state) {
     Object.assign(this.state, state);
   }
 
-  applyPixelSize (pixelSize) {
+  applyPixelSize(pixelSize) {
     this.state.pixelSize = pixelSize;
   }
 
-  useStateOn (ctx) {
+  useStateOn(ctx) {
     ctx.lineWidth = this.size;
     ctx.fillStyle = this.state.color;
     ctx.strokeStyle = this.state.color;
@@ -66,35 +71,42 @@ class AbstractTool {
     ctx.globalCompositeOperation = this.state.compositeOperation;
   }
 
-  useGhostStateOn (ctx) {
+  useGhostStateOn(ctx) {
     ctx.globalAlpha = this.state.ghostData.alpha;
     ctx.fillStyle = this.state.ghostData.color;
     ctx.strokeStyle = this.state.ghostData.color;
   }
 
-  getPixeledCoords (x, y) {
-    if (typeof x === 'undefined' || typeof y === 'undefined') return false;
+  getPixeledCoords(x, y) {
+    if (typeof x === 'undefined' || typeof y === 'undefined') {
+      return false;
+    }
     // shift x and y half a brush size and get how much grid pixels are in it
-    const pixelShift = this.state.size / 2 | 0,
-          xCell = getCellCount(x, this.state.pixelSize),
-          yCell = getCellCount(y, this.state.pixelSize);
+    const pixelShift = (this.state.size / 2) | 0,
+      xCell = getCellCount(x, this.state.pixelSize),
+      yCell = getCellCount(y, this.state.pixelSize);
 
     return {
       x: (xCell - pixelShift) * this.state.pixelSize,
       y: (yCell - pixelShift) * this.state.pixelSize,
       // these should be perfect mappings from surface coords to natural image data coords
       naturalX: xCell - pixelShift,
-      naturalY: yCell - pixelShift
+      naturalY: yCell - pixelShift,
     };
   }
 
-  modifyPixelCell (ctx, x, y, action = ACTION.DRAW) {
+  modifyPixelCell(ctx, x, y, action = ACTION.DRAW) {
     const coords = this.getPixeledCoords(x, y);
     let color;
 
-    if (!coords || x < 0 || y < 0) return;
+    if (!coords || x < 0 || y < 0) {
+      return;
+    }
 
-    color = action === ACTION.DRAW ? stringToRGBA(this.state.color) : this.state.transparent;
+    color =
+      action === ACTION.DRAW
+        ? stringToRGBA(this.state.color)
+        : this.state.transparent;
 
     ctx[action](coords.x, coords.y, this.size, this.size);
 
@@ -105,28 +117,30 @@ class AbstractTool {
         coords.naturalY,
         +this.state.size,
         +this.state.size,
-        color
+        color,
       );
     }
   }
 
-  drawPixelCell (ctx, x, y) {
+  drawPixelCell(ctx, x, y) {
     this.modifyPixelCell(ctx, x, y, ACTION.DRAW);
   }
 
-  clearPixelCell (ctx, x, y) {
+  clearPixelCell(ctx, x, y) {
     this.modifyPixelCell(ctx, x, y, ACTION.CLEAR);
   }
 
   /* eslint-disable no-unused-vars */
-  draw (ctx, x0, y0, x1, y1) {
+  draw(ctx, x0, y0, x1, y1) {
     this.useStateOn(ctx);
   }
 
-  handleGhostPixelMove (x, y) {
+  handleGhostPixelMove(x, y) {
     // "ghost" moving
     // on each move clear previous pixel and draw current
-    if (!this._buffer) return;
+    if (!this._buffer) {
+      return;
+    }
     this._buffer.save();
     this.useGhostStateOn(this._buffer);
     this.clearPixelCell(this._buffer, this.buf_x, this.buf_y);
@@ -135,23 +149,23 @@ class AbstractTool {
     [this.buf_x, this.buf_y] = [x, y];
   }
 
-  storeCallback () {
+  storeCallback() {
     throw Error('Store callback was not provided');
   }
 
-  onMouseDown () {
+  onMouseDown() {
     throw Error('Tool mouseDown event not implemented');
   }
 
-  onMouseMove () {
+  onMouseMove() {
     throw Error('Tool mouseMove event not implemented');
   }
 
-  onMouseUp () {
+  onMouseUp() {
     throw Error('Tool mouseUp event not implemented');
   }
 
-  cancelMouseDown () {
+  cancelMouseDown() {
     this.mouseDown = false;
   }
 }

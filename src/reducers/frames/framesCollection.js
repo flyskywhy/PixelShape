@@ -1,4 +1,4 @@
-import { framesCollectionInitialState, defaults } from './initialState';
+import {framesCollectionInitialState, defaults} from './initialState';
 
 import {
   ADD_FRAME,
@@ -6,28 +6,28 @@ import {
   DUPLICATE_FRAME,
   UPDATE_FRAME_NAME,
   REMOVE_FRAME,
-  RESET_FRAMES_STATE
+  RESET_FRAMES_STATE,
 } from '../../actions/frames';
 
-import { SET_IMAGE_SIZE } from '../../actions/application';
+import {SET_IMAGE_SIZE} from '../../actions/application';
 
-import { expandImageData, copyImageData } from '../../utils/canvasUtils';
+import {expandImageData, copyImageData} from '../../utils/canvasUtils';
 
-function framesCollection (state = framesCollectionInitialState(), action) {
+function framesCollection(state = framesCollectionInitialState(), action) {
   let framesCollectionObject = {},
-      chosenFrame,
-      newState;
+    chosenFrame,
+    newState;
 
   switch (action.type) {
     case ADD_FRAME:
       framesCollectionObject[action.id] = {
         name: `${defaults.frameName}${action.id}`,
-        naturalImageData: new ImageData(action.width, action.height)
+        naturalImageData: new ImageData(action.width, action.height),
       };
 
       return {
         ...state,
-        ...framesCollectionObject
+        ...framesCollectionObject,
       };
 
     case UPDATE_FRAME_IMAGE_DATA:
@@ -35,25 +35,27 @@ function framesCollection (state = framesCollectionInitialState(), action) {
 
       framesCollectionObject[action.frameUUID] = {
         ...chosenFrame,
-        naturalImageData: copyImageData(action.naturalImageData)
+        naturalImageData: copyImageData(action.naturalImageData),
       };
 
       return {
         ...state,
-        ...framesCollectionObject
+        ...framesCollectionObject,
       };
 
     case DUPLICATE_FRAME:
-      const naturalImageData = copyImageData(state[action.uuid].naturalImageData);
+      const naturalImageData = copyImageData(
+        state[action.uuid].naturalImageData,
+      );
 
       framesCollectionObject[action.id] = {
         name: `${state[action.uuid].name}_copy`,
-        naturalImageData
+        naturalImageData,
       };
 
       return {
         ...state,
-        ...framesCollectionObject
+        ...framesCollectionObject,
       };
 
     case UPDATE_FRAME_NAME:
@@ -61,22 +63,22 @@ function framesCollection (state = framesCollectionInitialState(), action) {
 
       framesCollectionObject[action.frameUUID] = {
         ...chosenFrame,
-        name: action.name
+        name: action.name,
       };
 
       return {
         ...state,
-        ...framesCollectionObject
+        ...framesCollectionObject,
       };
 
     case REMOVE_FRAME:
-      newState = { ...state };
+      newState = {...state};
       delete newState[action.uuid];
 
-      return { ...newState };
+      return {...newState};
 
     case SET_IMAGE_SIZE:
-      Object.keys(state).forEach(id => {
+      Object.keys(state).forEach((id) => {
         framesCollectionObject[id] = {
           name: state[id].name,
           naturalImageData: expandImageData(
@@ -84,15 +86,15 @@ function framesCollection (state = framesCollectionInitialState(), action) {
             action.width,
             action.height,
             action.anchor,
-            action.stretch
-          )
+            action.stretch,
+          ),
         };
       });
 
-      return { ...framesCollectionObject };
+      return {...framesCollectionObject};
 
     case RESET_FRAMES_STATE:
-      return { ...framesCollectionInitialState(action.width, action.height) };
+      return {...framesCollectionInitialState(action.width, action.height)};
 
     default:
       return state;

@@ -1,17 +1,19 @@
-export const getType = val => {
+export const getType = (val) => {
   const typeRegExp = /^\[.*\s(.*)\]$/;
 
   return Object.prototype.toString.call(val).replace(typeRegExp, '$1');
 };
 
-export const isObject = val => getType(val) === 'Object';
+export const isObject = (val) => getType(val) === 'Object';
 
-export const isArray = val => getType(val) === 'Array';
+export const isArray = (val) => getType(val) === 'Array';
 
-export const copyObj = obj => {
+export const copyObj = (obj) => {
   let clone, value, key;
 
-  if (!isArray(obj) && !isObject(obj)) return obj;
+  if (!isArray(obj) && !isObject(obj)) {
+    return obj;
+  }
 
   clone = isArray(obj) ? [] : {};
   for (key in obj) {

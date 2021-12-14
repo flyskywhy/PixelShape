@@ -15,7 +15,10 @@ test('Ellipse =>', (expect) => {
   expect.test('::constructor', (expect) => {
     before();
 
-    expect.ok(circle instanceof Boundshape, 'Should extend Boundshape class functionality');
+    expect.ok(
+      circle instanceof Boundshape,
+      'Should extend Boundshape class functionality',
+    );
     expect.end();
   });
 
@@ -26,8 +29,14 @@ test('Ellipse =>', (expect) => {
     circle.drawPixelCell = sinon.spy();
 
     circle.draw(circle._ctx, 0, 0, 10, 10);
-    expect.ok(Boundshape.prototype.draw.called, 'Should call super draw method');
-    expect.ok(ellipse.called && circle.drawPixelCell.called, 'Should call ellipse on draw method with drawPixelCell as callback');
+    expect.ok(
+      Boundshape.prototype.draw.called,
+      'Should call super draw method',
+    );
+    expect.ok(
+      ellipse.called && circle.drawPixelCell.called,
+      'Should call ellipse on draw method with drawPixelCell as callback',
+    );
     expect.end();
   });
 

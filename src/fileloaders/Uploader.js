@@ -1,22 +1,24 @@
 const Extension = {
   PIXEL_SHAPE: '.pxlsh',
   JSON: '.json',
-  GIF: '.gif'
+  GIF: '.gif',
 };
 
 const Errors = {
   BAD_EXTENSION: `Supplied file is not of ${Extension.PIXEL_SHAPE} type`,
-  FILE_CORRUPTED: 'Cannot read file. Supplied file is corrupted'
+  FILE_CORRUPTED: 'Cannot read file. Supplied file is corrupted',
 };
 
 export default class Uploader {
-  static asJSONAsync (file) {
+  static asJSONAsync(file) {
     return new Promise((resolve, reject) => {
       const fReader = new FileReader();
 
-      if (!file.name.match(Extension.PIXEL_SHAPE)) reject(Errors.BAD_EXTENSION);
+      if (!file.name.match(Extension.PIXEL_SHAPE)) {
+        reject(Errors.BAD_EXTENSION);
+      }
 
-      fReader.addEventListener('load', e => {
+      fReader.addEventListener('load', (e) => {
         let json;
 
         try {
@@ -25,10 +27,10 @@ export default class Uploader {
           reject(Errors.FILE_CORRUPTED);
         }
 
-        resolve({ file, json });
+        resolve({file, json});
       });
 
-      fReader.addEventListener('onerror', e => {
+      fReader.addEventListener('onerror', (e) => {
         reject(e.message);
       });
 

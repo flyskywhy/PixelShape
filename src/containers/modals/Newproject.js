@@ -1,36 +1,36 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { getResetPaletteState, getImageSize } from '../../selectors';
+import {getResetPaletteState, getImageSize} from '../../selectors';
 
-import { toggleResetPalette, uploadStore } from '../../actions/application';
-import { resetUserColors } from '../../actions/palette';
-import { resetFramesState } from '../../actions/frames';
+import {toggleResetPalette, uploadStore} from '../../actions/application';
+import {resetUserColors} from '../../actions/palette';
+import {resetFramesState} from '../../actions/frames';
 
 import NewProjectModal from '../../components/modals/Newproject/Newproject';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   resetPaletteOn: getResetPaletteState(state),
-  imageSize: getImageSize(state)
+  imageSize: getImageSize(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  toggleResetPalette () {
+const mapDispatchToProps = (dispatch) => ({
+  toggleResetPalette() {
     return dispatch(toggleResetPalette());
   },
-  resetUserColors () {
+  resetUserColors() {
     return dispatch(resetUserColors());
   },
-  resetFramesState (width, height) {
+  resetFramesState(width, height) {
     return dispatch(resetFramesState(width, height));
   },
-  uploadProject (data) {
+  uploadProject(data) {
     return dispatch(uploadStore(data));
-  }
+  },
 });
 
 const NewProjectModalContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(NewProjectModal);
 
 export default NewProjectModalContainer;

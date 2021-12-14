@@ -15,7 +15,10 @@ test('Eraser =>', (expect) => {
   expect.test('::constructor', (expect) => {
     before();
 
-    expect.ok(eraser instanceof Brush, 'Should extend Brush class functionality');
+    expect.ok(
+      eraser instanceof Brush,
+      'Should extend Brush class functionality',
+    );
     expect.end();
   });
 
@@ -25,7 +28,10 @@ test('Eraser =>', (expect) => {
     eraser.clearPixelCell = sinon.spy();
 
     eraser.onMouseDown(100, 100);
-    expect.ok(eraser.clearPixelCell.calledWith(eraser._ctx), 'Should clear cell on mouseDown');
+    expect.ok(
+      eraser.clearPixelCell.calledWith(eraser._ctx),
+      'Should clear cell on mouseDown',
+    );
     expect.end();
   });
 
@@ -35,7 +41,10 @@ test('Eraser =>', (expect) => {
     eraser.clearPixelCell = sinon.spy();
 
     eraser.draw();
-    expect.ok(lineTo.called && eraser.clearPixelCell.called, 'Should call lineTo on draw method with clearPixelCell as callback');
+    expect.ok(
+      lineTo.called && eraser.clearPixelCell.called,
+      'Should call lineTo on draw method with clearPixelCell as callback',
+    );
     expect.end();
   });
 

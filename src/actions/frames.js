@@ -1,7 +1,7 @@
-import { uniqueId } from '../utils/uuid';
+import {uniqueId} from '../utils/uuid';
 const framePrefix = 'frame_';
 
-import { getFramesOrder } from '../selectors';
+import {getFramesOrder} from '../selectors';
 
 export const ADD_FRAME = 'ADD_FRAME';
 export const REMOVE_FRAME = 'REMOVE_FRAME';
@@ -20,12 +20,12 @@ export const addFrame = (width, height) => ({
   type: ADD_FRAME,
   width,
   height,
-  id: uniqueId(framePrefix)
+  id: uniqueId(framePrefix),
 });
 
-export const removeFrameData = uuid => ({
+export const removeFrameData = (uuid) => ({
   type: REMOVE_FRAME,
-  uuid
+  uuid,
 });
 
 export const updateFramesSize = (width, height, anchor, stretch) => ({
@@ -33,63 +33,63 @@ export const updateFramesSize = (width, height, anchor, stretch) => ({
   width,
   height,
   anchor,
-  stretch
+  stretch,
 });
 
 export const updateFrameImageData = (frameUUID, naturalImageData) => ({
   type: UPDATE_FRAME_IMAGE_DATA,
   frameUUID,
-  naturalImageData
+  naturalImageData,
 });
 
-export const moveFrameRight = uuid => ({
+export const moveFrameRight = (uuid) => ({
   type: MOVE_FRAME_RIGHT,
-  uuid
+  uuid,
 });
 
-export const moveFrameLeft = uuid => ({
+export const moveFrameLeft = (uuid) => ({
   type: MOVE_FRAME_LEFT,
-  uuid
+  uuid,
 });
 
-export const duplicateFrame = uuid => ({
+export const duplicateFrame = (uuid) => ({
   type: DUPLICATE_FRAME,
   uuid,
-  id: uniqueId(framePrefix)
+  id: uniqueId(framePrefix),
 });
 
 export const updateFrameName = (frameUUID, name) => ({
   type: UPDATE_FRAME_NAME,
   frameUUID,
-  name
+  name,
 });
 
-export const setCurrentFrame = uuid => ({
+export const setCurrentFrame = (uuid) => ({
   type: SET_CURRENT_FRAME,
-  uuid
+  uuid,
 });
 
 export const updateFrameGIFData = (frameUUID, frameData) => ({
   type: UPDATE_FRAME_GIF_DATA,
   frameUUID,
-  frameData
+  frameData,
 });
 
-export const setFPS = fps => ({
+export const setFPS = (fps) => ({
   type: SET_FPS,
-  fps
+  fps,
 });
 
 export const resetFramesState = (width, height) => ({
   type: RESET_FRAMES_STATE,
   width,
-  height
+  height,
 });
 
-export const removeFrame = uuid => (dispatch, getState) => {
+export const removeFrame = (uuid) => (dispatch, getState) => {
   let frameOrder = getFramesOrder(getState()),
-      index = frameOrder.findIndex(el => el === uuid),
-      nextIndex = frameOrder[index + 1] ? index + 1 : index - 1;
+    index = frameOrder.findIndex((el) => el === uuid),
+    nextIndex = frameOrder[index + 1] ? index + 1 : index - 1;
 
   dispatch(setCurrentFrame(frameOrder[nextIndex]));
   dispatch(removeFrameData(uuid));

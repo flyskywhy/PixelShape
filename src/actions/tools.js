@@ -2,17 +2,17 @@ export const SET_TOOL = 'SET_TOOL';
 export const SET_COLOR = 'SET_COLOR';
 export const SET_SIZE = 'SET_SIZE';
 
-export const setTool = tool => ({
+export const setTool = (tool) => ({
   type: SET_TOOL,
-  tool
+  tool,
 });
 
-export const setColor = color => ({
+export const setColor = (color) => ({
   type: SET_COLOR,
-  color
+  color,
 });
 
-export const setSize = size => ({
+export const setSize = (size) => ({
   type: SET_SIZE,
-  size
+  size,
 });

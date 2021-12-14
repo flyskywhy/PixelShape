@@ -1,5 +1,6 @@
-function ImageData () {
-  let args = [...arguments], initial;
+function ImageData() {
+  let args = [...arguments],
+    initial;
 
   if (arguments.length < 2) {
     throw new TypeError(`
@@ -7,7 +8,9 @@ function ImageData () {
     `);
   }
 
-  if (args.length > 2) initial = args.shift();
+  if (args.length > 2) {
+    initial = args.shift();
+  }
 
   if (initial && !(initial instanceof Uint8ClampedArray)) {
     throw new TypeError(`
@@ -24,8 +27,8 @@ function ImageData () {
   return {
     data: initial || new Uint8ClampedArray(4 * args[0] * args[1]),
     width: args[0],
-    height: args[1]
-  }
+    height: args[1],
+  };
 }
 
 export default ImageData;

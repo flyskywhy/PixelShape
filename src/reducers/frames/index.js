@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 
 import order from './framesOrder';
 import collection from './framesCollection';
@@ -7,7 +7,7 @@ import activity from './framesActivity';
 const frames = combineReducers({
   order,
   collection,
-  activity
+  activity,
 });
 
 export default frames;

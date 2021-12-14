@@ -4,13 +4,10 @@ import {getSidebarVisibility} from '../../selectors';
 
 import Sidebar from '../../components/sidebar/Sidebar';
 
-const mapStateToProps = state => ({
-  visible: getSidebarVisibility(state)
+const mapStateToProps = (state) => ({
+  visible: getSidebarVisibility(state),
 });
 
-const SidebarContainer = connect(
-  mapStateToProps,
-  null
-)(Sidebar);
+const SidebarContainer = connect(mapStateToProps, null)(Sidebar);
 
 export default SidebarContainer;

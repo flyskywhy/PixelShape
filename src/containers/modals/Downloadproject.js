@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import {
   getGifFramesData,
@@ -7,7 +7,7 @@ import {
   getSpritesheetDownloadOption,
   getGifDownloadOption,
   getProjectDownloadOption,
-  getPaletteDownloadOption
+  getPaletteDownloadOption,
 } from '../../selectors';
 
 import {
@@ -15,42 +15,42 @@ import {
   toggleIncludeGif,
   toggleIncludeSpritesheet,
   toggleIncludeProject,
-  toggleIncludePalette
+  toggleIncludePalette,
 } from '../../actions/application';
 
 import DownloadProjectModal from '../../components/modals/Downloadproject/Downloadproject';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   gifFramesData: getGifFramesData(state),
   framesOrder: getFramesOrder(state),
   framesCollection: getAllFrames(state),
   includeSpritesheet: getSpritesheetDownloadOption(state),
   includeGif: getGifDownloadOption(state),
   includeProject: getProjectDownloadOption(state),
-  includePalette: getPaletteDownloadOption(state)
+  includePalette: getPaletteDownloadOption(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  getProjectState () {
+const mapDispatchToProps = (dispatch) => ({
+  getProjectState() {
     return dispatch(getStore());
   },
-  toggleIncludeGif () {
+  toggleIncludeGif() {
     return dispatch(toggleIncludeGif());
   },
-  toggleIncludeSpritesheet () {
+  toggleIncludeSpritesheet() {
     return dispatch(toggleIncludeSpritesheet());
   },
-  toggleIncludeProject () {
+  toggleIncludeProject() {
     return dispatch(toggleIncludeProject());
   },
-  toggleIncludePalette () {
+  toggleIncludePalette() {
     return dispatch(toggleIncludePalette());
-  }
+  },
 });
 
 const DownloadProjectModalContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DownloadProjectModal);
 
 export default DownloadProjectModalContainer;

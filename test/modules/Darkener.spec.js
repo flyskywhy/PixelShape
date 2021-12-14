@@ -6,8 +6,15 @@ test('Darkener =>', (expect) => {
   expect.test('::constructor', (expect) => {
     const darkener = new Darkener();
 
-    expect.ok(darkener instanceof ColorAdjust, 'Should use ColorAdjust as a base class');
-    expect.equal(darkener.shadingPercentage, -0.01, 'Should shade down 1% of original color');
+    expect.ok(
+      darkener instanceof ColorAdjust,
+      'Should use ColorAdjust as a base class',
+    );
+    expect.equal(
+      darkener.shadingPercentage,
+      -0.01,
+      'Should shade down 1% of original color',
+    );
     expect.end();
   });
 

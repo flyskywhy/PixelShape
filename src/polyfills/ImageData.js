@@ -4,8 +4,9 @@
     new window.ImageData(new Uint8ClampedArray([0, 0, 0, 0]), 1, 1);
   } catch (e) {
     /* eslint-disable no-inner-declarations */
-    function ImageDataPolyfill () {
-      let args = [...arguments], data;
+    function ImageDataPolyfill() {
+      let args = [...arguments],
+        data;
 
       if (args.length < 2) {
         throw new TypeError(`
@@ -30,12 +31,14 @@
       }
 
       const width = args[0],
-            height = args[1],
-            canvas = document.createElement('canvas'),
-            ctx = canvas.getContext('2d'),
-            imageData = ctx.createImageData(width, height);
+        height = args[1],
+        canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d'),
+        imageData = ctx.createImageData(width, height);
 
-      if (data) imageData.data.set(data);
+      if (data) {
+        imageData.data.set(data);
+      }
       return imageData;
     }
 

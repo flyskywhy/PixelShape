@@ -7,7 +7,7 @@ import {
   duplicateFrame,
   updateFrameName,
   setFPS,
-  setCurrentFrame
+  setCurrentFrame,
 } from '../../actions/frames';
 
 import {
@@ -19,12 +19,12 @@ import {
   getFramesAmount,
   getCurrentFrameIndex,
   getPreviousFrameUUID,
-  getNextFrameUUID
+  getNextFrameUUID,
 } from '../../selectors';
 
 import Framebar from '../../components/framebar/Framebar';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentFrameUUID: getCurrentFrameUUID(state),
   currentFrameName: getCurrentFrameName(state),
   framesCollection: getAllFrames(state),
@@ -33,36 +33,36 @@ const mapStateToProps = state => ({
   framesCount: getFramesAmount(state),
   currentFrameIndex: getCurrentFrameIndex(state),
   nextFrameUUID: getNextFrameUUID(state),
-  previousFrameUUID: getPreviousFrameUUID(state)
+  previousFrameUUID: getPreviousFrameUUID(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  setCurrentFrame (uuid) {
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentFrame(uuid) {
     return dispatch(setCurrentFrame(uuid));
   },
-  removeFrame (frameUUID) {
+  removeFrame(frameUUID) {
     return dispatch(removeFrame(frameUUID));
   },
-  moveFrameRight (uuid) {
+  moveFrameRight(uuid) {
     return dispatch(moveFrameRight(uuid));
   },
-  moveFrameLeft (uuid) {
+  moveFrameLeft(uuid) {
     return dispatch(moveFrameLeft(uuid));
   },
-  duplicateFrame (uuid) {
+  duplicateFrame(uuid) {
     return dispatch(duplicateFrame(uuid));
   },
-  updateFrameName (frameUUID, name) {
+  updateFrameName(frameUUID, name) {
     return dispatch(updateFrameName(frameUUID, name));
   },
-  setFPS (fps) {
+  setFPS(fps) {
     return dispatch(setFPS(fps));
-  }
+  },
 });
 
 const FramebarContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Framebar);
 
 export default FramebarContainer;

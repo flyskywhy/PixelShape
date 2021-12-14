@@ -1,36 +1,36 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
+
+import {getImageSize, getGridState, getStretchState} from '../../selectors';
 
 import {
-  getImageSize,
-  getGridState,
-  getStretchState
-} from '../../selectors';
-
-import { processSizeChange, toggleGrid, toggleStretch } from '../../actions/application';
+  processSizeChange,
+  toggleGrid,
+  toggleStretch,
+} from '../../actions/application';
 
 import SettingsModal from '../../components/modals/Settings/Settings';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   gridShown: getGridState(state),
   stretchOn: getStretchState(state),
-  imageSize: getImageSize(state)
+  imageSize: getImageSize(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  toggleGrid () {
+const mapDispatchToProps = (dispatch) => ({
+  toggleGrid() {
     return dispatch(toggleGrid());
   },
-  toggleStretch () {
+  toggleStretch() {
     return dispatch(toggleStretch());
   },
-  setImageSize (width, height, stretch) {
+  setImageSize(width, height, stretch) {
     return dispatch(processSizeChange(+width, +height, stretch));
-  }
+  },
 });
 
 const SettingsModalContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(SettingsModal);
 
 export default SettingsModalContainer;

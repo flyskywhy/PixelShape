@@ -6,7 +6,7 @@ let bucket;
 
 const before = () => {
   const rndrCtx = new RenderingContext2d(5, 5),
-        bfrCtx = new RenderingContext2d(5, 5);
+    bfrCtx = new RenderingContext2d(5, 5);
 
   bucket = new Bucket();
   bucket._buffer = bfrCtx;
@@ -32,7 +32,10 @@ test('Bucket =>', (expect) => {
     bucket.onMouseMove(1, 1);
 
     expect.equal(bucket.state.size, 1, 'Should set pixel size to minimum of 1');
-    expect.ok(bucket.handleGhostPixelMove.called, 'Should do the drawing of ghost pixel on mouseMove');
+    expect.ok(
+      bucket.handleGhostPixelMove.called,
+      'Should do the drawing of ghost pixel on mouseMove',
+    );
     expect.false(bucket.mouseDown, 'Should unset mouseDown toggle to false');
     expect.end();
   });
@@ -46,7 +49,10 @@ test('Bucket =>', (expect) => {
 
     bucket.mouseDown = false;
     bucket.onMouseUp(1, 1);
-    expect.false(bucket.mouseDown, 'Should not modify mouseDown toggle if previously set to false');
+    expect.false(
+      bucket.mouseDown,
+      'Should not modify mouseDown toggle if previously set to false',
+    );
     expect.end();
   });
 
@@ -57,8 +63,8 @@ test('Bucket =>', (expect) => {
     bucket._naturalImageData = new ImageData(5, 5);
     bucket.draw(bucket._ctx, 1, 1);
     const data = bucket._naturalImageData.data,
-          amount = Object.keys(data).filter(part => data[part] === 128).length,
-          expected = 5 * 5 * 3;
+      amount = Object.keys(data).filter((part) => data[part] === 128).length,
+      expected = 5 * 5 * 3;
 
     expect.equal(amount, expected, 'Should fill imageData with white');
     expect.end();

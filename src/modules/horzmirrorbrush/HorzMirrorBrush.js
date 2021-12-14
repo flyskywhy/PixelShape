@@ -1,11 +1,11 @@
 import MirrorBrush from '../mirrorbrush/MirrorBrush';
 
 class HorzMirrorBrush extends MirrorBrush {
-  constructor (...args) {
+  constructor(...args) {
     super(...args);
     this.shift = {
       x: false,
-      y: true
+      y: true,
     };
   }
 }

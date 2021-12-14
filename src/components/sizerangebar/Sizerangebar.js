@@ -1,36 +1,34 @@
 import './sizerangebar.styl';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import classNames from 'classnames';
 
 class Sizerangebar extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args);
     this.state = {
       isActive: false,
     };
   }
 
-  onChange (ev) {
+  onChange(ev) {
     this.props.setSize(ev.target.value);
   }
 
-  onMouseDown () {
-    this.setState({ isActive: true });
+  onMouseDown() {
+    this.setState({isActive: true});
   }
 
-  onMouseUp (ev) {
-    this.setState({ isActive: false });
+  onMouseUp(ev) {
+    this.setState({isActive: false});
     /* UNFORTUNATELY IE11 DOESN'T HANDLE ONCHANGE EVENT, SO NEED TO SUBSCRIBE TO ONMOUSEUP AS WELL */
     this.onChange(ev);
   }
 
-  render () {
-    const classes = classNames(
-      'sizerangebar__value',
-      {
-        'active': this.state.isActive
-      });
+  render() {
+    const classes = classNames('sizerangebar__value', {
+      active: this.state.isActive,
+    });
 
     return (
       <div className="sizerangebar">
@@ -44,11 +42,9 @@ class Sizerangebar extends Component {
           value={this.props.currentSize}
           onChange={this.onChange.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
-          onMouseUp={this.onMouseUp.bind(this)} />
-        <div
-          className={classes}>
-          {this.props.currentSize}
-        </div>
+          onMouseUp={this.onMouseUp.bind(this)}
+        />
+        <div className={classes}>{this.props.currentSize}</div>
       </div>
     );
   }

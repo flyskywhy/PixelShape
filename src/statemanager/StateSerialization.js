@@ -6,7 +6,7 @@ const Hash = {
   ACTIVE: 'active',
   FPS: 'fps',
   ORDER: 'order',
-  FRAMES: 'frames'
+  FRAMES: 'frames',
 };
 
 export const StateSelector = {
@@ -15,12 +15,12 @@ export const StateSelector = {
   applicationActiveFrame: Selectors.getCurrentFrameUUID,
   framesFps: Selectors.getFPS,
   framesOrder: Selectors.getFramesOrder,
-  framesCollection: Selectors.getAllFrames
+  framesCollection: Selectors.getAllFrames,
 };
 
 export const SerializationSchema = {
   meta: {
-    schemaVersion: 'v1'
+    schemaVersion: 'v1',
   },
   _export: {
     [Hash.GUID]: 'applicationGUID',
@@ -28,7 +28,7 @@ export const SerializationSchema = {
     [Hash.ACTIVE]: 'applicationActiveFrame',
     [Hash.FPS]: 'framesFps',
     [Hash.ORDER]: 'framesOrder',
-    [Hash.FRAMES]: 'framesCollection'
+    [Hash.FRAMES]: 'framesCollection',
   },
   _import: {
     'undoables.present.application.projectGuid': Hash.GUID,
@@ -36,7 +36,7 @@ export const SerializationSchema = {
     'undoables.present.frames.activity.activeFrame': Hash.ACTIVE,
     'undoables.present.frames.activity.fps': Hash.FPS,
     'undoables.present.frames.order.framesOrderArray': Hash.ORDER,
-    'undoables.present.frames.collection': Hash.FRAMES
+    'undoables.present.frames.collection': Hash.FRAMES,
   },
 
   _framesImport: {
@@ -45,6 +45,6 @@ export const SerializationSchema = {
     'undoables.present.frames.activity.activeFrame': 'active',
     'undoables.present.frames.activity.fps': 'fps',
     'undoables.present.frames.order.framesOrderArray': 'order',
-    'undoables.present.frames.collection': 'collection'
-  }
+    'undoables.present.frames.collection': 'collection',
+  },
 };

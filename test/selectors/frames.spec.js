@@ -14,13 +14,13 @@ import {
   getFramesAmount,
   getCurrentFrameIndex,
   getPreviousFrameUUID,
-  getNextFrameUUID
+  getNextFrameUUID,
 } from '../../src/selectors/frames';
 
 import {
   framesOrderInitialState,
   framesCollectionInitialState,
-  framesActivityInitialState
+  framesActivityInitialState,
 } from '../../src/reducers/frames/initialState';
 
 const state = {
@@ -29,10 +29,10 @@ const state = {
       frames: {
         activity: framesActivityInitialState(),
         collection: framesCollectionInitialState(),
-        order: framesOrderInitialState()
-      }
-    }
-  }
+        order: framesOrderInitialState(),
+      },
+    },
+  },
 };
 
 const uuid = state.undoables.present.frames.order.framesOrderArray[0];
@@ -41,7 +41,11 @@ test('frames =>', (expect) => {
   expect.test('::getFrames', (expect) => {
     const next = getFrames(state);
 
-    expect.deepEqual(next, state.undoables.present.frames, 'Should return substate with frames only');
+    expect.deepEqual(
+      next,
+      state.undoables.present.frames,
+      'Should return substate with frames only',
+    );
     expect.end();
   });
 
@@ -55,7 +59,11 @@ test('frames =>', (expect) => {
   expect.test('::getModifiedFramesArray', (expect) => {
     const next = getModifiedFramesArray(state);
 
-    expect.deepEqual(next, [{ [uuid]: 0 }], 'Should return current array of modified frames in prescribed pattern');
+    expect.deepEqual(
+      next,
+      [{[uuid]: 0}],
+      'Should return current array of modified frames in prescribed pattern',
+    );
     expect.end();
   });
 
@@ -76,21 +84,24 @@ test('frames =>', (expect) => {
   expect.test('::getCurrentFrame', (expect) => {
     const next = getCurrentFrame(state);
 
-    expect.ok(next.name && next.naturalImageData, 'Should contain frame specific information in collection');
+    expect.ok(
+      next.name && next.naturalImageData,
+      'Should contain frame specific information in collection',
+    );
     expect.end();
   });
 
   expect.test('::getAllFrames', (expect) => {
     const next = getAllFrames(state);
 
-    expect.deepEqual(Object.keys(next), [ uuid ], 'Should return all frames');
+    expect.deepEqual(Object.keys(next), [uuid], 'Should return all frames');
     expect.end();
   });
 
   expect.test('::getFramesOrder', (expect) => {
     const next = getFramesOrder(state);
 
-    expect.deepEqual(next, [ uuid ], 'Should return all ordered frames');
+    expect.deepEqual(next, [uuid], 'Should return all ordered frames');
     expect.end();
   });
 
@@ -118,14 +129,22 @@ test('frames =>', (expect) => {
   expect.test('::getPreviousFrameUUID', (expect) => {
     const next = getPreviousFrameUUID(state);
 
-    expect.equal(next, uuid, 'Should return previous frame UUID, or self if no previous exists');
+    expect.equal(
+      next,
+      uuid,
+      'Should return previous frame UUID, or self if no previous exists',
+    );
     expect.end();
   });
 
   expect.test('::getNextFrameUUID', (expect) => {
     const next = getNextFrameUUID(state);
 
-    expect.equal(next, uuid, 'Should return next frame UUID, or self if no previous exists');
+    expect.equal(
+      next,
+      uuid,
+      'Should return next frame UUID, or self if no previous exists',
+    );
     expect.end();
   });
 

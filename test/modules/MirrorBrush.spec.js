@@ -7,7 +7,7 @@ let mirrorbrush;
 
 const before = () => {
   const rndrCtx = new RenderingContext2d(5, 5),
-        bfrCtx = new RenderingContext2d(5, 5);
+    bfrCtx = new RenderingContext2d(5, 5);
 
   mirrorbrush = new MirrorBrush();
   mirrorbrush._buffer = bfrCtx;
@@ -26,12 +26,16 @@ test('MirrorBrush =>', (expect) => {
     before();
 
     const actual = mirrorbrush.getMirrorGhost(mirrorbrush._ctx, 2, 2),
-          expected = {
-            x: 2,
-            y: 3
-          };
+      expected = {
+        x: 2,
+        y: 3,
+      };
 
-    expect.deepEqual(actual, expected, 'Should calculate mirror ghost position');
+    expect.deepEqual(
+      actual,
+      expected,
+      'Should calculate mirror ghost position',
+    );
     expect.end();
   });
 
@@ -41,8 +45,14 @@ test('MirrorBrush =>', (expect) => {
     mirrorbrush.drawPixelCell = sinon.spy();
 
     mirrorbrush.mirroredPixelDraw(mirrorbrush._ctx, 2, 2);
-    expect.ok(mirrorbrush.drawPixelCell.calledWith(mirrorbrush._ctx, 2, 2), 'Should execute original brush drawing');
-    expect.ok(mirrorbrush.drawPixelCell.calledWith(mirrorbrush._ctx, 2, 3), 'Should execute mirrored brush drawing');
+    expect.ok(
+      mirrorbrush.drawPixelCell.calledWith(mirrorbrush._ctx, 2, 2),
+      'Should execute original brush drawing',
+    );
+    expect.ok(
+      mirrorbrush.drawPixelCell.calledWith(mirrorbrush._ctx, 2, 3),
+      'Should execute mirrored brush drawing',
+    );
     expect.end();
   });
 
@@ -52,8 +62,14 @@ test('MirrorBrush =>', (expect) => {
     mirrorbrush.draw = sinon.spy();
 
     mirrorbrush.mirroredDraw(mirrorbrush._ctx, 2, 2, 3, 3);
-    expect.ok(mirrorbrush.draw.calledWith(mirrorbrush._ctx, 2, 2, 3, 3), 'Should execute original brush drawing');
-    expect.ok(mirrorbrush.draw.calledWith(mirrorbrush._ctx, 2, 3, 3, 2), 'Should execute mirrored brush drawing');
+    expect.ok(
+      mirrorbrush.draw.calledWith(mirrorbrush._ctx, 2, 2, 3, 3),
+      'Should execute original brush drawing',
+    );
+    expect.ok(
+      mirrorbrush.draw.calledWith(mirrorbrush._ctx, 2, 3, 3, 2),
+      'Should execute mirrored brush drawing',
+    );
     expect.end();
   });
 
@@ -65,8 +81,14 @@ test('MirrorBrush =>', (expect) => {
 
     mirrorbrush.handleGhostPixelMove(2, 2);
 
-    expect.ok(mirrorbrush.clearPixelCell.calledTwice, 'Should clear both last brush drawing and last mirrored drawing');
-    expect.ok(mirrorbrush.drawPixelCell.calledTwice, 'Should draw both new brush drawing and new mirrored drawing');
+    expect.ok(
+      mirrorbrush.clearPixelCell.calledTwice,
+      'Should clear both last brush drawing and last mirrored drawing',
+    );
+    expect.ok(
+      mirrorbrush.drawPixelCell.calledTwice,
+      'Should draw both new brush drawing and new mirrored drawing',
+    );
     expect.end();
   });
 
@@ -77,7 +99,10 @@ test('MirrorBrush =>', (expect) => {
     mirrorbrush.onMouseDown(1, 1);
 
     expect.ok(mirrorbrush.mouseDown, 'Should set mouseDown toggle to true');
-    expect.ok(mirrorbrush.mirroredPixelDraw.calledWith(mirrorbrush._ctx), 'Should do the drawing on mouseDown');
+    expect.ok(
+      mirrorbrush.mirroredPixelDraw.calledWith(mirrorbrush._ctx),
+      'Should do the drawing on mouseDown',
+    );
     expect.end();
   });
 
@@ -88,16 +113,28 @@ test('MirrorBrush =>', (expect) => {
     mirrorbrush.mirroredDraw = sinon.spy();
     mirrorbrush.onMouseMove(1, 1);
 
-    expect.ok(mirrorbrush.handleGhostPixelMove.called, 'Should do ghost drawing if mouseDown toggle is not set to true');
-    expect.false(mirrorbrush.mirroredDraw.calledWith(mirrorbrush._ctx), 'Should not do actual drawing if mouseDown toggle is not set to true');
+    expect.ok(
+      mirrorbrush.handleGhostPixelMove.called,
+      'Should do ghost drawing if mouseDown toggle is not set to true',
+    );
+    expect.false(
+      mirrorbrush.mirroredDraw.calledWith(mirrorbrush._ctx),
+      'Should not do actual drawing if mouseDown toggle is not set to true',
+    );
 
     mirrorbrush.handleGhostPixelMove = sinon.spy();
     mirrorbrush.mirroredDraw = sinon.spy();
     mirrorbrush.mouseDown = true;
     mirrorbrush.onMouseMove(1, 1);
 
-    expect.false(mirrorbrush.handleGhostPixelMove.called, 'Should not do ghost drawing if mouseDown toggle is set to true');
-    expect.ok(mirrorbrush.mirroredDraw.calledWith(mirrorbrush._ctx), 'Should do actual drawing if mouseDown toggle is set to true');
+    expect.false(
+      mirrorbrush.handleGhostPixelMove.called,
+      'Should not do ghost drawing if mouseDown toggle is set to true',
+    );
+    expect.ok(
+      mirrorbrush.mirroredDraw.calledWith(mirrorbrush._ctx),
+      'Should do actual drawing if mouseDown toggle is set to true',
+    );
     expect.end();
   });
 
@@ -107,14 +144,23 @@ test('MirrorBrush =>', (expect) => {
     mirrorbrush.mirroredDraw = sinon.spy();
     mirrorbrush.onMouseUp(1, 1);
 
-    expect.false(mirrorbrush.mirroredDraw.called, 'Should not execute drawing if mouseDown toggle is not set to true');
+    expect.false(
+      mirrorbrush.mirroredDraw.called,
+      'Should not execute drawing if mouseDown toggle is not set to true',
+    );
 
     mirrorbrush.mirroredDraw = sinon.spy();
     mirrorbrush.mouseDown = true;
     mirrorbrush.onMouseUp(1, 1);
 
-    expect.ok(mirrorbrush.mirroredDraw.calledWith(mirrorbrush._ctx), 'Should do actual drawing if mouseDown toggle is set to true');
-    expect.false(mirrorbrush.mouseDown, 'Should unset mouseDown toggle to false');
+    expect.ok(
+      mirrorbrush.mirroredDraw.calledWith(mirrorbrush._ctx),
+      'Should do actual drawing if mouseDown toggle is set to true',
+    );
+    expect.false(
+      mirrorbrush.mouseDown,
+      'Should unset mouseDown toggle to false',
+    );
     expect.end();
   });
 
@@ -124,7 +170,10 @@ test('MirrorBrush =>', (expect) => {
     mirrorbrush.drawPixelCell = sinon.spy();
 
     mirrorbrush.draw();
-    expect.ok(lineTo.called && mirrorbrush.drawPixelCell.called, 'Should call lineTo on draw method with drawPixelCell as callback');
+    expect.ok(
+      lineTo.called && mirrorbrush.drawPixelCell.called,
+      'Should call lineTo on draw method with drawPixelCell as callback',
+    );
     expect.end();
   });
 

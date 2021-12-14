@@ -4,15 +4,15 @@ import sinon from 'sinon';
 import {
   getTool,
   getToolSettings,
-  getCurrentColor
+  getCurrentColor,
 } from '../../src/selectors/tools';
 
 const state = {
   tools: {
     tool: 'Brush',
     color: '#1B2631',
-    size: 1
-  }
+    size: 1,
+  },
 };
 
 test('tools =>', (expect) => {

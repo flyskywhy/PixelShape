@@ -7,19 +7,19 @@ export default [
       {
         name: 'Brush',
         tool: 'Brush',
-        icon: 'brush'
+        icon: 'brush',
       },
       {
         name: 'Horizontal mirror brush',
         tool: 'HorzMirrorBrush',
-        icon: 'horizontal-mirror-brush'
+        icon: 'horizontal-mirror-brush',
       },
       {
         name: 'Vertical mirror brush',
         tool: 'VertMirrorBrush',
-        icon: 'vertical-mirror-brush'
-      }
-    ]
+        icon: 'vertical-mirror-brush',
+      },
+    ],
   },
   {
     name: 'Bucket fill',
@@ -29,34 +29,34 @@ export default [
       {
         name: 'Bucket fill',
         tool: 'Bucket',
-        icon: 'colorfill'
+        icon: 'colorfill',
       },
       {
         name: 'Color replacer',
         tool: 'ColorReplace',
-        icon: 'globalcolorfill'
-      }
-    ]
+        icon: 'globalcolorfill',
+      },
+    ],
   },
   {
     name: 'Eraser',
     tool: 'Eraser',
-    icon: 'eraser'
+    icon: 'eraser',
   },
   {
     name: 'Color picker',
     tool: 'Dropper',
-    icon: 'dropper'
+    icon: 'dropper',
   },
   {
     name: 'Rectangle',
     tool: 'Rectangle',
-    icon: 'rect'
+    icon: 'rect',
   },
   {
     name: 'Ellipse',
     tool: 'Ellipse',
-    icon: 'circle'
+    icon: 'circle',
   },
   {
     name: 'Lightener',
@@ -66,15 +66,15 @@ export default [
       {
         name: 'Lightener',
         tool: 'Lightener',
-        icon: 'lightener'
+        icon: 'lightener',
       },
       {
         name: 'Darkener',
         tool: 'Darkener',
-        icon: 'darkener'
-      }
-    ]
-  }
+        icon: 'darkener',
+      },
+    ],
+  },
   // ,
   // {
   //   name: '',
@@ -84,15 +84,15 @@ export default [
 ];
 
 export const toolHotkeys = {
-  'Brush': 'b',
-  'HorzMirrorBrush': 'h',
-  'VertMirrorBrush': 'v',
-  'Bucket': 'f',
-  'ColorReplace': 'a',
-  'Eraser': 'e',
-  'Dropper': 'g',
-  'Rectangle': 'r',
-  'Ellipse': 'c',
-  'Lightener': 'l',
-  'Darkener': 'd'
+  Brush: 'b',
+  HorzMirrorBrush: 'h',
+  VertMirrorBrush: 'v',
+  Bucket: 'f',
+  ColorReplace: 'a',
+  Eraser: 'e',
+  Dropper: 'g',
+  Rectangle: 'r',
+  Ellipse: 'c',
+  Lightener: 'l',
+  Darkener: 'd',
 };

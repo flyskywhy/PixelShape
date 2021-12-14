@@ -5,20 +5,17 @@ import {getTool, getToolbarVisibility} from '../../selectors';
 
 import Toolbar from '../../components/toolbar/Toolbar';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   tool: getTool(state),
-  visible: getToolbarVisibility(state)
+  visible: getToolbarVisibility(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  setTool (tool) {
+const mapDispatchToProps = (dispatch) => ({
+  setTool(tool) {
     return dispatch(setTool(tool));
-  }
+  },
 });
 
-const ToolbarContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Toolbar);
+const ToolbarContainer = connect(mapStateToProps, mapDispatchToProps)(Toolbar);
 
 export default ToolbarContainer;

@@ -1,7 +1,7 @@
-export function getCustomColors (state) {
+export function getCustomColors(state) {
   return state.userPalette.colors;
 }
 
-export function getTempColor (state) {
+export function getTempColor(state) {
   return state.userPalette.tempColor;
 }

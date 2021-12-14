@@ -3,20 +3,20 @@ import {
   getColor,
   putColor,
   stringToRGBA,
-  getBlackWhiteContrastColor
+  getBlackWhiteContrastColor,
 } from './colorUtils';
-import { ANCHORS } from '../defaults/defaults';
+import {ANCHORS} from '../defaults/defaults';
 
 // TODO: write tests for all of these
 
-export const enableImageSmoothing = context => {
+export const enableImageSmoothing = (context) => {
   context.imageSmoothingEnabled = true;
   context.mozImageSmoothingEnabled = true;
   context.webkitImageSmoothingEnabled = true;
   context.msImageSmoothingEnabled = true;
 };
 
-export const disableImageSmoothing = context => {
+export const disableImageSmoothing = (context) => {
   context.imageSmoothingEnabled = false;
   context.mozImageSmoothingEnabled = false;
   context.webkitImageSmoothingEnabled = false;
@@ -26,7 +26,7 @@ export const disableImageSmoothing = context => {
 export const drawGrid = (context, space, gutter) => {
   let i = 0;
   const width = context.canvas.width,
-        height = context.canvas.height;
+    height = context.canvas.height;
 
   context.clearRect(0, 0, width, height);
 
@@ -60,9 +60,9 @@ export const createCanvas = (width, height) => {
 // resizes/stretches imageData to new width and height
 export const resizeImageData = (imageData, targetWidth, targetHeight) => {
   const originalCanvas = createCanvas(imageData.width, imageData.height),
-        originalContext = originalCanvas.getContext('2d'),
-        targetCanvas = createCanvas(targetWidth, targetHeight),
-        targetContext = targetCanvas.getContext('2d');
+    originalContext = originalCanvas.getContext('2d'),
+    targetCanvas = createCanvas(targetWidth, targetHeight),
+    targetContext = targetCanvas.getContext('2d');
 
   disableImageSmoothing(originalContext);
   disableImageSmoothing(targetContext);
@@ -70,8 +70,14 @@ export const resizeImageData = (imageData, targetWidth, targetHeight) => {
 
   targetContext.drawImage(
     originalCanvas,
-    0, 0, imageData.width, imageData.height,
-    0, 0, targetWidth, targetHeight
+    0,
+    0,
+    imageData.width,
+    imageData.height,
+    0,
+    0,
+    targetWidth,
+    targetHeight,
   );
 
   return targetContext.getImageData(0, 0, targetWidth, targetHeight);
@@ -80,16 +86,15 @@ export const resizeImageData = (imageData, targetWidth, targetHeight) => {
 // extends imageData to new width and height based on anchor point
 export const extendImageData = (imageData, width, height, anchor) => {
   const target = new ImageData(width, height),
-        oldWidth = imageData.width,
-        oldHeight = imageData.height,
-        offset = ANCHORS[anchor],
-        halfWidth = (width - oldWidth) / 2 | 0,
-        halfHeight = (height - oldHeight) / 2 | 0,
-        shiftW = Math.abs(halfWidth),
-        shiftH = Math.abs(halfHeight);
+    oldWidth = imageData.width,
+    oldHeight = imageData.height,
+    offset = ANCHORS[anchor],
+    halfWidth = ((width - oldWidth) / 2) | 0,
+    halfHeight = ((height - oldHeight) / 2) | 0,
+    shiftW = Math.abs(halfWidth),
+    shiftH = Math.abs(halfHeight);
 
-  let x, y, cols, rows, shiftedX, shiftedY, tx, ty,
-      pxl, tpxl, color;
+  let x, y, cols, rows, shiftedX, shiftedY, tx, ty, pxl, tpxl, color;
 
   cols = halfWidth > 0 ? oldWidth : width;
   rows = halfHeight > 0 ? oldHeight : height;
@@ -116,16 +121,29 @@ export const extendImageData = (imageData, width, height, anchor) => {
 };
 
 // extends or stretches image depending on params passed
-export const expandImageData = (imageData, width, height, anchor = 'oo', stretch) =>
+export const expandImageData = (
+  imageData,
+  width,
+  height,
+  anchor = 'oo',
+  stretch,
+) =>
   stretch
     ? resizeImageData(imageData, width, height)
     : extendImageData(imageData, width, height, anchor);
 
-export const combineImageDataToCanvas = (imageDataArr, imageDataWidth, imageDataHeight) => {
+export const combineImageDataToCanvas = (
+  imageDataArr,
+  imageDataWidth,
+  imageDataHeight,
+) => {
   let tmpCanvas = createCanvas(imageDataWidth, imageDataHeight),
-      tmpContext = tmpCanvas.getContext('2d'),
-      resultCanvas = createCanvas(imageDataArr.length * imageDataWidth, imageDataHeight),
-      rContext = resultCanvas.getContext('2d');
+    tmpContext = tmpCanvas.getContext('2d'),
+    resultCanvas = createCanvas(
+      imageDataArr.length * imageDataWidth,
+      imageDataHeight,
+    ),
+    rContext = resultCanvas.getContext('2d');
 
   imageDataArr.forEach((data, i) => {
     tmpContext.putImageData(data, 0, 0);
@@ -134,25 +152,24 @@ export const combineImageDataToCanvas = (imageDataArr, imageDataWidth, imageData
       i * imageDataWidth,
       0,
       imageDataWidth,
-      imageDataHeight
+      imageDataHeight,
     );
   });
 
   return resultCanvas;
 };
 
-export const combineColorPaletteToCanvas = (colorsArr, colorHeight, colorWidth) => {
+export const combineColorPaletteToCanvas = (
+  colorsArr,
+  colorHeight,
+  colorWidth,
+) => {
   let resultCanvas = createCanvas(colorWidth, colorsArr.length * colorHeight),
-      rContext = resultCanvas.getContext('2d');
+    rContext = resultCanvas.getContext('2d');
 
   colorsArr.forEach((color, i) => {
     rContext.fillStyle = color;
-    rContext.fillRect(
-      0,
-      i * colorHeight,
-      colorWidth,
-      (i + 1) * colorHeight
-    );
+    rContext.fillRect(0, i * colorHeight, colorWidth, (i + 1) * colorHeight);
 
     rContext.textAlign = 'center';
     rContext.font = '36px Arial';
@@ -163,9 +180,9 @@ export const combineColorPaletteToCanvas = (colorsArr, colorHeight, colorWidth) 
   return resultCanvas;
 };
 
-export const copyImageData = imageData => {
+export const copyImageData = (imageData) => {
   const imageDataClone = new ImageData(imageData.width, imageData.height),
-        dataCopy = new Uint8ClampedArray(imageData.data);
+    dataCopy = new Uint8ClampedArray(imageData.data);
 
   imageDataClone.data.set(dataCopy);
 

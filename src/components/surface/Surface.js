@@ -1,37 +1,46 @@
 import './surface.styl';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import toolsMap from '../../modules/toolsmap';
-import { disableImageSmoothing, drawGrid, resizeImageData, copyImageData } from '../../utils/canvasUtils';
+import {
+  disableImageSmoothing,
+  drawGrid,
+  resizeImageData,
+  copyImageData,
+} from '../../utils/canvasUtils';
 
 const minPixelGridSize = 9,
-      LEFT_CLICK = 0;
+  LEFT_CLICK = 0;
 
 class Surface extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args);
     this.tool = toolsMap.get(this.props.tool);
   }
 
-  applyAllContextInformation () {
+  applyAllContextInformation() {
     this.tool.applyState(Object.assign({}, this.props.toolSettings));
     this.tool.applyPixelSize(this.props.pixelSize);
     this.tool._assignRenderingContext(this.ctx);
     this.tool._assignBufferContext(this.buffer);
   }
 
-  applyImageData () {
-    this.tool._applyNaturalImageData(copyImageData(this.props.currentFrame.naturalImageData));
+  applyImageData() {
+    this.tool._applyNaturalImageData(
+      copyImageData(this.props.currentFrame.naturalImageData),
+    );
   }
 
-  detectImageSizeChanged (props, changedProps) {
-    return (props.imageSize.width !== changedProps.imageSize.width
-      || props.imageSize.height !== changedProps.imageSize.height
-      || props.pixelSize !== changedProps.pixelSize);
+  detectImageSizeChanged(props, changedProps) {
+    return (
+      props.imageSize.width !== changedProps.imageSize.width ||
+      props.imageSize.height !== changedProps.imageSize.height ||
+      props.pixelSize !== changedProps.pixelSize
+    );
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.ctx = this._canvas.getContext('2d');
     this.buffer = this._buffer.getContext('2d');
     this.grid = this._grid.getContext('2d');
@@ -42,137 +51,161 @@ class Surface extends Component {
     drawGrid(this.grid, this.props.pixelSize | 0, 0.5);
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     // new imageData has arrived with a new currentFrame -
     // need to apply to the surface
-    const iData = resizeImageData(this.props.currentFrame.naturalImageData, this._canvas.width, this._canvas.height);
+    const iData = resizeImageData(
+      this.props.currentFrame.naturalImageData,
+      this._canvas.width,
+      this._canvas.height,
+    );
     // this.ctx.putImageData(this.props.currentFrame.imageData, 0, 0);
     this.ctx.putImageData(iData, 0, 0);
-    this.tool._applyNaturalImageData(copyImageData(this.props.currentFrame.naturalImageData));
+    this.tool._applyNaturalImageData(
+      copyImageData(this.props.currentFrame.naturalImageData),
+    );
     // disable smoothing once again, in case we faced canvas resizing and smoothing is reset
     disableImageSmoothing(this.ctx);
     disableImageSmoothing(this.buffer);
     // redraw grid if imageSize changed
-    if (this.detectImageSizeChanged(this.props, prevProps)) drawGrid(this.grid, this.props.pixelSize | 0, 0.5);
+    if (this.detectImageSizeChanged(this.props, prevProps)) {
+      drawGrid(this.grid, this.props.pixelSize | 0, 0.5);
+    }
   }
 
-  shouldShowGrid () {
-    return this.props.gridShown && (this.props.pixelSize > minPixelGridSize);
+  shouldShowGrid() {
+    return this.props.gridShown && this.props.pixelSize > minPixelGridSize;
   }
 
-  updateFrameImageData () {
+  updateFrameImageData() {
     this.props.updateFrameImageData(
       this.props.currentFrameUUID,
-      this.tool._naturalImageData
+      this.tool._naturalImageData,
     );
     // this.applyImageData();
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.tool !== nextProps.tool) {
       this.tool = toolsMap.get(nextProps.tool);
       this.applyAllContextInformation();
       this.applyImageData();
     }
 
-    if (this.tool._naturalImageData !== nextProps.currentFrame.naturalImageData)
-      this.tool._applyNaturalImageData(copyImageData(nextProps.currentFrame.naturalImageData));
+    if (
+      this.tool._naturalImageData !== nextProps.currentFrame.naturalImageData
+    ) {
+      this.tool._applyNaturalImageData(
+        copyImageData(nextProps.currentFrame.naturalImageData),
+      );
+    }
   }
 
-  shouldComponentUpdate (nextProps) {
+  shouldComponentUpdate(nextProps) {
     // this is very important, since we are tracking currentFrame object
     // which is being changed all the time when framesContainer is updated
     // do not redraw component if currentFrame doesn't change
-    if (this.detectImageSizeChanged(this.props, nextProps)) return true;
-    if (this.props.projectGuid !== nextProps.projectGuid) return true;
-    if (this.props.gridShown !== nextProps.gridShown) return true;
+    if (this.detectImageSizeChanged(this.props, nextProps)) {
+      return true;
+    }
+    if (this.props.projectGuid !== nextProps.projectGuid) {
+      return true;
+    }
+    if (this.props.gridShown !== nextProps.gridShown) {
+      return true;
+    }
     // if (this.props.currentFrameUUID === nextProps.currentFrameUUID) return false;
     return true;
   }
 
-  normalizeEvent (ev) {
+  normalizeEvent(ev) {
     this.boundRect = this._canvas.getBoundingClientRect();
     return [ev.clientX - this.boundRect.left, ev.clientY - this.boundRect.top];
   }
 
-  onMouseDown (ev) {
-    if (!this.isMouseLeftBtn(ev)) return;
+  onMouseDown(ev) {
+    if (!this.isMouseLeftBtn(ev)) {
+      return;
+    }
     this.tool.storeCallback = this.props.setTempColor.bind(this);
     this.tool.onMouseDown(...this.normalizeEvent(ev));
   }
 
-  mouseMoveOffBounds (ev) {
+  mouseMoveOffBounds(ev) {
     if (this.isToolDrawing() && !this.isInBounds(ev)) {
       this.cancelMouseDown();
       this.updateFrameImageData();
     }
   }
 
-  onMouseMove (ev) {
+  onMouseMove(ev) {
     this.mouseMoveOffBounds(ev);
     // this.tool = toolsMap.get(this.props.tool);
     this.applyAllContextInformation();
     this.tool.onMouseMove(...this.normalizeEvent(ev));
   }
 
-  onMouseUp (ev) {
-    if (!this.isMouseLeftBtn(ev)) return;
+  onMouseUp(ev) {
+    if (!this.isMouseLeftBtn(ev)) {
+      return;
+    }
     this.tool.onMouseUp(...this.normalizeEvent(ev));
     this.updateFrameImageData();
   }
 
-  cancelMouseDown () {
+  cancelMouseDown() {
     this.tool.cancelMouseDown();
   }
 
-  isMouseLeftBtn (ev) {
+  isMouseLeftBtn(ev) {
     return ev.button === LEFT_CLICK;
   }
 
-  isToolDrawing () {
+  isToolDrawing() {
     return this.tool.mouseDown;
   }
 
-  isInBounds (ev) {
+  isInBounds(ev) {
     return ev.target === this._handleLayer;
   }
 
-  render () {
+  render() {
     return (
       <main
         className="surface"
-        ref={s => this._surface = s}
+        ref={(s) => (this._surface = s)}
         onMouseMove={this.onMouseMove.bind(this)}>
         <section
           className="surface__drawer"
-          style={{width: this.props.surfaceWidth, height: this.props.surfaceHeight}}>
+          style={{
+            width: this.props.surfaceWidth,
+            height: this.props.surfaceHeight,
+          }}>
           <canvas
             className="main-rendering-canvas"
-            ref={c => this._canvas = c}
+            ref={(c) => (this._canvas = c)}
             height={this.props.surfaceHeight}
-            width={this.props.surfaceWidth}>
-          </canvas>
+            width={this.props.surfaceWidth}></canvas>
           <canvas
             className="buffer-canvas"
-            ref={c => this._buffer = c}
+            ref={(c) => (this._buffer = c)}
             height={this.props.surfaceHeight}
-            width={this.props.surfaceWidth}>
-          </canvas>
+            width={this.props.surfaceWidth}></canvas>
           <canvas
             className="grid-canvas"
-            ref={c => this._grid = c}
+            ref={(c) => (this._grid = c)}
             height={this.props.surfaceHeight}
             width={this.props.surfaceWidth}
-            style={{display: this.shouldShowGrid() ? 'block' : 'none'}}>
-          </canvas>
+            style={{
+              display: this.shouldShowGrid() ? 'block' : 'none',
+            }}></canvas>
           <canvas
             className="handle-layer"
-            ref={c => this._handleLayer = c}
+            ref={(c) => (this._handleLayer = c)}
             height={this.props.surfaceHeight}
             width={this.props.surfaceWidth}
             onMouseDown={this.onMouseDown.bind(this)}
-            onMouseUp={this.onMouseUp.bind(this)}>
-          </canvas>
+            onMouseUp={this.onMouseUp.bind(this)}></canvas>
         </section>
       </main>
     );

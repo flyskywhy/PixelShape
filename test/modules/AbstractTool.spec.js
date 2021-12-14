@@ -1,4 +1,4 @@
-import test from 'blue-tape'
+import test from 'blue-tape';
 import sinon from 'sinon';
 import AbstractTool from '../../src/modules/basetool/AbstractTool';
 
@@ -19,7 +19,10 @@ test('AbstractTool =>', (expect) => {
 
     tool._assignBufferContext(context);
     expect.ok(tool._buffer, 'Should assign new buffer context');
-    expect.ok(context.clearRect.called, 'Should clear buffer context surface when assigned');
+    expect.ok(
+      context.clearRect.called,
+      'Should clear buffer context surface when assigned',
+    );
     expect.ok(tool.useStateOn.called, 'Should apply state on buffer context');
     expect.end();
   });
@@ -30,12 +33,16 @@ test('AbstractTool =>', (expect) => {
     const newState = {
       ghostData: {
         color: '#ababab',
-        alpha: 1
-      }
+        alpha: 1,
+      },
     };
 
     tool.applyState(newState);
-    expect.deepEqual(tool.state.ghostData, newState.ghostData, 'Should set new props on the tools state');
+    expect.deepEqual(
+      tool.state.ghostData,
+      newState.ghostData,
+      'Should set new props on the tools state',
+    );
     expect.end();
   });
 
@@ -46,7 +53,7 @@ test('AbstractTool =>', (expect) => {
       size: tool.size,
       color: tool.state.color,
       alpha: tool.state.alpha,
-      compositeOperation: tool.state.compositeOperation
+      compositeOperation: tool.state.compositeOperation,
     };
 
     tool.useStateOn(context);
@@ -55,10 +62,14 @@ test('AbstractTool =>', (expect) => {
       lineWidth: size,
       fillStyle: color,
       globalAlpha: alpha,
-      globalCompositeOperation: compositeOperation
+      globalCompositeOperation: compositeOperation,
     } = context;
 
-    expect.deepEqual({ size, color, alpha, compositeOperation }, state, 'Should set new state on context');
+    expect.deepEqual(
+      {size, color, alpha, compositeOperation},
+      state,
+      'Should set new state on context',
+    );
     expect.end();
   });
 
@@ -67,17 +78,18 @@ test('AbstractTool =>', (expect) => {
 
     const state = {
       alpha: tool.state.ghostData.alpha,
-      color: tool.state.ghostData.color
+      color: tool.state.ghostData.color,
     };
 
     tool.useGhostStateOn(context);
 
-    const {
-      globalAlpha: alpha,
-      fillStyle: color
-    } = context;
+    const {globalAlpha: alpha, fillStyle: color} = context;
 
-    expect.deepEqual({ alpha, color }, state, 'Should set new ghost state on context');
+    expect.deepEqual(
+      {alpha, color},
+      state,
+      'Should set new ghost state on context',
+    );
     expect.end();
   });
 
@@ -86,36 +98,52 @@ test('AbstractTool =>', (expect) => {
 
     let coords;
 
-    tool.applyState({ size: 2 });
+    tool.applyState({size: 2});
     tool.applyPixelSize(10);
 
     expect.false(tool.getPixeledCoords(), 'Should return false on empty args');
 
     coords = tool.getPixeledCoords(311, 207);
 
-    expect.deepEqual(coords, { x: 300, y: 190, naturalX: 30, naturalY: 19 }, 'Should truncate input coords to grid cell size')
+    expect.deepEqual(
+      coords,
+      {x: 300, y: 190, naturalX: 30, naturalY: 19},
+      'Should truncate input coords to grid cell size',
+    );
     expect.end();
   });
 
   expect.test('::drawPixelCell', (expect) => {
     before();
 
-    tool.getPixeledCoords = sinon.stub().returns({ x: 100, y: 100 });
+    tool.getPixeledCoords = sinon.stub().returns({x: 100, y: 100});
     tool.drawPixelCell(context, 104, 104);
 
-    expect.ok(tool.getPixeledCoords.called, 'Should truncate coords before drawing');
-    expect.ok(context.fillRect.called, 'Should draw pixel cell with provided coordinates');
+    expect.ok(
+      tool.getPixeledCoords.called,
+      'Should truncate coords before drawing',
+    );
+    expect.ok(
+      context.fillRect.called,
+      'Should draw pixel cell with provided coordinates',
+    );
     expect.end();
   });
 
   expect.test('::clearPixelCell', (expect) => {
     before();
 
-    tool.getPixeledCoords = sinon.stub().returns({ x: 100, y: 100 });
+    tool.getPixeledCoords = sinon.stub().returns({x: 100, y: 100});
     tool.clearPixelCell(context, 104, 104);
 
-    expect.ok(tool.getPixeledCoords.called, 'Should truncate coords before clearing');
-    expect.ok(context.clearRect.called, 'Should clear pixel cell with provided coordinates');
+    expect.ok(
+      tool.getPixeledCoords.called,
+      'Should truncate coords before clearing',
+    );
+    expect.ok(
+      context.clearRect.called,
+      'Should clear pixel cell with provided coordinates',
+    );
     expect.end();
   });
 
@@ -127,24 +155,33 @@ test('AbstractTool =>', (expect) => {
     tool.drawPixelCell = sinon.spy();
 
     tool.handleGhostPixelMove(100, 100);
-    expect.false(tool.useGhostStateOn.called, 'Should do nothing if buffer is not defined on tool');
+    expect.false(
+      tool.useGhostStateOn.called,
+      'Should do nothing if buffer is not defined on tool',
+    );
 
     tool._assignBufferContext(context);
     tool.handleGhostPixelMove(100, 100);
     expect.ok(
-      tool.useGhostStateOn.calledWith(tool._buffer)
-      && tool.clearPixelCell.calledWith(tool._buffer)
-      && tool.drawPixelCell.calledWith(tool._buffer),
-      'Should operate with buffer context only');
+      tool.useGhostStateOn.calledWith(tool._buffer) &&
+        tool.clearPixelCell.calledWith(tool._buffer) &&
+        tool.drawPixelCell.calledWith(tool._buffer),
+      'Should operate with buffer context only',
+    );
     expect.ok(
-      tool._buffer.save.called && tool._buffer.restore.called, 'Should save and restore buffers state before and after drawing respectively');
+      tool._buffer.save.called && tool._buffer.restore.called,
+      'Should save and restore buffers state before and after drawing respectively',
+    );
     expect.end();
   });
 
   expect.test('::storeCallback', (expect) => {
     before();
 
-    expect.throws(tool.storeCallback, 'Should throw if not implemented in child');
+    expect.throws(
+      tool.storeCallback,
+      'Should throw if not implemented in child',
+    );
     expect.end();
   });
 

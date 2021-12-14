@@ -1,26 +1,26 @@
 import {connect} from 'react-redux';
-import { ActionCreators } from 'redux-undo';
+import {ActionCreators} from 'redux-undo';
 
 import Apptoolbox from '../../components/apptoolbox/Apptoolbox';
-import { canRedo, canUndo } from '../../selectors/timetravel';
+import {canRedo, canUndo} from '../../selectors/timetravel';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   canRedo: canRedo(state),
-  canUndo: canUndo(state)
+  canUndo: canUndo(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  undo () {
+const mapDispatchToProps = (dispatch) => ({
+  undo() {
     return dispatch(ActionCreators.undo());
   },
-  redo () {
+  redo() {
     return dispatch(ActionCreators.redo());
-  }
+  },
 });
 
 const ApptoolboxContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Apptoolbox);
 
 export default ApptoolboxContainer;

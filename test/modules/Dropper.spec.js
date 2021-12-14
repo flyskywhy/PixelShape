@@ -16,7 +16,11 @@ test('Dropper =>', (expect) => {
     before();
 
     const color = getUnderlyingColor(0, 0);
-    expect.equal(color, '#000000', 'Should get color in hex format from context with coords [x, y]');
+    expect.equal(
+      color,
+      '#000000',
+      'Should get color in hex format from context with coords [x, y]',
+    );
     expect.end();
   });
 
@@ -27,7 +31,10 @@ test('Dropper =>', (expect) => {
 
     dropper.onMouseDown(100, 100);
     expect.ok(dropper.mouseDown, 'Should set mouseDown flag to true');
-    expect.ok(dropper.storeCallback.called, 'Should process color with callback modifying store');
+    expect.ok(
+      dropper.storeCallback.called,
+      'Should process color with callback modifying store',
+    );
     expect.end();
   });
 
@@ -36,7 +43,10 @@ test('Dropper =>', (expect) => {
 
     dropper.mouseDown = true;
     dropper.onMouseMove(100, 100);
-    expect.ok(dropper.storeCallback.called, 'Should process color with callback modifying store');
+    expect.ok(
+      dropper.storeCallback.called,
+      'Should process color with callback modifying store',
+    );
     expect.end();
   });
 
@@ -47,7 +57,10 @@ test('Dropper =>', (expect) => {
     dropper.mouseDown = true;
     dropper.onMouseUp(100, 100);
     expect.notOk(dropper.mouseDown, 'Should stop processing color on mouseUp');
-    expect.ok(dropper.storeCallback.called, 'Should process color with callback modifying store');
+    expect.ok(
+      dropper.storeCallback.called,
+      'Should process color with callback modifying store',
+    );
     expect.end();
   });
 

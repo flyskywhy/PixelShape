@@ -1,30 +1,29 @@
 import './colorbar.styl';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Coloritem from '../coloritem/Coloritem';
 import Colorpicker from '../colorpicker/Colorpicker';
 
 import colors from '../../defaults/palette';
 
 class Colorbar extends Component {
-  getPalette (colors) {
-    return colors
-      .map(colorObj => (
-        <Coloritem
-          key={colorObj.color}
-          color={colorObj.color}
-          isActive={colorObj.color === this.props.currentColor}
-          setColor={this.props.setColor.bind(this, colorObj.color)}>
-          {colorObj.color}
-        </Coloritem>
-      ));
+  getPalette(colors) {
+    return colors.map((colorObj) => (
+      <Coloritem
+        key={colorObj.color}
+        color={colorObj.color}
+        isActive={colorObj.color === this.props.currentColor}
+        setColor={this.props.setColor.bind(this, colorObj.color)}>
+        {colorObj.color}
+      </Coloritem>
+    ));
   }
 
-  getDefaultColorPalette () {
+  getDefaultColorPalette() {
     return this.getPalette(colors);
   }
 
-  getUserColorPalette () {
+  getUserColorPalette() {
     return (
       <div className="colorbar__user-palette-wrapper">
         {this.getPalette(this.props.userColors)}
@@ -32,7 +31,7 @@ class Colorbar extends Component {
     );
   }
 
-  render () {
+  render() {
     return (
       <div className="colorbar">
         <div className="colorbar__default-palette">
@@ -42,7 +41,8 @@ class Colorbar extends Component {
         <Colorpicker
           addColor={this.props.addColor.bind(this)}
           userColors={this.props.userColors}
-          tempColor={this.props.tempColor} />
+          tempColor={this.props.tempColor}
+        />
         <div className="colorbar__user-palette">
           <div className="colorbar__label">Custom</div>
           {this.getUserColorPalette()}

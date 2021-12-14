@@ -24,5 +24,4 @@ toolsMap.set('Ellipse', new Ellipse());
 toolsMap.set('Lightener', new Lightener());
 toolsMap.set('Darkener', new Darkener());
 
-
 export default toolsMap;

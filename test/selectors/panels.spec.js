@@ -4,15 +4,15 @@ import sinon from 'sinon';
 import {
   getToolbarVisibility,
   getSidebarVisibility,
-  getFramebarVisibility
+  getFramebarVisibility,
 } from '../../src/selectors/panels';
 
 const state = {
   panels: {
     toolbar: true,
     sidebar: true,
-    framebar: true
-  }
+    framebar: true,
+  },
 };
 
 test('panels =>', (expect) => {
