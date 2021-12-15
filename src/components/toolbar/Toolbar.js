@@ -1,8 +1,9 @@
-import './toolbar.styl';
-
 import React, {Component} from 'react';
-import DropToolButton from '../droptoolbutton/Droptoolbutton';
+import {Dimensions, View} from 'react-native';
+import ToolButton from '../toolbutton/ToolButton';
 import tools from '../../defaults/tools';
+
+const {height} = Dimensions.get('window');
 
 class Toolbar extends Component {
   constructor(props) {
@@ -11,26 +12,30 @@ class Toolbar extends Component {
 
   getButtons() {
     return tools.map((toolObj, keyValue) => (
-      <DropToolButton
+      <ToolButton
         key={keyValue}
         name={toolObj.name}
         tool={toolObj.tool}
         icon={toolObj.icon}
+        iconSrc={toolObj.iconSrc}
+        iconSelectedSrc={toolObj.iconSelectedSrc}
         activeTool={this.props.tool}
         setTool={this.props.setTool.bind(this)}
-        dropdownTools={toolObj.list}
       />
     ));
   }
 
   render() {
-    return (
-      <aside
-        className="toolbar"
-        style={{display: this.props.visible ? 'block' : 'none'}}>
-        <ul className="toolbar__buttonlist">{this.getButtons()}</ul>
-      </aside>
-    );
+    return this.props.visible ? (
+      <View
+        style={{
+          position: 'absolute',
+          top: (height - tools.length * 40) / 2,
+          left: 0,
+        }}>
+        {this.getButtons()}
+      </View>
+    ) : null;
   }
 }
 

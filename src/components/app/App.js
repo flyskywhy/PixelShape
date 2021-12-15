@@ -2,7 +2,7 @@ import styles from './app.style.js';
 
 import React, {Component} from 'react';
 import {Dimensions, View} from 'react-native';
-// import Toolbar from '../../containers/toolbar/Toolbar';
+import Toolbar from '../../containers/toolbar/Toolbar';
 // import Surface from '../../containers/surface/Surface';
 // import Sidebar from '../../containers/sidebar/Sidebar';
 // import Framebar from '../../containers/framebar/Framebar';
@@ -27,9 +27,7 @@ class App extends Component {
   render() {
     return (
       <View style={styles.app} data-guid={this.props.guid}>
-        {/*
         <Toolbar />
-        */}
         <View style={styles.appContent}>
           {/*
           <Apptoolbox />
