@@ -1,3 +1,4 @@
+import 'react-native';
 import pako from 'pako';
 
 // This will be used to serialize and deserialize imageData

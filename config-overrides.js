@@ -29,7 +29,7 @@ module.exports = {
     // Keep all rules except the eslint - note that if they add additional rules this will need updating to match
     // Consider if this should only apply to the development environment? If so, uncomment the if statement
     // if (env === 'development') {
-      config.module.rules.splice(1, 1);
+    //  config.module.rules.splice(1, 1);
     // }
 
     // Need this rule to prevent `Attempted import error: 'SOME' is not exported from` when `react-app-rewired build`
