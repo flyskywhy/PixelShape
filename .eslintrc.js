@@ -3,5 +3,6 @@ module.exports = {
   extends: '@react-native-community',
   globals: {
     ENV: false,
+    ImageData: false,
   },
 };
