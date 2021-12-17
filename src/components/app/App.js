@@ -27,7 +27,6 @@ class App extends Component {
   render() {
     return (
       <View style={styles.app} data-guid={this.props.guid}>
-        <Toolbar />
         <View style={styles.appContent}>
           {/*
           <Apptoolbox />
@@ -35,6 +34,7 @@ class App extends Component {
           <Framebar />
           */}
         </View>
+        <Toolbar />
         {/*
         <Sidebar />
         */}
