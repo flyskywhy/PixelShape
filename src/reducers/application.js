@@ -24,11 +24,11 @@ const defaultConsts = {
 const initialState = {
   projectGuid: uuid(),
   size: {
-    width: 32,
-    height: 32,
+    width: 20,
+    height: 20,
   },
-  pixelSize: 20,
-  optimalPixelSize: 20,
+  pixelSize: 16,
+  optimalPixelSize: 16,
   surfaceConstraints: {
     width: 2000,
     height: 2000,

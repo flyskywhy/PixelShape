@@ -4,8 +4,8 @@ export const defaults = {
   framePrefix: 'frame_',
   frameName: 'default_',
   frameSize: {
-    naturalWidth: 32,
-    naturalHeight: 32,
+    naturalWidth: 20,
+    naturalHeight: 20,
   },
 };
 

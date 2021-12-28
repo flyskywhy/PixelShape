@@ -20,7 +20,7 @@ import {StateConverter} from '../statemanager/StateConverter';
 
 import tools from './tools';
 import userPalette from './palette';
-// import frames from './frames';
+import frames from './frames';
 import panels from './panels';
 import application from './application';
 
@@ -31,8 +31,7 @@ const appReducer = combineReducers({
 
   undoables: undoable(
     combineReducers({
-      // TODO: react -> react-native
-      // frames,
+      frames,
       application,
     }),
     {

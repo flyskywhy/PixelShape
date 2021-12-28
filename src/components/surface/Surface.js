@@ -1,7 +1,5 @@
-import './surface.styl';
-
 import React, {Component} from 'react';
-
+import {ImageBackground, Platform, StyleSheet, View} from 'react-native';
 import toolsMap from '../../modules/toolsmap';
 import {
   disableImageSmoothing,
@@ -20,10 +18,10 @@ class Surface extends Component {
   }
 
   applyAllContextInformation() {
+    this.ctx && this.tool._assignRenderingContext(this.ctx);
+    this.buffer && this.tool._assignBufferContext(this.buffer);
     this.tool.applyState(Object.assign({}, this.props.toolSettings));
     this.tool.applyPixelSize(this.props.pixelSize);
-    this.tool._assignRenderingContext(this.ctx);
-    this.tool._assignBufferContext(this.buffer);
   }
 
   applyImageData() {
@@ -41,35 +39,114 @@ class Surface extends Component {
   }
 
   componentDidMount() {
-    this.ctx = this._canvas.getContext('2d');
-    this.buffer = this._buffer.getContext('2d');
-    this.grid = this._grid.getContext('2d');
     this.applyAllContextInformation();
     this.applyImageData();
-    disableImageSmoothing(this.ctx);
-    disableImageSmoothing(this.buffer);
-    drawGrid(this.grid, this.props.pixelSize | 0, 0.5);
   }
 
+  initCanvasMainRendering = (canvas) => {
+    if (this._canvas) {
+      return;
+    }
+
+    this._canvas = canvas;
+    if (Platform.OS === 'web') {
+      // canvas.width not equal canvas.clientWidth, so have to assign again
+      this._canvas.width = this._canvas.clientWidth;
+      this._canvas.height = this._canvas.clientHeight;
+    }
+    this.ctx = this._canvas.getContext('2d');
+
+    this.applyAllContextInformation();
+
+    this.updateCanvasMainRendering();
+  };
+
+  initCanvasBuffer = (canvas) => {
+    if (this._buffer) {
+      return;
+    }
+
+    this._buffer = canvas;
+    if (Platform.OS === 'web') {
+      // canvas.width not equal canvas.clientWidth, so have to assign again
+      this._buffer.width = this._buffer.clientWidth;
+      this._buffer.height = this._buffer.clientHeight;
+    }
+    this.buffer = this._buffer.getContext('2d');
+
+    this.applyAllContextInformation();
+
+    this.updateCanvasBuffer();
+  };
+
+  initCanvasGrid = (canvas) => {
+    if (this._grid) {
+      return;
+    }
+
+    this._grid = canvas;
+    if (Platform.OS === 'web') {
+      // canvas.width not equal canvas.clientWidth, so have to assign again
+      this._grid.width = this._grid.clientWidth;
+      this._grid.height = this._grid.clientHeight;
+    }
+    this.grid = this._grid.getContext('2d');
+
+    this.updateCanvasGrid();
+  };
+
+  initCanvasHandleLayer = (canvas) => {
+    if (this._handleLayer) {
+      return;
+    }
+
+    this._handleLayer = canvas;
+    if (Platform.OS === 'web') {
+      // canvas.width not equal canvas.clientWidth, so have to assign again
+      this._handleLayer.width = this._handleLayer.clientWidth;
+      this._handleLayer.height = this._handleLayer.clientHeight;
+    }
+  };
+
+  updateCanvasMainRendering = () => {
+    if (this.ctx) {
+      // new imageData has arrived with a new currentFrame -
+      // need to apply to the surface
+      const iData = resizeImageData(
+        this.props.currentFrame.naturalImageData,
+        this._canvas.width,
+        this._canvas.height,
+      );
+      // this.ctx.putImageData(this.props.currentFrame.imageData, 0, 0);
+      this.ctx.putImageData(iData, 0, 0);
+
+      // disable smoothing once again, in case we faced canvas resizing and smoothing is reset
+      disableImageSmoothing(this.ctx);
+    }
+  };
+
+  updateCanvasBuffer = () => {
+    if (this.buffer) {
+      // disable smoothing once again, in case we faced canvas resizing and smoothing is reset
+      disableImageSmoothing(this.buffer);
+    }
+  };
+
+  updateCanvasGrid = () => {
+    if (this.grid) {
+      drawGrid(this.grid, this.props.pixelSize | 0, 0.5);
+    }
+  };
+
   componentDidUpdate(prevProps) {
-    // new imageData has arrived with a new currentFrame -
-    // need to apply to the surface
-    const iData = resizeImageData(
-      this.props.currentFrame.naturalImageData,
-      this._canvas.width,
-      this._canvas.height,
-    );
-    // this.ctx.putImageData(this.props.currentFrame.imageData, 0, 0);
-    this.ctx.putImageData(iData, 0, 0);
+    this.updateCanvasMainRendering();
     this.tool._applyNaturalImageData(
       copyImageData(this.props.currentFrame.naturalImageData),
     );
-    // disable smoothing once again, in case we faced canvas resizing and smoothing is reset
-    disableImageSmoothing(this.ctx);
-    disableImageSmoothing(this.buffer);
+    this.updateCanvasBuffer();
     // redraw grid if imageSize changed
     if (this.detectImageSizeChanged(this.props, prevProps)) {
-      drawGrid(this.grid, this.props.pixelSize | 0, 0.5);
+      this.updateCanvasGrid();
     }
   }
 
@@ -170,46 +247,61 @@ class Surface extends Component {
   }
 
   render() {
+    const {surfaceWidth, surfaceHeight} = this.props;
+    let canvasStyleMainRendering = {
+      width: surfaceWidth,
+      height: surfaceHeight,
+    };
+    let canvasStyleOther = {
+      width: surfaceWidth,
+      height: surfaceHeight,
+      marginTop: -surfaceHeight,
+    };
     return (
-      <main
-        className="surface"
+      <View
+        style={styles.container}
         ref={(s) => (this._surface = s)}
         onMouseMove={this.onMouseMove.bind(this)}>
-        <section
-          className="surface__drawer"
-          style={{
-            width: this.props.surfaceWidth,
-            height: this.props.surfaceHeight,
-          }}>
+        <ImageBackground
+          style={canvasStyleMainRendering}
+          source={require('../../images/tile-light-16.png')}
+          resizeMode="repeat">
           <canvas
-            className="main-rendering-canvas"
-            ref={(c) => (this._canvas = c)}
+            style={canvasStyleMainRendering}
+            ref={this.initCanvasMainRendering}
             height={this.props.surfaceHeight}
             width={this.props.surfaceWidth}></canvas>
           <canvas
-            className="buffer-canvas"
-            ref={(c) => (this._buffer = c)}
+            style={canvasStyleOther}
+            ref={this.initCanvasBuffer}
             height={this.props.surfaceHeight}
             width={this.props.surfaceWidth}></canvas>
+          {this.shouldShowGrid() && (
+            <canvas
+              style={canvasStyleOther}
+              ref={this.initCanvasGrid}
+              height={this.props.surfaceHeight}
+              width={this.props.surfaceWidth}></canvas>
+          )}
           <canvas
-            className="grid-canvas"
-            ref={(c) => (this._grid = c)}
-            height={this.props.surfaceHeight}
-            width={this.props.surfaceWidth}
-            style={{
-              display: this.shouldShowGrid() ? 'block' : 'none',
-            }}></canvas>
-          <canvas
-            className="handle-layer"
-            ref={(c) => (this._handleLayer = c)}
+            style={canvasStyleOther}
+            ref={this.initCanvasHandleLayer}
             height={this.props.surfaceHeight}
             width={this.props.surfaceWidth}
             onMouseDown={this.onMouseDown.bind(this)}
             onMouseUp={this.onMouseUp.bind(this)}></canvas>
-        </section>
-      </main>
+        </ImageBackground>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default Surface;
