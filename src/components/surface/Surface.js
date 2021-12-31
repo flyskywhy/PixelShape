@@ -219,7 +219,7 @@ class Surface extends Component {
   onMouseMove(ev) {
     this.mouseMoveOffBounds(ev);
     // this.tool = toolsMap.get(this.props.tool);
-    this.applyAllContextInformation();
+    // this.applyAllContextInformation();
     this.tool.onMouseMove(...this.normalizeEvent(ev));
   }
 
