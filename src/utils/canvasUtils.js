@@ -58,30 +58,31 @@ export const createCanvas = (width, height) => {
 };
 
 // resizes/stretches imageData to new width and height
-export const resizeImageData = (imageData, targetWidth, targetHeight) => {
-  const originalCanvas = createCanvas(imageData.width, imageData.height),
-    originalContext = originalCanvas.getContext('2d'),
-    targetCanvas = createCanvas(targetWidth, targetHeight),
-    targetContext = targetCanvas.getContext('2d');
+export resizeImageData from 'resize-image-data';
+// export const resizeImageData = (imageData, targetWidth, targetHeight) => {
+//   const originalCanvas = createCanvas(imageData.width, imageData.height),
+//     originalContext = originalCanvas.getContext('2d'),
+//     targetCanvas = createCanvas(targetWidth, targetHeight),
+//     targetContext = targetCanvas.getContext('2d');
 
-  disableImageSmoothing(originalContext);
-  disableImageSmoothing(targetContext);
-  originalContext.putImageData(imageData, 0, 0);
+//   disableImageSmoothing(originalContext);
+//   disableImageSmoothing(targetContext);
+//   originalContext.putImageData(imageData, 0, 0);
 
-  targetContext.drawImage(
-    originalCanvas,
-    0,
-    0,
-    imageData.width,
-    imageData.height,
-    0,
-    0,
-    targetWidth,
-    targetHeight,
-  );
+//   targetContext.drawImage(
+//     originalCanvas,
+//     0,
+//     0,
+//     imageData.width,
+//     imageData.height,
+//     0,
+//     0,
+//     targetWidth,
+//     targetHeight,
+//   );
 
-  return targetContext.getImageData(0, 0, targetWidth, targetHeight);
-};
+//   return targetContext.getImageData(0, 0, targetWidth, targetHeight);
+// };
 
 // extends imageData to new width and height based on anchor point
 export const extendImageData = (imageData, width, height, anchor) => {

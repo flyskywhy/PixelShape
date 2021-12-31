@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {ImageBackground, Platform, StyleSheet, View} from 'react-native';
+import {GCanvasView} from '@flyskywhy/react-native-gcanvas';
 import toolsMap from '../../modules/toolsmap';
 import {
   disableImageSmoothing,
@@ -258,39 +259,74 @@ class Surface extends Component {
       marginTop: -surfaceHeight,
     };
     return (
-      <View
-        style={styles.container}
-        ref={(s) => (this._surface = s)}
-        onMouseMove={this.onMouseMove.bind(this)}>
-        <ImageBackground
-          style={canvasStyleMainRendering}
-          source={require('../../images/tile-light-16.png')}
-          resizeMode="repeat">
-          <canvas
+      <View style={styles.container} ref={(s) => (this._surface = s)}>
+        {Platform.OS === 'web' ? (
+          <ImageBackground
             style={canvasStyleMainRendering}
-            ref={this.initCanvasMainRendering}
-            height={this.props.surfaceHeight}
-            width={this.props.surfaceWidth}></canvas>
-          <canvas
-            style={canvasStyleOther}
-            ref={this.initCanvasBuffer}
-            height={this.props.surfaceHeight}
-            width={this.props.surfaceWidth}></canvas>
-          {this.shouldShowGrid() && (
+            source={require('../../images/tile-light-16.png')}
+            resizeMode="repeat">
+            <canvas
+              style={canvasStyleMainRendering}
+              ref={this.initCanvasMainRendering}
+              height={this.props.surfaceHeight}
+              width={this.props.surfaceWidth}
+            />
             <canvas
               style={canvasStyleOther}
-              ref={this.initCanvasGrid}
+              ref={this.initCanvasBuffer}
               height={this.props.surfaceHeight}
-              width={this.props.surfaceWidth}></canvas>
-          )}
-          <canvas
-            style={canvasStyleOther}
-            ref={this.initCanvasHandleLayer}
-            height={this.props.surfaceHeight}
-            width={this.props.surfaceWidth}
-            onMouseDown={this.onMouseDown.bind(this)}
-            onMouseUp={this.onMouseUp.bind(this)}></canvas>
-        </ImageBackground>
+              width={this.props.surfaceWidth}
+            />
+            {this.shouldShowGrid() && (
+              <canvas
+                style={canvasStyleOther}
+                ref={this.initCanvasGrid}
+                height={this.props.surfaceHeight}
+                width={this.props.surfaceWidth}
+              />
+            )}
+            <canvas
+              style={canvasStyleOther}
+              ref={this.initCanvasHandleLayer}
+              height={this.props.surfaceHeight}
+              width={this.props.surfaceWidth}
+              onMouseDown={this.onMouseDown.bind(this)}
+              onMouseMove={this.onMouseMove.bind(this)}
+              onMouseUp={this.onMouseUp.bind(this)}
+            />
+          </ImageBackground>
+        ) : (
+          <ImageBackground
+            style={canvasStyleMainRendering}
+            source={require('../../images/tile-light-16.png')}
+            resizeMode="repeat">
+            <GCanvasView
+              style={canvasStyleMainRendering}
+              onCanvasCreate={this.initCanvasMainRendering}
+              isGestureResponsible={false}
+            />
+            <GCanvasView
+              style={canvasStyleOther}
+              onCanvasCreate={this.initCanvasBuffer}
+              isGestureResponsible={false}
+            />
+            {this.shouldShowGrid() && (
+              <GCanvasView
+                style={canvasStyleOther}
+                onCanvasCreate={this.initCanvasGrid}
+                isGestureResponsible={false}
+              />
+            )}
+            <GCanvasView
+              style={canvasStyleOther}
+              onCanvasCreate={this.initCanvasHandleLayer}
+              isGestureResponsible={true}
+              onMouseDown={this.onMouseDown.bind(this)}
+              onMouseMove={this.onMouseMove.bind(this)}
+              onMouseUp={this.onMouseUp.bind(this)}
+            />
+          </ImageBackground>
+        )}
       </View>
     );
   }
