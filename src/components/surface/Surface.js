@@ -259,12 +259,35 @@ class Surface extends Component {
       height: surfaceHeight,
       marginTop: -surfaceHeight,
     };
+
+    let imageTile = require('../../images/tile-light-12.png');
+    switch (this.props.pixelSize) {
+      case 16:
+        imageTile = require('../../images/tile-light-16.png');
+        break;
+      case 20:
+        imageTile = require('../../images/tile-light.png');
+        break;
+      default:
+        break;
+    }
+
+    if (surfaceWidth > 300) {
+      // There is a bug that when style.width in ImageBackground bigger
+      // than 300 and resizeMode="repeat": can't repeat any more
+      // console.warn(
+      //   'surfaceWidth > 300 will cause ImageBackground bug, please \
+      //   change defaultConsts.margins.horizontal in reducers/application.js \
+      //   to automatically change this.props.pixelSize thus surfaceWidth',
+      // );
+    }
+
     return (
       <View style={styles.container} ref={(s) => (this._surface = s)}>
         {Platform.OS === 'web' ? (
           <ImageBackground
             style={canvasStyleMainRendering}
-            source={require('../../images/tile-light-16.png')}
+            source={imageTile}
             resizeMode="repeat">
             <canvas
               style={canvasStyleMainRendering}
