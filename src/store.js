@@ -11,9 +11,9 @@ const logger = createLogger({
 
 const middleware = [thunk];
 
-if (__DEV__) {
-  middleware.push(logger);
-}
+// if (__DEV__) {
+//   middleware.push(logger);
+// }
 
 const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
 
