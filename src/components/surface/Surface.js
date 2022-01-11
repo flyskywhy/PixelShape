@@ -117,6 +117,7 @@ class Surface extends Component {
         this.props.currentFrame.naturalImageData,
         this._canvas.width,
         this._canvas.height,
+        'nearest-neighbor',
       );
       // this.ctx.putImageData(this.props.currentFrame.imageData, 0, 0);
       this.ctx.putImageData(iData, 0, 0);
