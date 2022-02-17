@@ -5,6 +5,19 @@
 
 ### [Live demo](https://convicted202.github.io/PixelShape/)
 
-Web-based pixel drawing tool.
+Android iOS and Web pixel drawing tool.
 
-Use `npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser; use `npm run build-web` to generate files in `build/` for production, and can use `npx http-server build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser.
+## Android
+`npm run android` to generate `android/app/build/outputs/apk/debug/app-debug.apk` for development.
+
+`npm run build-worker-android` to generate `android/app/src/main/assets/threads/generateGif.worker.bundle` for production, if `generateGif.worker.js` is changed, need run this again.
+
+`npm run build-android` to generate `android/app/build/outputs/apk/release/app-release.apk` for production.
+
+`npm run bundle-android` to `android/app/build/outputs/bundle/release/app-release.aab` for production.
+
+## Web
+
+`npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser
+
+`npm run build-web` to generate files in `build/` for production, and can use `npx http-server build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser
