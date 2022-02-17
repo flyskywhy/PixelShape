@@ -1,20 +1,26 @@
-import './framebutton.styl';
-
 import React from 'react';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 
 const FrameButton = (props) => (
-  <li
-    className="framebutton tooltip-top"
-    onClick={props.doAction}
-    data-tooltip={props.btnTooltip}>
-    <svg
-      className="framebutton__icon"
-      viewBox="0 0 24 24"
-      width="24"
-      height="24">
-      <use xlinkHref={`#${props.icon}`}></use>
-    </svg>
-  </li>
+  <TouchableOpacity style={styles.container} onPress={props.doAction}>
+    <Image source={props.icon} style={styles.icon} resizeMode="stretch" />
+  </TouchableOpacity>
 );
+
+const styles = StyleSheet.create({
+  container: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#264653',
+    borderRightWidth: 1,
+    borderColor: '#40606d',
+  },
+  icon: {
+    height: 24,
+    width: 24,
+    margin: 8,
+    alignSelf: 'center',
+  },
+});
 
 export default FrameButton;

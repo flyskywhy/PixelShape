@@ -44,6 +44,14 @@ module.exports = {
       },
     });
 
+    config.module.rules.push({
+      test: /\.worker\.js$/,
+      loader: 'worker-loader',
+      options: {
+        inline: 'no-fallback',
+      },
+    });
+
     return config;
   },
   paths: function (paths, env) {

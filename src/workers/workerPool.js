@@ -1,3 +1,6 @@
+import {Platform} from 'react-native';
+import {Thread} from '@minar-kotonoha/react-native-threads';
+
 const workerPool = {},
   messageQueue = [];
 let workerIds = [],
@@ -12,18 +15,22 @@ export default class WorkerPool {
 
   spawnWorkers() {
     workerIds = [...Array(this.amount)].map((i, v) => {
-      let webWorker = new this.Worker();
+      let webWorker =
+        Platform.OS === 'web' ? new this.Worker() : new Thread(this.Worker);
 
       workerPool[v] = {worker: webWorker};
 
-      webWorker.addEventListener('message', () => {
+      webWorker.onmessage = (event) => {
         // console.log(`Freed worker #${v}`);
         workerIds.push(v);
 
         if (messageQueue.length) {
           this.postMessage(messageQueue.pop());
         }
-      });
+
+        const data = typeof event === 'string' ? JSON.parse(event) : event.data;
+        workerPool[v].listener && workerPool[v].listener({data});
+      };
 
       return v;
     });
@@ -48,21 +55,23 @@ export default class WorkerPool {
           let worker = workerPool[id].worker;
 
           // console.log("postMessage with worker #" + id);
-          worker.postMessage(data);
+          worker.postMessage(
+            Platform.OS === 'web' ? data : JSON.stringify(data),
+          );
         }, data),
       0,
     );
   }
 
   addEventListener(event, callback) {
-    Object.keys(workerPool).forEach((i) =>
-      workerPool[i].worker.addEventListener(event, (e) => {
+    Object.keys(workerPool).forEach((i) => {
+      workerPool[i].listener = (e) => {
         // updating current progress to keep track from outside
         e.data.partsTotal = partsTotal;
         e.data.currentPart = currentPart++;
         callback(e);
-      }),
-    );
+      };
+    });
   }
 
   get freeWorkers() {

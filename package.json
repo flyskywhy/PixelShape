@@ -42,7 +42,10 @@
   "author": "Alexander Yanovych",
   "license": "MIT",
   "dependencies": {
-    "@flyskywhy/react-native-gcanvas": "2.3.15",
+    "@flyskywhy/react-native-gcanvas": "2.3.18",
+    "@minar-kotonoha/react-native-threads": "0.0.22",
+    "@react-native-community/slider": "4.2.0",
+    "btoa": "1.2.1",
     "es6-promise": "^4.1.0",
     "file-saver": "^1.3.2",
     "hyperscript": "^2.0.2",
@@ -53,6 +56,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-fast-image": "8.5.11",
     "react-native-web": "^0.17.5",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0",
@@ -83,7 +87,8 @@
     "sinon": "^1.17.6",
     "tap-spec": "^4.1.1",
     "tiny-worker": "^2.0.3",
-    "w3c-blob": "0.0.1"
+    "w3c-blob": "0.0.1",
+    "worker-loader": "3.0.8"
   },
   "jest": {
     "preset": "react-native"

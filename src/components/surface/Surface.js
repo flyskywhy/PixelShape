@@ -328,6 +328,7 @@ class Surface extends Component {
               style={canvasStyleMainRendering}
               onCanvasCreate={this.initCanvasMainRendering}
               isGestureResponsible={false}
+              isAutoClearRectBeforePutImageData={true}
             />
             <GCanvasView
               style={canvasStyleOther}

@@ -1,11 +1,32 @@
-import './framescontainer.styl';
-
 import React, {Component} from 'react';
-import classNames from 'classnames';
+import {
+  ImageBackground,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import btoa from 'btoa';
 import Frame from '../frame/Frame';
 
 import WorkerPool from '../../workers/workerPool';
-const Worker = require('worker!../../workers/generateGif.worker.js');
+import WebWorker from '../../workers/generateGif.worker.js';
+if (Platform.OS === 'web') {
+  var Image = require('react-native').Image;
+
+  // worker can not work with require below, have to use import above
+  // var WebWorker = require('worker-loader!../../../workers/generateGif.worker.js').default;
+} else {
+  var Image = require('react-native-fast-image');
+
+  // in dev mode, bundler only picks up js files from project root,
+  // ref to https://github.com/joltup/react-native-threads/issues/125#issuecomment-939343110
+  var NativeWorker = 'generateGif.worker.js';
+}
+
+const Worker = Platform.OS === 'web' ? WebWorker : NativeWorker;
 
 class FramesContainer extends Component {
   constructor(...args) {
@@ -15,6 +36,7 @@ class FramesContainer extends Component {
     this.state = {
       frameAdded: false,
       loading: false,
+      gifImgSrc: '',
     };
   }
 
@@ -35,7 +57,9 @@ class FramesContainer extends Component {
       if (event.data.currentPart === event.data.partsTotal - 1) {
         this.endLoading();
         gif = this.getOrderedGif();
-        this._gifImg.src = `data:image/gif;base64,${window.btoa(gif)}`;
+        this.setState({
+          gifImgSrc: `data:image/gif;base64,${btoa(gif)}`,
+        });
       }
     });
   }
@@ -81,7 +105,11 @@ class FramesContainer extends Component {
 
   componentDidUpdate() {
     if (this.state.frameAdded) {
-      this._addButton.scrollIntoView();
+      // Web don't need this setTimeout, but Android need
+      setTimeout(() => {
+        this._addButton.scrollToEnd();
+      });
+
       this.setState({frameAdded: false});
     }
   }
@@ -96,19 +124,21 @@ class FramesContainer extends Component {
 
   getGifImage() {
     if (this.state.loading) {
-      return <div className="framescontainer__gif-loading"></div>;
+      return <View style={styles.gifLoading} />;
     }
 
     return [
-      <div
-        key="image"
-        className="framescontainer__gif-image"
-        style={this.stylesToCenter()}>
-        <img src="" ref={(img) => (this._gifImg = img)} />
-      </div>,
-      <span key="fps" className="framescontainer__gif-fps">
+      <View key="image" style={this.stylesToCenter()}>
+        <ImageBackground
+          style={styles.gifImg}
+          source={require('../../images/tile-light-16.png')}
+          resizeMode="repeat">
+          <Image style={styles.gifImg} source={{uri: this.state.gifImgSrc}} />
+        </ImageBackground>
+      </View>,
+      <Text key="fps" style={styles.gifFps}>
         {this.props.fps}fps
-      </span>,
+      </Text>,
     ];
   }
 
@@ -126,12 +156,17 @@ class FramesContainer extends Component {
 
     modified.forEach((frameObj) => {
       const id = Object.keys(frameObj)[0];
-
       this.workerPool.postMessage({
         frameUUID: id,
         frameNum: frameObj[id],
         framesLength: gifLength,
-        imageData: collection[id].naturalImageData.data,
+        // need this [...] otherwise will be object like {"0":0} after
+        // JSON.stringify(Uint8ClampedArray naturalImageData.data) ,
+        // for postMessage() and onmessage() only eat string in
+        // react-native-threads, and since [] instead of Uint8ClampedArray
+        // also works well in getImagePixels() of `src/libs/gif/GIFEncoder.js`,
+        // so [...] here is ok
+        imageData: [...collection[id].naturalImageData.data],
         height,
         width,
         fps,
@@ -161,44 +196,108 @@ class FramesContainer extends Component {
           (1 -
             getRatio(root.props.imageSize.height, root.props.imageSize.width)) +
         '%';
-      return `${vertical} 0`;
+      return vertical;
     };
 
     return {
       height: '100%',
       width: getWidth(),
-      padding: getPadding(),
+      paddingVertical: getPadding(),
     };
   }
 
   render() {
-    const classes = classNames('framescontainer', {
-      hidden: this.props.hidden,
-    });
-
-    return (
-      <div className={classes}>
-        <div className="framescontainer__gif-container">
-          <div className="framescontainer__gif">{this.getGifImage()}</div>
-        </div>
-        <div className="framescontainer__frames">
+    return this.props.hidden ? null : (
+      <View style={styles.container}>
+        <View style={styles.gifContainer}>
+          <View style={styles.gif}>{this.getGifImage()}</View>
+        </View>
+        <ScrollView
+          style={styles.frames}
+          horizontal={true}
+          ref={(b) => (this._addButton = b)}>
           {this.getFrames()}
-          <div
-            className="framescontainer__frames-addframe"
-            ref={(b) => (this._addButton = b)}
-            onClick={this.addFrame.bind(this)}>
-            <svg
-              className="framescontainer__frames-addframe__icon"
-              viewBox="0 0 24 24"
-              width="40"
-              height="40">
-              <use xlinkHref="#plus"></use>
-            </svg>
-          </div>
-        </div>
-      </div>
+          <TouchableOpacity
+            style={styles.framesAddframe}
+            onPress={this.addFrame.bind(this)}>
+            <Image
+              source={require('../../images/plus.png')}
+              style={styles.framesAddframeIcon}
+              resizeMode="stretch"
+            />
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',
+  },
+  gifContainer: {
+    width: 55,
+    height: 50,
+    paddingRight: 5,
+    borderRightWidth: 1,
+    borderColor: '#6d858e',
+  },
+  gif: {
+    width: '100%',
+    height: '100%',
+    textAlign: 'center',
+    backgroundColor: '#1b2631',
+    borderWidth: 4,
+    borderColor: '#1b2631',
+  },
+  gifImage: {
+    width: '100%',
+    height: '100%',
+  },
+  gifImg: {
+    width: '100%',
+    height: '100%',
+  },
+  gifFps: {
+    width: 23,
+    height: 12,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    textAlign: 'center',
+    fontSize: 9,
+    opacity: 0.8,
+    color: '#5b5c5d',
+    backgroundColor: '#b7b7b7',
+  },
+  gifLoading: {
+    width: 35,
+    height: 10,
+  },
+  frames: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 50,
+    paddingLeft: 5,
+    // overflow: 'hidden',
+  },
+  framesAddframe: {
+    height: 45,
+    width: 45,
+    margin: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#1b2631',
+  },
+  framesAddframeIcon: {
+    width: 40,
+    height: 40,
+    margin: 15,
+  },
+});
 
 export default FramesContainer;

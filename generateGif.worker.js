@@ -7,10 +7,10 @@
 // so
 // for Android and iOS: /generateGif.worker.js
 // for Web: /src/workers/generateGif.worker.js
+import {self} from '@minar-kotonoha/react-native-threads';
+import GIFEncoder from './src/libs/gif/GIFEncoder';
 
-import GIFEncoder from '../libs/gif/GIFEncoder';
-
-// below is same with /generateGif.worker.js
+// below is same with /src/workers/generateGif.worker.js`
 // =======
 
 self.onmessage = (event) => {

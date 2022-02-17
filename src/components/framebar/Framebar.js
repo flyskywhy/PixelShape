@@ -1,14 +1,16 @@
-import './framebar.styl';
-
 import React, {Component} from 'react';
-import decorateWithKeyBindings from '../../helpers/KeyBindings';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import Slider from '@react-native-community/slider';
+// import decorateWithKeyBindings from '../../helpers/KeyBindings';
 
 import FrameButton from '../framebutton/Framebutton';
-import FrameButtonBig from '../framebutton/Framebuttonbig';
+// import FrameButtonBig from '../framebutton/Framebuttonbig';
 import FramesContainer from '../../containers/framescontainer/Framescontainer';
-import classNames from 'classnames';
 
 import debounce from '../../utils/debounce';
+import {colors as stylesColors} from '../../styles/variables.js';
+
+const {width, height} = Dimensions.get('window');
 
 class Framebar extends Component {
   constructor(...args) {
@@ -22,10 +24,10 @@ class Framebar extends Component {
     this.goLeft = this.goLeft.bind(this);
     this.goRight = this.goRight.bind(this);
 
-    this.bindKeys({
-      'alt + left': this.goLeft,
-      'alt + right': this.goRight,
-    });
+    // this.bindKeys({
+    //   'alt + left': this.goLeft,
+    //   'alt + right': this.goRight,
+    // });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,11 +60,11 @@ class Framebar extends Component {
     this.props.setCurrentFrame(this.props.nextFrameUUID);
   }
 
-  onChange(ev) {
+  onChange(value) {
     // setting just state, to make slider movable
-    this.setState({fps: ev.target.value});
+    this.setState({fps: value});
     // and then setting actual fps debounced to apply changes
-    this.setFPS(ev.target.value);
+    this.setFPS(value);
   }
 
   saveCurrentFrameName() {
@@ -74,81 +76,89 @@ class Framebar extends Component {
 
   getMaximizedControls() {
     return [
-      <div className="framebar__gif-controls" key="maxgifcontrols">
-        <input
-          className="framebar__gif-slider"
-          ref={(s) => (this._fpsSlider = s)}
-          type="range"
-          step="1"
-          min="1"
-          max="24"
+      <View style={styles.gifControls} key="maxgifcontrols">
+        <Slider
+          step={1}
+          minimumValue={1}
+          maximumValue={24}
           value={this.state.fps}
-          /* UNFORTUNATELY IE11 DOESN'T HANDLE ONCHANGE EVENT, SO NEED TO SUBSCRIBE TO ONMOUSEUP AS WELL */
-          onMouseUp={this.onChange.bind(this)}
-          onChange={this.onChange.bind(this)}
+          thumbTintColor="#1b2631"
+          onSlidingComplete={this.onChange.bind(this)}
         />
-      </div>,
+      </View>,
 
-      <ul className="framebar__frames-controls" key="maxcontrols">
+      <View style={styles.framesControls} key="maxcontrols">
         <FrameButton
           btnTooltip="Duplicate"
-          icon="duplicate"
+          icon={require('../../images/duplicate.png')}
           doAction={this.duplicateCurrentFrame.bind(this)}
         />
         <FrameButton
           btnTooltip="Remove"
-          icon="remove"
+          icon={require('../../images/remove.png')}
           doAction={this.removeCurrentFrame.bind(this)}
         />
         <FrameButton
           btnTooltip="Move left"
-          icon="move-left"
+          icon={require('../../images/move-left.png')}
           doAction={this.moveCurrentFrameLeft.bind(this)}
         />
         <FrameButton
           btnTooltip="Move right"
-          icon="move-right"
+          icon={require('../../images/move-right.png')}
           doAction={this.moveCurrentFrameRight.bind(this)}
         />
-      </ul>,
 
-      <div className="framebar__framename" key="maxframename">
-        <input
-          className="framebar__framename-input"
+        <FrameButton
+          btnTooltip="Go left"
+          icon={require('../../images/left-min.png')}
+          doAction={this.goLeft}
+        />
+        <FrameButton
+          btnTooltip="Go right"
+          icon={require('../../images/right-min.png')}
+          doAction={this.goRight}
+        />
+      </View>,
+      /*{
+      <View style={styles.framename} key="maxframename">
+        <Text
+          style={styles.framenameInput}
           ref={(inp) => (this._nameInput = inp)}
           key={this.props.currentFrameName}
           defaultValue={this.props.currentFrameName}
           onBlur={this.saveCurrentFrameName.bind(this)}
         />
-      </div>,
+      </View>,
+      }*/
     ];
   }
 
-  getMinimizedControls() {
-    return [
-      <div className="framebar__frame-counter" key="mincounter">
-        <span>{this.props.currentFrameIndex + 1} of </span>
-        <span>{this.props.framesCount}</span>
-      </div>,
+  // getMinimizedControls() {
+  //   return [
+  //     <View style={styles.frameCounter} key="mincounter">
+  //       <Text>{this.props.currentFrameIndex + 1} of </Text>
+  //       <Text>{this.props.framesCount}</Text>
+  //     </View>,
 
-      <ul
-        className="framebar__frames-controls framebar__frames-controls-big"
-        key="mincontrols">
-        <FrameButtonBig
-          btnTooltip="Go left"
-          btnShortcut="(ALT + LEFT)"
-          icon="left-min"
-          doAction={this.goLeft}
-        />
-        <FrameButtonBig
-          btnTooltip="Go right"
-          btnShortcut="(ALT + RIGHT)"
-          icon="right-min"
-          doAction={this.goRight}
-        />
-      </ul>,
-    ];
-  }
+  //     <View
+  //       style={[styles.framesControls, {height: 60}]}
+  //       key="mincontrols">
+  //       <FrameButtonBig
+  //         btnTooltip="Go left"
+  //         btnShortcut="(ALT + LEFT)"
+  //         icon={require('../../images/left-min.png')}
+  //         doAction={this.goLeft}
+  //       />
+  //       <FrameButtonBig
+  //         btnTooltip="Go right"
+  //         btnShortcut="(ALT + RIGHT)"
+  //         icon={require('../../images/right-min.png')}
+  //         doAction={this.goRight}
+  //       />
+  //     </View>,
+  //   ];
+  // }
 
   toggleMinimize() {
     this.setState({
@@ -157,30 +167,103 @@ class Framebar extends Component {
   }
 
   render() {
-    const classes = classNames('framebar', {
-      minimized: !this.state.maximized,
-    });
-
-    return (
-      <aside
-        className={classes}
-        style={{display: this.props.visible ? 'block' : 'none'}}>
-        <div className="framebar__controls">
-          {this.state.maximized
-            ? this.getMaximizedControls()
-            : this.getMinimizedControls()}
-          <div className="framebar__minimize">
-            <div
-              className="framebar__minimize-button"
-              onClick={this.toggleMinimize.bind(this)}>
-              {this.state.maximized ? 'Minimize' : 'Maximize'}
-            </div>
-          </div>
-        </div>
+    return this.props.visible ? (
+      <View style={styles.container}>
+        <View style={styles.controls}>{this.getMaximizedControls()}</View>
         <FramesContainer hidden={!this.state.maximized} />
-      </aside>
-    );
+      </View>
+    ) : null;
+
+    // return this.props.visible ? (
+    //   <View style={[styles.container, {height: this.state.maximized ? 100 : 70}]}>
+    //     <View style={styles.controls}>
+    //       {this.state.maximized
+    //         ? this.getMaximizedControls()
+    //         : this.getMinimizedControls()}
+    //       <View style={styles.minimize}>
+    //         <TouchableOpacity
+    //           style={styles.minimizeButton}"
+    //           onPress={this.toggleMinimize.bind(this)}>
+    //           {this.state.maximized ? 'Minimize' : 'Maximize'}
+    //         </TouchableOpacity>
+    //       </View>
+    //     </View>
+    //     <FramesContainer hidden={!this.state.maximized} />
+    //   </View>
+    // ) : null;
   }
 }
 
-export default decorateWithKeyBindings(Framebar);
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: height - 110,
+    // left: width * 0.2,
+    left: 0,
+    height: 100,
+    // width: width * 0.6,
+    width: width,
+    borderWidth: 2,
+    borderBottomWidth: 0,
+    borderColor: '#3a3a3a',
+    borderTopRightRadius: 6,
+    borderTopLeftRadius: 6,
+    backgroundColor: stylesColors.blue,
+    // zIndex: 1,
+  },
+  frameCounter: {
+    flex: 0.7,
+    flexDirection: 'row',
+    padding: 18,
+    color: '#b7b7b7',
+  },
+  controls: {
+    flex: 1,
+    flexDirection: 'row',
+    marginBottom: 2,
+  },
+  gifControls: {
+    flex: 1,
+    height: 50,
+    marginLeft: 5,
+    marginRight: 5,
+    justifyContent: 'center',
+  },
+  framesControls: {
+    flex: 2,
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  framename: {
+    height: 50,
+  },
+  framenameInput: {
+    width: 100,
+    height: 20,
+    paddingLeft: 3,
+    marginTop: 15,
+    fontFamily: 'robotothin',
+    fontSize: 9,
+    borderBottomWidth: 2,
+    color: '#fff',
+    backgroundColor: '#264653',
+  },
+  minimize: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  minimizeButton: {
+    width: 90,
+    height: 40,
+    padding: 8,
+    textAlign: 'center',
+    color: '#b7b7b7',
+    fontWeight: 'bold',
+  },
+});
+
+// export default decorateWithKeyBindings(Framebar);
+export default Framebar;
