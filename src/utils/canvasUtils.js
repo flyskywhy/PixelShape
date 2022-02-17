@@ -58,7 +58,7 @@ export const createCanvas = (width, height) => {
 };
 
 // resizes/stretches imageData to new width and height
-export resizeImageData from 'resize-image-data';
+export const resizeImageData = require('resize-image-data');
 // export const resizeImageData = (imageData, targetWidth, targetHeight) => {
 //   const originalCanvas = createCanvas(imageData.width, imageData.height),
 //     originalContext = originalCanvas.getContext('2d'),
