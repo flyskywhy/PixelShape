@@ -46,6 +46,16 @@ class Frame extends Component {
     //   .then(data => this.ctx.drawImage(data, 0, 0));
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.imageData !== nextProps.imageData) {
+      return true;
+    }
+    if (this.props.isActive !== nextProps.isActive) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
     const {width, height} = this.props;
 
