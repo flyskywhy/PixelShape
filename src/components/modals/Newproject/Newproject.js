@@ -1,11 +1,19 @@
 import React, {Component} from 'react';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import RNSystemFileBrower from 'react-native-system-file-browser';
+
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
 import StateLoader from '../../../statemanager/StateLoader';
 import {projectExtension} from '../../../defaults/constants';
-
-import './newproject.styl';
 
 class NewProjectModal extends Component {
   constructor(props) {
@@ -20,7 +28,7 @@ class NewProjectModal extends Component {
 
   onFileLoaded(data) {
     this.setState({
-      importedFileName: data.file.name,
+      importedFileName: data.file.name || 'gif',
       importedData: data.json,
       loading: false,
       progress: 0,
@@ -37,6 +45,22 @@ class NewProjectModal extends Component {
     this.setState({
       loading: true,
     });
+  }
+
+  importFile() {
+    if (Platform.OS === 'web') {
+      document.getElementById('project-import').click();
+    } else {
+      RNSystemFileBrower.openFileBrower({
+        types: Platform.OS === 'ios' ? 'public.gif' : 'image/gif',
+      }).then((res) => {
+        if (res && typeof res.url === 'string') {
+          const callback = this.onFileLoaded.bind(this),
+            stepCallback = this.onStep.bind(this);
+          StateLoader.uploadGif(res.url, callback, stepCallback);
+        }
+      });
+    }
   }
 
   handleUpload() {
@@ -60,11 +84,7 @@ class NewProjectModal extends Component {
 
   getFileNotification() {
     if (this.state.importedFileName) {
-      return (
-        <p className="newproject-import__info-file">
-          {this.state.importedFileName}
-        </p>
-      );
+      return <Text style={styles.infoFile}>{this.state.importedFileName}</Text>;
     }
 
     if (this.state.loading) {
@@ -72,24 +92,23 @@ class NewProjectModal extends Component {
     }
 
     return [
-      <p key="info" className="newproject-import__info-row">
+      <Text key="info" style={styles.infoRow}>
         No file imported.
-      </p>,
-      <p
-        key="note"
-        className="newproject-import__info-row newproject-import__info-row__note">
+      </Text>,
+      <Text key="note" style={styles.infoRowNote}>
         New project will be created.
-      </p>,
+      </Text>,
     ];
   }
 
   getFileLoadingTracking() {
-    return [
-      <div key="spinner" className="newproject-import__info-spinner"></div>,
-      <div
-        key="tracking"
-        className="newproject-import__info-tracking">{`${this.state.progress}%`}</div>,
-    ];
+    // return [
+    //   <div key="spinner" className="newproject-import__info-spinner"></div>,
+    //   <div
+    //     key="tracking"
+    //     className="newproject-import__info-tracking">{`${this.state.progress}%`}</div>,
+    // ];
+    return <Text style={styles.infoTracking}>{`${this.state.progress}%`}</Text>;
   }
 
   dropImportedFile() {
@@ -97,7 +116,9 @@ class NewProjectModal extends Component {
       importedFileName: null,
       importedData: null,
     });
-    this._input.value = '';
+    if (Platform.OS === 'web') {
+      this._input.value = '';
+    }
   }
 
   confirm() {
@@ -134,8 +155,8 @@ class NewProjectModal extends Component {
           Reset palette
         </ToggleCheckbox>
 
-        <div className="newproject-import">
-          <div className="newproject-import__upload">
+        <View style={styles.import}>
+          {Platform.OS === 'web' && (
             <input
               id="project-import"
               type="file"
@@ -144,32 +165,76 @@ class NewProjectModal extends Component {
               style={{display: 'none'}}
               onChange={this.handleUpload.bind(this)}
             />
-            <label
-              htmlFor="project-import"
-              className="newproject-import__upload-btn">
-              Import
-              <svg
-                className="newproject-import__upload-btn__icon"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24">
-                <use xlinkHref={'#upload'}></use>
-              </svg>
-            </label>
-          </div>
+          )}
+          <TouchableOpacity onPress={this.importFile.bind(this)}>
+            <View style={styles.upload}>
+              <Text style={styles.uploadBtn}>Import</Text>
+              <Image
+                source={require('../../../images/upload.png')}
+                style={styles.icon}
+                resizeMode="stretch"
+              />
+            </View>
+          </TouchableOpacity>
 
-          <div className="newproject-import__info">
-            {this.getFileNotification()}
-          </div>
-        </div>
+          <View style={styles.info}>{this.getFileNotification()}</View>
+        </View>
 
-        <div className="newproject-import__warning">
-          You are allowed to load only files of <strong>.gif</strong> and{' '}
-          <strong>.pxlsh</strong> formats
-        </div>
+        <Text>
+          {'You are allowed to load only files of `.gif`' +
+            (Platform.OS === 'web' ? ' and `.pxlsh` formats' : 'format')}
+        </Text>
       </ModalWindow>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  import: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderColor: '#e0e0e0',
+    marginTop: 10,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  upload: {
+    flexDirection: 'row',
+    paddingHorizontal: 19,
+    backgroundColor: '#264653',
+  },
+  uploadBtn: {
+    color: '#fff',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    lineHeight: 40,
+  },
+  icon: {
+    height: 24,
+    width: 24,
+    marginLeft: 10,
+    alignSelf: 'center',
+  },
+  info: {
+    flex: 1,
+    paddingLeft: 19,
+  },
+  infoFile: {
+    lineHeight: 20,
+    fontWeight: 'bold',
+  },
+  infoRow: {
+    textAlign: 'left',
+    lineHeight: 20,
+  },
+  infoRowNote: {
+    fontWeight: 'bold',
+  },
+  infoTracking: {
+    marginLeft: 30,
+    lineHeight: 40,
+    fontFamily: 'robotobold',
+  },
+});
 
 export default NewProjectModal;

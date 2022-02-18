@@ -1,3 +1,8 @@
+import React, {Component} from 'react';
+import {Platform} from 'react-native';
+if (Platform.OS !== 'web') {
+  var RNFS = require('react-native-fs');
+}
 import ImageDataExtended from '../utils/imageData';
 
 // Generic functions
@@ -545,20 +550,42 @@ var GifLoader = function ( opts ) {
                 load_callback = resolve;
                 error_callback = reject || doNothing;
 
-                const fReader = new FileReader();
+                if (typeof gif === 'string') {
+                    RNFS.readFile(gif, 'ascii')
+                        .then((data) => {
+                            const len = data.length,
+                                bytes = [];
 
-                fReader.addEventListener('load', e => {
-                    stream = new Stream(
-                        new Uint8Array(e.target.result)
-                    );
-                    setTimeout(doParse, 0);
-                });
+                            let i = 0;
 
-                fReader.addEventListener('onerror', e => {
-                    error_callback(e.message);
-                });
+                            for (; i < len; i++) {
+                                bytes[i] = data.charCodeAt(i);
+                            }
 
-                fReader.readAsArrayBuffer(gif);
+                            stream = new Stream(
+                                new Uint8Array(bytes)
+                            );
+                            setTimeout(doParse, 0);
+                        })
+                        .catch((err) => {
+                            error_callback(err);
+                        });
+                } else {
+                    const fReader = new FileReader();
+
+                    fReader.addEventListener('load', e => {
+                        stream = new Stream(
+                            new Uint8Array(e.target.result)
+                        );
+                        setTimeout(doParse, 0);
+                    });
+
+                    fReader.addEventListener('onerror', e => {
+                        error_callback(e.message);
+                    });
+
+                    fReader.readAsArrayBuffer(gif);
+                }
             });
         },
         parsedFrames: function () {

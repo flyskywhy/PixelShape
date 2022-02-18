@@ -1,7 +1,15 @@
 import React from 'react';
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-const modalWidth = 250;
+const {width} = Dimensions.get('window');
+const modalWidth = 300;
 
 const ModalWindow = (props) => {
   return (
@@ -28,6 +36,9 @@ const ModalWindow = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    top: 100,
+    left: (width - modalWidth) / 2,
     width: modalWidth,
     backgroundColor: '#ffffff',
     justifyContent: 'center',
@@ -46,8 +57,8 @@ const styles = StyleSheet.create({
   },
   section: {
     width: modalWidth,
-    paddingTop: 10,
-    paddingBottom: 24,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
   },
   footer: {
     width: modalWidth,

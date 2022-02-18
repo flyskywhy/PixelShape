@@ -4,12 +4,12 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 
 import AppToolButton from '../apptoolbutton/Apptoolbutton';
 
-// import NewProjectModal from '../../containers/modals/Newproject';
+import NewProjectModal from '../../containers/modals/Newproject';
 import DownloadProjectModal from '../../containers/modals/Downloadproject';
 import CustomizePanelsModal from '../../containers/modals/Customizepanels';
 // import SettingsModal from '../../containers/modals/Settings';
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const MODALS = {
   NewProject: 'newProjectShow',
@@ -130,14 +130,14 @@ class Apptoolbox extends Component {
             icon={require('../../images/panels.png')}
             doAction={this.openCustomizePanels}
           />
-          <AppToolButton
+          {/*<AppToolButton
             btnTooltip="Settings"
             btnShortcut="(ALT + S)"
             width={30}
             height={30}
             icon={require('../../images/settings.png')}
             doAction={this.openSettings}
-          />
+          />*/}
         </View>
 
         {(this.state.newProjectShow ||
@@ -145,10 +145,10 @@ class Apptoolbox extends Component {
           this.state.customizePanelsShow ||
           this.state.settingsShow) && <View style={[styles.modalLayer]} />}
 
-        {/*        <NewProjectModal
+        <NewProjectModal
           isShown={this.state.newProjectShow}
           closeModal={this.closeModal}
-        />*/}
+        />
 
         <DownloadProjectModal
           isShown={this.state.downloadProjectShow}
@@ -171,32 +171,30 @@ class Apptoolbox extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     position: 'absolute',
+    flexDirection: 'row',
+    justifyContent: 'center',
     top: 0,
-    left: (width - 310) / 2,
-    width: 310,
-    height: 60,
-    padding: 5,
+    left: 0,
+    zIndex: 1,
+  },
+  buttons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
     borderWidth: 1,
     borderTopWidth: 0,
     borderColor: '#40606d',
+    padding: 5,
     backgroundColor: '#365561',
-    // zIndex: 1,
-  },
-  buttons: {
-    // flex: 1,
-    width: '100%',
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   modalLayer: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
+    width,
+    height,
     top: 0,
     left: 0,
     zIndex: 1,
