@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import {Platform} from 'react-native';
+if (Platform.OS !== 'web') {
+  var RNFS = require('react-native-fs');
+}
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
@@ -61,7 +65,61 @@ class DownloadProjectModal extends Component {
     const blobs = [];
 
     if (this.props.includeGif) {
-      blobs.push(this.prepareGif());
+      if (
+        this.props.includePalette ||
+        this.props.includeProject ||
+        this.props.includeSpritesheet
+      ) {
+        blobs.push(this.prepareGif());
+      } else {
+        if (Platform.OS === 'web') {
+          blobs.push(this.prepareGif());
+          Downloader.asFiles(blobs);
+        } else {
+          const combinedData = this.combineGifData();
+          if (combinedData) {
+            const directoryPath = `${
+              Platform.OS === 'android'
+                ? RNFS.PicturesDirectoryPath
+                : RNFS.DocumentDirectoryPath
+            }/gifs`;
+
+            const now = new Date();
+            const year = now.getFullYear();
+            let month = now.getMonth() + 1;
+            month = month < 10 ? '0' + month : '' + month;
+            const date =
+              now.getDate() < 10 ? '0' + now.getDate() : '' + now.getDate();
+            const hour =
+              now.getHours() < 10 ? '0' + now.getHours() : '' + now.getHours();
+            const minute =
+              now.getMinutes() < 10
+                ? '0' + now.getMinutes()
+                : '' + now.getMinutes();
+            const second =
+              now.getSeconds() < 10
+                ? '0' + now.getSeconds()
+                : '' + now.getSeconds();
+            const fileName =
+              year + month + date + hour + minute + second + '.gif';
+            // const fileName = Files.NAME.ANIMATION;
+
+            const fullPath = `${directoryPath}/${fileName}`;
+
+            RNFS.stat(directoryPath)
+              .then((success) => {
+                RNFS.writeFile(fullPath, combinedData, 'ascii');
+              })
+              .catch(() => {
+                RNFS.mkdir(directoryPath).then((success) => {
+                  RNFS.writeFile(fullPath, combinedData, 'ascii');
+                });
+              });
+          }
+        }
+        this.props.closeModal();
+        return;
+      }
     }
     if (this.props.includePalette) {
       blobs.push(this.preparePalette());

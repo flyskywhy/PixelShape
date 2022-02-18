@@ -39,9 +39,9 @@ const initialState = {
   anchor: 'oo',
   downloadOptions: {
     includeGif: true,
-    includeSpritesheet: true,
-    includeProject: true,
-    includePalette: true,
+    includeSpritesheet: false,
+    includeProject: false,
+    includePalette: false,
   },
 };
 

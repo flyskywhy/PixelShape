@@ -1,29 +1,33 @@
-import './apptoolbutton.styl';
-
 import React from 'react';
-import classNames from 'classnames';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 
-const AppToolButton = (props) => {
-  const classes = classNames('apptoolbutton', 'tooltip-bottom', {
-    'apptoolbutton--disabled': props.disabled,
-  });
+const AppToolButton = (props) => (
+  <TouchableOpacity
+    style={[styles.container, {opacity: props.disabled ? 0.5 : 1}]}
+    onPress={props.doAction}>
+    <Image
+      source={props.icon}
+      style={[styles.icon, {width: props.width, height: props.height}]}
+      resizeMode="stretch"
+    />
+  </TouchableOpacity>
+);
 
-  return (
-    <li
-      className={classes}
-      onClick={props.doAction}
-      data-tooltip={props.btnTooltip}
-      data-shortcut={props.btnShortcut}
-      data-multiline-tooltip>
-      <svg
-        className="apptoolbutton__icon"
-        viewBox="0 0 24 24"
-        width={props.width}
-        height={props.height}>
-        <use xlinkHref={`#${props.icon}`}></use>
-      </svg>
-    </li>
-  );
-};
+const styles = StyleSheet.create({
+  container: {
+    height: 50,
+    width: 50,
+    backgroundColor: 'transparent',
+    // backgroundColor: '#264653',
+    // borderRightWidth: 1,
+    // borderColor: '#40606d',
+  },
+  icon: {
+    height: 24,
+    width: 24,
+    margin: 10,
+    alignSelf: 'center',
+  },
+});
 
 export default AppToolButton;

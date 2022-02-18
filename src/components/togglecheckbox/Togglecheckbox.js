@@ -1,7 +1,6 @@
-import './togglecheckbox.styl';
-
 import React, {Component} from 'react';
-import classNames from 'classnames';
+import {StyleSheet, Text, View} from 'react-native';
+import Checkbox from 'expo-checkbox';
 
 // this is needed to reference input from label
 // so we will increase it in constructor to keep unique
@@ -15,27 +14,34 @@ class ToggleCheckbox extends Component {
   }
 
   render() {
-    const classes = classNames('togglecheckbox', this.props.className);
-
     return (
-      <div className={classes}>
-        <input
-          className="togglecheckbox-checkbox"
-          type="checkbox"
-          id={`togglecheckbox-${this.state.id}`}
-          checked={this.props.value}
-          onChange={this.props.onChange}
+      <View key={`togglecheckbox-${this.state.id}`} style={styles.container}>
+        <Checkbox
+          style={styles.checkbox}
+          value={this.props.value}
+          onValueChange={this.props.onChange}
+          color={this.props.value ? '#70c1b3' : '#bddcd7'}
         />
-        <label
-          className="togglecheckbox-checkbox__switch"
-          htmlFor={`togglecheckbox-${this.state.id}`}
-        />
-        <span className="togglecheckbox-checkbox__text">
-          {this.props.children}
-        </span>
-      </div>
+        <Text style={styles.text}>{this.props.children}</Text>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkbox: {
+    marginVertical: 3,
+    marginLeft: 24,
+    marginRight: 4,
+  },
+  text: {
+    textAlignVertical: 'center',
+  },
+});
 
 export default ToggleCheckbox;
