@@ -5,9 +5,15 @@ const path = require('path');
 
 module.exports = {
   webpack: function (config, env) {
+    // To enable the eslint rules in '.eslintrc.js'
     config.module.rules[1].use[0].options.baseConfig.extends = [
       path.resolve('.eslintrc.js'),
     ];
+
+    // To avoid sometimes react-app-rewired is not honouring your change to the eslint rules
+    // in '.eslintrc.js', you should manually disable the eslint cache, ref to
+    // https://github.com/facebook/create-react-app/issues/9007#issuecomment-628601097
+    config.module.rules[1].use[0].options.cache = false;
 
     // To let alias like 'react-native/Libraries/Components/StaticRenderer'
     // take effect, must set it before alias 'react-native'
