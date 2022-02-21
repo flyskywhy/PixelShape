@@ -15,6 +15,9 @@ module.exports = {
     // https://github.com/facebook/create-react-app/issues/9007#issuecomment-628601097
     config.module.rules[1].use[0].options.cache = false;
 
+    // To enable '.eslintignore'
+    config.module.rules[1].use[0].options.ignore = true;
+
     // To let alias like 'react-native/Libraries/Components/StaticRenderer'
     // take effect, must set it before alias 'react-native'
     delete config.resolve.alias['react-native'];
