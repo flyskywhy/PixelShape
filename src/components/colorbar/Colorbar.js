@@ -1,10 +1,10 @@
-import './colorbar.styl';
-
 import React, {Component} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import Coloritem from '../coloritem/Coloritem';
 import Colorpicker from '../colorpicker/Colorpicker';
 
-import colors from '../../defaults/palette';
+import defaultColors from '../../defaults/palette';
+import {colors as stylesColors} from '../../styles/variables.js';
 
 class Colorbar extends Component {
   getPalette(colors) {
@@ -20,36 +20,64 @@ class Colorbar extends Component {
   }
 
   getDefaultColorPalette() {
-    return this.getPalette(colors);
+    return this.getPalette(defaultColors);
   }
 
   getUserColorPalette() {
     return (
-      <div className="colorbar__user-palette-wrapper">
+      <ScrollView style={styles.userPaletteWrapper}>
         {this.getPalette(this.props.userColors)}
-      </div>
+      </ScrollView>
     );
   }
 
   render() {
     return (
-      <div className="colorbar">
-        <div className="colorbar__default-palette">
-          <div className="colorbar__label">Palette</div>
+      <View style={styles.container}>
+        <View style={styles.defaultPalette}>
+          <Text style={styles.label}>Palette</Text>
           {this.getDefaultColorPalette()}
-        </div>
+        </View>
         <Colorpicker
           addColor={this.props.addColor.bind(this)}
           userColors={this.props.userColors}
           tempColor={this.props.tempColor}
         />
-        <div className="colorbar__user-palette">
-          <div className="colorbar__label">Custom</div>
+        <View style={styles.userPalette}>
+          <Text style={styles.label}>Custom</Text>
           {this.getUserColorPalette()}
-        </div>
-      </div>
+        </View>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: 45,
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  defaultPalette: {
+    alignItems: 'center',
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderColor: stylesColors.greyblue,
+  },
+  userPalette: {
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: stylesColors.greyblue,
+    paddingBottom: 10,
+  },
+  userPaletteWrapper: {
+    maxHeight: 80,
+  },
+  label: {
+    paddingBottom: 10,
+    fontSize: 9,
+    color: stylesColors.greyblue,
+  },
+});
 
 export default Colorbar;

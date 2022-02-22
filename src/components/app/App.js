@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import {Dimensions, View} from 'react-native';
 import Toolbar from '../../containers/toolbar/Toolbar';
 import Surface from '../../containers/surface/Surface';
-// import Sidebar from '../../containers/sidebar/Sidebar';
+import Sidebar from '../../containers/sidebar/Sidebar';
 import Framebar from '../../containers/framebar/Framebar';
 import Apptoolbox from '../../containers/apptoolbox/Apptoolbox';
 
@@ -33,9 +33,7 @@ class App extends Component {
           <Framebar />
         </View>
         <Toolbar />
-        {/*
         <Sidebar />
-        */}
       </View>
     );
   }

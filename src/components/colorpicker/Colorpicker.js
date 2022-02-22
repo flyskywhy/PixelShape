@@ -1,6 +1,14 @@
-import './colorpicker.styl';
-
 import React, {Component} from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+import {colors as stylesColors} from '../../styles/variables.js';
 
 // TODO: move this to defaults file
 const defaultColor = '#b7b7b7';
@@ -15,30 +23,35 @@ class Colorpicker extends Component {
     };
   }
 
-  getInputColor(ev) {
-    return ev.target.value.match(this.pattern) ? ev.target.value : defaultColor;
+  getInputColor(value) {
+    if (value) {
+      return value.match(this.pattern) ? value : defaultColor;
+    } else {
+      return defaultColor;
+    }
   }
 
-  onChange(ev) {
-    const value = this.getInputColor(ev);
+  onChange(value) {
+    const color = this.getInputColor(value);
     this.setState({
-      borderColor: value,
-      currentColor: ev.target.value,
-    });
-  }
-
-  onBlur(ev) {
-    const value = this.getInputColor(ev);
-    this.setState({
-      borderColor: value,
+      borderColor: color,
       currentColor: value,
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  onBlur() {
+    const color = this.getInputColor(this.state.currentColor);
     this.setState({
-      borderColor: nextProps.tempColor,
-      currentColor: nextProps.tempColor,
+      borderColor: color,
+      currentColor: color,
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const color = this.getInputColor(nextProps.tempColor);
+    this.setState({
+      borderColor: color,
+      currentColor: color,
     });
   }
 
@@ -59,27 +72,51 @@ class Colorpicker extends Component {
 
   render() {
     return (
-      <div className="colorpicker">
-        <div className="colorbar__label">Hex</div>
-        <input
-          ref={(inp) => (this._input = inp)}
+      <View style={styles.container}>
+        <TextInput
+          style={styles.hexColor}
+          maxLength={7}
           value={this.state.currentColor}
-          style={{borderColor: this.state.borderColor}}
-          onChange={this.onChange.bind(this)}
+          placeholder="Hex"
+          placeholderTextColor="#ccc"
+          onChangeText={this.onChange.bind(this)}
           onBlur={this.onBlur.bind(this)}
         />
-        <div className="colorpicker__add" onClick={this.onClick.bind(this)}>
-          <svg
-            className="colorpicker__add-icon"
-            viewBox="0 0 24 24"
-            width="20"
-            height="45">
-            <use xlinkHref="#plus"></use>
-          </svg>
-        </div>
-      </div>
+
+        <TouchableOpacity style={styles.add} onPress={this.onClick.bind(this)}>
+          <Text>+</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 10,
+    alignItems: 'center',
+  },
+  hexColor: {
+    color: '#ffffff',
+    fontSize: 8,
+    width: 40,
+    height: 30,
+  },
+  add: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: stylesColors.seagreen,
+  },
+  label: {
+    padding: 8,
+    paddingBottom: 10,
+    fontSize: 9,
+    color: stylesColors.greyblue,
+  },
+});
 
 export default Colorpicker;
