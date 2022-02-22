@@ -1,9 +1,6 @@
 # PixelShape
 
-[![Build Status](https://travis-ci.org/Convicted202/PixelShape.svg?branch=master)](https://travis-ci.org/Convicted202/PixelShape)
-[![Coverage Status](https://coveralls.io/repos/github/Convicted202/PixelShape/badge.svg?branch=master)](https://coveralls.io/github/Convicted202/PixelShape?branch=master)
-
-### [Live demo](https://convicted202.github.io/PixelShape/)
+### [origin convicted202's Live Web demo](https://convicted202.github.io/PixelShape/)
 
 Android iOS and Web pixel drawing tool.
 
@@ -17,7 +14,17 @@ Android iOS and Web pixel drawing tool.
 `npm run bundle-android` to `android/app/build/outputs/bundle/release/app-release.aab` for production.
 
 ## Web
+`npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser.
 
-`npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser
+`npm run build-web` to generate files in `build/` for production, and can use `npx http-server build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser. (TODO: to let it works again since add Web Worker in 99b0eb0)
 
-`npm run build-web` to generate files in `build/` for production, and can use `npx http-server build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser
+## Authors
+* Alexander Yanovych
+* Li Zheng <flyskywhy@gmail.com>
+
+## Donate
+To support my work, please consider donate.
+
+- ETH: 0xd02fa2738dcbba988904b5a9ef123f7a957dbb3e
+
+- <img src="https://raw.githubusercontent.com/flyskywhy/flyskywhy/main/assets/alipay_weixin.png" width="500">
