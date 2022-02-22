@@ -18,11 +18,11 @@ class Surface extends Component {
     this.tool = toolsMap.get(this.props.tool);
   }
 
-  applyAllContextInformation() {
+  applyAllContextInformation(props) {
+    this.tool.applyState(Object.assign({}, props.toolSettings));
+    this.tool.applyPixelSize(props.pixelSize);
     this.ctx && this.tool._assignRenderingContext(this.ctx);
     this.buffer && this.tool._assignBufferContext(this.buffer);
-    this.tool.applyState(Object.assign({}, this.props.toolSettings));
-    this.tool.applyPixelSize(this.props.pixelSize);
   }
 
   applyImageData() {
@@ -40,7 +40,7 @@ class Surface extends Component {
   }
 
   componentDidMount() {
-    this.applyAllContextInformation();
+    this.applyAllContextInformation(this.props);
     this.applyImageData();
   }
 
@@ -57,7 +57,7 @@ class Surface extends Component {
     }
     this.ctx = this._canvas.getContext('2d');
 
-    this.applyAllContextInformation();
+    this.applyAllContextInformation(this.props);
 
     this.updateCanvasMainRendering();
   };
@@ -75,7 +75,7 @@ class Surface extends Component {
     }
     this.buffer = this._buffer.getContext('2d');
 
-    this.applyAllContextInformation();
+    this.applyAllContextInformation(this.props);
 
     this.updateCanvasBuffer();
   };
@@ -167,7 +167,7 @@ class Surface extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.tool !== nextProps.tool) {
       this.tool = toolsMap.get(nextProps.tool);
-      this.applyAllContextInformation();
+      this.applyAllContextInformation(nextProps);
       this.applyImageData();
     }
 
@@ -220,7 +220,7 @@ class Surface extends Component {
   onMouseMove(ev) {
     this.mouseMoveOffBounds(ev);
     // this.tool = toolsMap.get(this.props.tool);
-    // this.applyAllContextInformation();
+    // this.applyAllContextInformation(this.props);
     this.tool.onMouseMove(...this.normalizeEvent(ev));
   }
 
