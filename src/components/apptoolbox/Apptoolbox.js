@@ -194,12 +194,8 @@ class Apptoolbox extends Component {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'center',
-    top: 0,
-    left: 0,
-    zIndex: 1,
   },
   buttons: {
     flexDirection: 'row',

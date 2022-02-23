@@ -27,13 +27,13 @@ class App extends Component {
   render() {
     return (
       <View style={styles.app} data-guid={this.props.guid}>
+        <Apptoolbox />
         <View style={styles.appContent}>
+          <Toolbar />
           <Surface />
-          <Apptoolbox />
-          <Framebar />
+          <Sidebar />
         </View>
-        <Toolbar />
-        <Sidebar />
+        <Framebar />
       </View>
     );
   }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import ToolButton from '../toolbutton/ToolButton';
 import tools from '../../defaults/tools';
 
@@ -27,16 +27,17 @@ class Toolbar extends Component {
 
   render() {
     return this.props.visible ? (
-      <View
-        style={{
-          position: 'absolute',
-          top: (height - tools.length * 40) / 2,
-          left: 0,
-        }}>
+      <View style={styles.container}>
         {this.getButtons()}
       </View>
     ) : null;
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+  },
+});
 
 export default Toolbar;

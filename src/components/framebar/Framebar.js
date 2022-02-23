@@ -196,10 +196,6 @@ class Framebar extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: height - 110,
-    // left: width * 0.2,
-    left: 0,
     height: 100,
     // width: width * 0.6,
     width: width,
@@ -209,7 +205,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 6,
     borderTopLeftRadius: 6,
     backgroundColor: stylesColors.blue,
-    // zIndex: 1,
   },
   frameCounter: {
     flex: 0.7,
