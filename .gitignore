@@ -57,6 +57,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+/ios/Podfile.lock
 
 # deps + build
 dist
