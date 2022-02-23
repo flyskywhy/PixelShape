@@ -16,7 +16,7 @@ const Coloritem = (props) => {
         {backgroundColor: props.color, color: props.color},
       ]}
       onPress={props.setColor}>
-      <Text style={[styles.label, labelColor]}>{props.children}</Text>
+      {/*<Text style={[styles.label, labelColor]}>{props.children}</Text>*/}
     </TouchableOpacity>
   );
 };
