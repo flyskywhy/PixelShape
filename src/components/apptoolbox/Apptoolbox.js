@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, Platform, StyleSheet, View} from 'react-native';
+import RNSystemFileBrower from 'react-native-system-file-browser';
 // import decorateWithKeyBindings from '../../helpers/KeyBindings';
 
 import AppToolButton from '../apptoolbutton/Apptoolbutton';
@@ -8,6 +9,8 @@ import NewProjectModal from '../../containers/modals/Newproject';
 import DownloadProjectModal from '../../containers/modals/Downloadproject';
 import CustomizePanelsModal from '../../containers/modals/Customizepanels';
 // import SettingsModal from '../../containers/modals/Settings';
+
+import StateLoader from '../../statemanager/StateLoader';
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,7 +34,13 @@ class Apptoolbox extends Component {
 
     this.executeUndo = this.executeUndo.bind(this);
     this.executeRedo = this.executeRedo.bind(this);
-    this.openNewProject = this.openModal.bind(this, MODALS.NewProject);
+
+    // can't open RNSystemFileBrower from react-native Modal on iOS, so skip Modal
+    this.openNewProject =
+      Platform.OS === 'web'
+        ? this.openModal.bind(this, MODALS.NewProject)
+        : this.importFile.bind(this);
+
     this.openDownloadProject = this.openModal.bind(
       this,
       MODALS.DownloadProject,
@@ -53,6 +62,19 @@ class Apptoolbox extends Component {
     //   'alt + s': this.openSettings,
     //   esc: this.closeModal,
     // });
+  }
+
+  importFile() {
+    const params = Platform.OS === 'android' ? 'image/gif' : undefined;
+    RNSystemFileBrower.openFileBrower(params).then((res) => {
+      if (res && typeof res.url === 'string') {
+        const callback = (data) => {
+          this.props.uploadProject(data.json);
+        };
+        const stepCallback = () => {};
+        StateLoader.uploadGif(res.url, callback, stepCallback);
+      }
+    });
   }
 
   setStateFlag(flag) {
