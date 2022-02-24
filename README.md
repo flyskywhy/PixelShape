@@ -13,6 +13,9 @@ Android iOS and Web pixel drawing tool.
 
 `npm run bundle-android` to `android/app/build/outputs/bundle/release/app-release.aab` for production.
 
+## iOS
+`npm run build-worker-ios` to generate `ios/generateGif.worker.jsbundle` for production, if `generateGif.worker.js` is changed, need run this again.
+
 ## Web
 `npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser.
 
