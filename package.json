@@ -1,8 +1,8 @@
 {
-  "name": "PixelShapeRN",
+  "name": "pixelshapern",
   "version": "1.0.0",
-  "private": true,
-  "description": "Android iOS Web pixel editor that comes in handy when creating pixel art images and gif animations",
+  "private": false,
+  "description": "Android iOS Web pixel drawing editor APP and sub-app that comes in handy when creating pixel art images and gif animations",
   "scripts": {
     "rn": "adb reverse tcp:8081 tcp:8081; node node_modules/react-native/local-cli/cli.js start",
     "rn-fresh": "adb reverse tcp:8081 tcp:8081; watchman watch-del-all; rm -rf /tmp/react-*; rm -rf /tmp/npm-*; rm -rf /tmp/haste-*; rm -rf /tmp/metro-*; node node_modules/react-native/local-cli/cli.js start --reset-cache",
@@ -38,9 +38,11 @@
   },
   "keywords": [
     "8bit",
+    "app",
     "android",
     "artwork",
     "canvas",
+    "drawing",
     "editor",
     "gif",
     "ios",
@@ -49,6 +51,9 @@
     "pixel",
     "react",
     "react-native",
+    "subapp",
+    "sub-app",
+    "sub-apps",
     "web"
   ],
   "author": [

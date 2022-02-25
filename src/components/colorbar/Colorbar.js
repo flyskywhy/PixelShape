@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {PixelShapeContext} from '../../context';
 import Coloritem from '../coloritem/Coloritem';
 import Colorpicker from '../colorpicker/Colorpicker';
 
@@ -7,6 +8,8 @@ import defaultColors from '../../defaults/palette';
 import {colors as stylesColors} from '../../styles/variables.js';
 
 class Colorbar extends Component {
+  static contextType = PixelShapeContext;
+
   getPalette(colors) {
     return colors.map((colorObj) => (
       <Coloritem
@@ -20,7 +23,7 @@ class Colorbar extends Component {
   }
 
   getDefaultColorPalette() {
-    return this.getPalette(defaultColors);
+    return this.getPalette(this.context.defaultsPalette || defaultColors);
   }
 
   getUserColorPalette() {
