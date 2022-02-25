@@ -65,7 +65,7 @@ class Apptoolbox extends Component {
   }
 
   importFile() {
-    const params = Platform.OS === 'android' ? 'image/gif' : undefined;
+    const params = Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
     RNSystemFileBrower.openFileBrower(params).then((res) => {
       if (res && typeof res.url === 'string') {
         const callback = (data) => {
