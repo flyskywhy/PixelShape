@@ -26,6 +26,7 @@ Ref to [Isolating Redux Sub-Apps](https://redux.js.org/usage/isolating-redux-sub
 
 * `npm install pixelshapern` in `otherAPP/`.
 * Add native component name e.g. `"@flyskywhy/react-native-gcanvas": "2.3.18",` into `otherAPP/package.json` so that they can be automatically linked by react-native.
+* Enable fs permission in other APP to save and load `.gif` file, ref to [ENOENT: open failed: EACCES (Permission denied), open '/storage/emulated/0/Download/](https://github.com/itinance/react-native-fs/issues/941) on Android, and [IOS file downloaded not able to be located on device](https://github.com/itinance/react-native-fs/issues/897#issuecomment-759577180) on iOS.
 * Copy `/generateGif.worker.js` into `otherAPP/`, and change './src/libs/gif/GIFEncoder' to 'pixelshapern/src/libs/gif/GIFEncoder' in it.
 * Copy `build-worker-android` in `package.json` into `otherAPP/package.json` to generate `otherAPP/android/app/src/main/assets/threads/generateGif.worker.bundle` for production.
 * Copy `build-worker-ios` in `package.json` into `otherAPP/package.json` to generate `otherAPP/ios/generateGif.worker.jsbundle` for production.

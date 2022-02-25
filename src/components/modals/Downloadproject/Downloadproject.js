@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform} from 'react-native';
+import {PermissionsAndroid, Platform} from 'react-native';
 if (Platform.OS !== 'web') {
   var RNFS = require('react-native-fs');
 }
@@ -61,7 +61,7 @@ class DownloadProjectModal extends Component {
     );
   }
 
-  confirm() {
+  async confirm() {
     const blobs = [];
 
     if (this.props.includeGif) {
@@ -105,6 +105,30 @@ class DownloadProjectModal extends Component {
             // const fileName = Files.NAME.ANIMATION;
 
             const fullPath = `${directoryPath}/${fileName}`;
+
+            if (Platform.OS === 'android') {
+              try {
+                const granted = await PermissionsAndroid.request(
+                  PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                  {
+                    title: 'Write External Storage Permission',
+                    message: 'Your app needs this permission to save file.',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                  },
+                );
+                if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+                  console.log('Camera permission denied');
+                  this.props.closeModal();
+                  return false;
+                }
+              } catch (err) {
+                console.warn(err);
+                this.props.closeModal();
+                return false;
+              }
+            }
 
             RNFS.stat(directoryPath)
               .then((success) => {
