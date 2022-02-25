@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import ToolButton from '../toolbutton/ToolButton';
 import tools from '../../defaults/tools';
-
-const {height} = Dimensions.get('window');
 
 class Toolbar extends Component {
   constructor(props) {
@@ -27,9 +25,7 @@ class Toolbar extends Component {
 
   render() {
     return this.props.visible ? (
-      <View style={styles.container}>
-        {this.getButtons()}
-      </View>
+      <View style={styles.container}>{this.getButtons()}</View>
     ) : null;
   }
 }
