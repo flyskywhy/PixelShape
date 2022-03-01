@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import btoa from 'btoa';
 import Frame from '../frame/Frame';
+import {PixelShapeContext} from '../../context';
 
 import WorkerPool from '../../workers/workerPool';
 import WebWorker from '../../workers/generateGif.worker.js';
@@ -29,6 +30,8 @@ if (Platform.OS === 'web') {
 const Worker = Platform.OS === 'web' ? WebWorker : NativeWorker;
 
 class FramesContainer extends Component {
+  static contextType = PixelShapeContext;
+
   constructor(...args) {
     super(...args);
 
@@ -92,6 +95,15 @@ class FramesContainer extends Component {
       if (nextProps.modifiedFrames.length > 3) {
         this.startLoading();
       }
+
+      this.context.onGifGeneratePre &&
+        this.context.onGifGeneratePre({
+          fps: nextProps.fps,
+          imageDatas: nextProps.framesOrder.map(
+            (uuid) => nextProps.framesCollection[uuid].naturalImageData,
+          ),
+        });
+
       this.generateGif(
         nextProps.modifiedFrames,
         nextProps.framesCollection,
