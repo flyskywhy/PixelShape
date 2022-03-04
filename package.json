@@ -127,6 +127,7 @@
     "sinon": "^1.17.6",
     "tap-spec": "^4.1.1",
     "tiny-worker": "^2.0.3",
+    "typescript": "^4.6.2",
     "w3c-blob": "0.0.1",
     "worker-loader": "3.0.8"
   },
