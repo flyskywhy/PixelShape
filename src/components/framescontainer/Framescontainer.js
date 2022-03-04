@@ -32,11 +32,13 @@ const Worker = Platform.OS === 'web' ? WebWorker : NativeWorker;
 class FramesContainer extends Component {
   static contextType = PixelShapeContext;
 
-  constructor(...args) {
-    super(...args);
+  constructor(props) {
+    super(props);
 
     this.initializeGifWorker();
     this.state = {
+      modifiedFrames: props.modifiedFrames,
+
       frameAdded: false,
       loading: false,
       gifImgSrc: '',
@@ -90,32 +92,40 @@ class FramesContainer extends Component {
     ));
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.modifiedFrames !== nextProps.modifiedFrames) {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.modifiedFrames !== nextProps.modifiedFrames) {
+      let state = {
+        modifiedFrames: nextProps.modifiedFrames,
+      };
       if (nextProps.modifiedFrames.length > 3) {
-        this.startLoading();
+        state.loading = true;
       }
+      return state;
+    }
 
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.modifiedFrames !== prevProps.modifiedFrames) {
       this.context.onGifGeneratePre &&
         this.context.onGifGeneratePre({
-          fps: nextProps.fps,
-          imageDatas: nextProps.framesOrder.map(
-            (uuid) => nextProps.framesCollection[uuid].naturalImageData,
+          fps: this.props.fps,
+          imageDatas: this.props.framesOrder.map(
+            (uuid) => this.props.framesCollection[uuid].naturalImageData,
           ),
         });
 
       this.generateGif(
-        nextProps.modifiedFrames,
-        nextProps.framesCollection,
-        nextProps.framesOrder,
-        nextProps.imageSize.width,
-        nextProps.imageSize.height,
-        nextProps.fps,
+        this.props.modifiedFrames,
+        this.props.framesCollection,
+        this.props.framesOrder,
+        this.props.imageSize.width,
+        this.props.imageSize.height,
+        this.props.fps,
       );
     }
-  }
 
-  componentDidUpdate() {
     if (this.state.frameAdded) {
       // Web don't need this setTimeout, but Android need
       setTimeout(() => {

@@ -140,11 +140,23 @@ class Surface extends Component {
     }
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    // TODO: `this.tool !== prevProps.tool` is always true because they
+    // are object and string; and modify `return true` in shouldComponentUpdate()
+    if (this.tool !== prevProps.tool) {
+      this.tool = toolsMap.get(this.props.tool);
+      this.applyAllContextInformation(this.props);
+      // this.applyImageData();
+    }
+
+    // if (
+    //   this.tool._naturalImageData !== prevProps.currentFrame.naturalImageData
+    // ) {
+    //   this.applyImageData();
+    // }
+
     this.updateCanvasMainRendering();
-    this.tool._applyNaturalImageData(
-      copyImageData(this.props.currentFrame.naturalImageData),
-    );
+    this.applyImageData();
     this.updateCanvasBuffer();
     // redraw grid if imageSize changed
     if (this.detectImageSizeChanged(this.props, prevProps)) {
@@ -162,22 +174,6 @@ class Surface extends Component {
       this.tool._naturalImageData,
     );
     // this.applyImageData();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.tool !== nextProps.tool) {
-      this.tool = toolsMap.get(nextProps.tool);
-      this.applyAllContextInformation(nextProps);
-      this.applyImageData();
-    }
-
-    if (
-      this.tool._naturalImageData !== nextProps.currentFrame.naturalImageData
-    ) {
-      this.tool._applyNaturalImageData(
-        copyImageData(nextProps.currentFrame.naturalImageData),
-      );
-    }
   }
 
   shouldComponentUpdate(nextProps) {

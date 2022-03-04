@@ -30,10 +30,12 @@ class Framebar extends Component {
     // });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.state.fps !== nextProps.fps) {
-      this.setState({fps: nextProps.fps});
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.fps !== nextProps.fps) {
+      return {fps: nextProps.fps};
     }
+
+    return null;
   }
 
   removeCurrentFrame() {

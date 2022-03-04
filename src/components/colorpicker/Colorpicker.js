@@ -12,26 +12,27 @@ import {colors as stylesColors} from '../../styles/variables.js';
 // TODO: move this to defaults file
 const defaultColor = '#b7b7b7';
 
+const pattern = /^#([a-f0-9]{3}){1,2}$/i;
+
+function getInputColor(value) {
+  if (value) {
+    return value.match(pattern) ? value : defaultColor;
+  } else {
+    return defaultColor;
+  }
+}
+
 class Colorpicker extends Component {
   constructor(...args) {
     super(...args);
-    this.pattern = /^#([a-f0-9]{3}){1,2}$/i;
     this.state = {
       currentColor: defaultColor,
       borderColor: defaultColor,
     };
   }
 
-  getInputColor(value) {
-    if (value) {
-      return value.match(this.pattern) ? value : defaultColor;
-    } else {
-      return defaultColor;
-    }
-  }
-
   onChange(value) {
-    const color = this.getInputColor(value);
+    const color = getInputColor(value);
     this.setState({
       borderColor: color,
       currentColor: value,
@@ -39,19 +40,19 @@ class Colorpicker extends Component {
   }
 
   onBlur() {
-    const color = this.getInputColor(this.state.currentColor);
+    const color = getInputColor(this.state.currentColor);
     this.setState({
       borderColor: color,
       currentColor: color,
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const color = this.getInputColor(nextProps.tempColor);
-    this.setState({
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const color = getInputColor(nextProps.tempColor);
+    return {
       borderColor: color,
       currentColor: color,
-    });
+    };
   }
 
   getUserColorsList() {
