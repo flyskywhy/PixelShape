@@ -130,7 +130,6 @@ class AbstractTool {
     this.modifyPixelCell(ctx, x, y, ACTION.CLEAR);
   }
 
-  /* eslint-disable no-unused-vars */
   draw(ctx, x0, y0, x1, y1) {
     this.useStateOn(ctx);
   }

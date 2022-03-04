@@ -10,7 +10,7 @@ import FramesContainer from '../../containers/framescontainer/Framescontainer';
 import debounce from '../../utils/debounce';
 import {colors as stylesColors} from '../../styles/variables.js';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 class Framebar extends Component {
   constructor(...args) {

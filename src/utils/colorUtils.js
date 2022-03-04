@@ -156,7 +156,7 @@ export const getAllActiveColors = (
   transparent = [0, 0, 0, 0],
 ) => {
   const list = imageDataArr.reduce(
-    (list, data) => list.concat(getImageDataActiveColors(data, transparent)),
+    (arr, data) => arr.concat(getImageDataActiveColors(data, transparent)),
     [],
   );
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 
 const Coloritem = (props) => {
   const containerBorder = props.isActive
     ? {borderColor: '#ffffff', borderWidth: 1}
     : {};
 
-  const labelColor = props.children === '#1B2631' ? {color: '#ffffff'} : {};
+  // const labelColor = props.children === '#1B2631' ? {color: '#ffffff'} : {};
 
   return (
     <TouchableOpacity

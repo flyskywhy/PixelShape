@@ -32,7 +32,6 @@ class ColorAdjust extends AbstractTool {
     [this.x, this.y] = [x, y];
   }
 
-  /* eslint-disable no-unused-vars */
   onMouseUp(x, y) {
     if (!this.mouseDown) {
       return;
@@ -94,7 +93,6 @@ class ColorAdjust extends AbstractTool {
     this.restoreState(ctx, stateSize, stateColor);
   }
 
-  /* eslint-disable no-unused-vars */
   draw(ctx, x, y) {
     this.adjustPixelGroup(...arguments, this.state.size, this.state.color);
   }

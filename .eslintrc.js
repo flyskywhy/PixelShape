@@ -8,4 +8,7 @@ module.exports = {
     XMLSerializer: false,
     atob: false,
   },
+  rules: {
+    'no-bitwise': 0,
+  }
 };

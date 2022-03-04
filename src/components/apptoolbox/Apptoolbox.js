@@ -99,11 +99,15 @@ class Apptoolbox extends Component {
   }
 
   executeUndo() {
-    if (this.props.canUndo) this.props.undo();
+    if (this.props.canUndo) {
+      this.props.undo();
+    }
   }
 
   executeRedo() {
-    if (this.props.canRedo) this.props.redo();
+    if (this.props.canRedo) {
+      this.props.redo();
+    }
   }
 
   render() {
