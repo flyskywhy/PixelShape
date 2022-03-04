@@ -51,7 +51,8 @@ class NewProjectModal extends Component {
     if (Platform.OS === 'web') {
       document.getElementById('project-import').click();
     } else {
-      const params = Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
+      const params =
+        Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
       RNSystemFileBrower.openFileBrower(params).then((res) => {
         if (res && typeof res.url === 'string') {
           const callback = this.onFileLoaded.bind(this),
