@@ -1,4 +1,5 @@
 import {Platform} from 'react-native';
+import codegen from 'codegen.macro';
 import {Thread} from '@minar-kotonoha/react-native-threads';
 
 const workerPool = {},
@@ -15,8 +16,17 @@ export default class WorkerPool {
 
   spawnWorkers() {
     workerIds = [...Array(this.amount)].map((i, v) => {
-      let webWorker =
-        Platform.OS === 'web' ? new this.Worker() : new Thread(this.Worker);
+      let webWorker;
+      if (Platform.OS === 'web') {
+        // webWorker = new Worker(new URL('./generateGif.worker.js', import.meta.url));
+        // above will cause `SyntaxError: import.meta is only valid inside modules.` with react-native
+        // ref to https://stackoverflow.com/questions/64961387/how-to-use-import-meta-when-testing-with-jest
+        webWorker = new Worker(new URL('generateGif.worker.js', codegen`module.exports = process.env.PLATFORM_OS === "web" ? "import.meta.url" : "foobar"`));
+        // below will cause `Uncaught DOMException: Failed to construct 'Worker'` with react-native-web
+        // webWorker = new Worker(new URL(this.Worker, codegen`module.exports = process.env.PLATFORM_OS === "web" ? "import.meta.url" : "foobar"`));
+      } else {
+        webWorker = new Thread(this.Worker);
+      }
 
       workerPool[v] = {worker: webWorker};
 

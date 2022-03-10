@@ -8,17 +8,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import btoa from 'btoa';
 import Frame from '../frame/Frame';
 import {PixelShapeContext} from '../../context';
 
 import WorkerPool from '../../workers/workerPool';
-import WebWorker from '../../workers/generateGif.worker.js';
+
 if (Platform.OS === 'web') {
   var Image = require('react-native').Image;
-
-  // worker can not work with require below, have to use import above
-  // var WebWorker = require('worker-loader!../../../workers/generateGif.worker.js').default;
+  var WebWorker = 'generateGif.worker.js';
 } else {
   var Image = require('react-native-fast-image');
 
