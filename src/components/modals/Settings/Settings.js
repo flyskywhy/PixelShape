@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
-import CanvasAnchors from '../../../containers/canvasanchors/Canvasanchors';
+// import CanvasAnchors from '../../../containers/canvasanchors/Canvasanchors';
 
-import './settings.styl';
 // TODO: take styles from apptoolbox and push in separate related stylesheets
 
 const maxVal = 600,
@@ -14,6 +14,8 @@ class SettingsModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      widthText: '' + props.imageSize.width,
+      heightText: '' + props.imageSize.height,
       widthError: false,
       heightError: false,
     };
@@ -27,17 +29,17 @@ class SettingsModal extends Component {
   }
 
   isInputValid(input) {
-    return input.value <= maxVal;
+    return input <= maxVal;
   }
 
   checkErrors() {
     let ok = false;
 
-    if (!this.isInputValid(this._widthInput)) {
+    if (!this.isInputValid(parseInt(this.state.widthText, 10))) {
       this.setState({widthError: true});
       ok = true;
     }
-    if (!this.isInputValid(this._heightInput)) {
+    if (!this.isInputValid(parseInt(this.state.heightText, 10))) {
       this.setState({heightError: true});
       ok = true;
     }
@@ -47,17 +49,19 @@ class SettingsModal extends Component {
   getErrorMessage() {
     if (this.state.widthError || this.state.heightError) {
       return (
-        <span className="settings__dimensions-inputs-error">
-          Sorry, max allowed value is 600
-        </span>
+        <Text style={styles.dimensionsInputsError}>
+          {'Sorry, max allowed value is ' + maxVal}
+        </Text>
       );
     }
     return null;
   }
 
   setActualInputValues() {
-    this._widthInput.value = this.props.imageSize.width;
-    this._heightInput.value = this.props.imageSize.height;
+    this.setState({
+      widthText: '' + this.props.imageSize.width,
+      heightText: '' + this.props.imageSize.height,
+    });
   }
 
   confirm() {
@@ -66,8 +70,8 @@ class SettingsModal extends Component {
       return;
     }
     this.props.setImageSize(
-      this._widthInput.value,
-      this._heightInput.value,
+      parseInt(this.state.widthText, 10),
+      parseInt(this.state.heightText, 10),
       this.props.stretchOn,
     );
     this.props.closeModal();
@@ -81,31 +85,35 @@ class SettingsModal extends Component {
 
   getInputs() {
     return [
-      <div key="width">
-        <span className="settings__inputlabel">Width </span>
-        <input
-          className="settings__inputinline"
-          ref={(w) => (this._widthInput = w)}
+      <View key="width" style={styles.input}>
+        <Text style={styles.inputlabel}>Width </Text>
+        <TextInput
+          style={[
+            styles.inputinline,
+            {
+              borderColor: this.state.widthError ? errorColor : regularColor,
+            },
+          ]}
           key={this.props.imageSize.width}
-          style={{
-            borderColor: this.state.widthError ? errorColor : regularColor,
-          }}
-          defaultValue={this.props.imageSize.width}
+          value={this.state.widthText}
+          onChangeText={(value) => this.setState({widthText: value})}
         />
-      </div>,
+      </View>,
 
-      <div key="height">
-        <span className="settings__inputlabel">Height </span>
-        <input
-          className="settings__inputinline"
-          ref={(h) => (this._heightInput = h)}
+      <View key="height" style={styles.input}>
+        <Text style={styles.inputlabel}>Height </Text>
+        <TextInput
+          style={[
+            styles.inputinline,
+            {
+              borderColor: this.state.heightError ? errorColor : regularColor,
+            },
+          ]}
           key={this.props.imageSize.height}
-          style={{
-            borderColor: this.state.heightError ? errorColor : regularColor,
-          }}
-          defaultValue={this.props.imageSize.height}
+          value={this.state.heightText}
+          onChangeText={(value) => this.setState({heightText: value})}
         />
-      </div>,
+      </View>,
     ];
   }
 
@@ -116,40 +124,93 @@ class SettingsModal extends Component {
         ok={{text: 'Save', action: this.confirm.bind(this)}}
         cancel={{text: 'Cancel', action: this.cancel.bind(this)}}
         isShown={this.props.isShown}>
-        <div className="settings__dimensions">
-          <div className="settings__dimensions-edit">
-            <div className="settings__dimensions-inputs">
+        <View style={styles.dimensions}>
+          <View style={styles.dimensionsEdit}>
+            <View style={styles.dimensionsInputs}>
               {this.getInputs()}
               {this.getErrorMessage()}
-            </div>
-            <ToggleCheckbox
-              className="settings__dimensions-edit__ratio"
+            </View>
+            {/*<ToggleCheckbox
+              style={styles.dimensionsEditRatio}
               value={false}
               onChange={() => {}}>
               Keep ratio
-            </ToggleCheckbox>
-          </div>
-          <div className="settings__dimensions-modifiers">
-            <CanvasAnchors
-              className="settings__dimensions-modifiers__anchors"
+            </ToggleCheckbox>*/}
+          </View>
+          <View style={styles.dimensionsModifiers}>
+            {/*<CanvasAnchors
+              style={styles.dimensionsModifiersAnchors}
               disabled={this.props.stretchOn}
-            />
+            />*/}
             <ToggleCheckbox
-              className="settings__dimensions-modifiers__stretch"
+              style={styles.dimensionsModifiersStretch}
               value={this.props.stretchOn}
               onChange={this.props.toggleStretch.bind(this)}>
               Stretch
             </ToggleCheckbox>
-          </div>
-        </div>
-        <ToggleCheckbox
+          </View>
+        </View>
+        {/*<ToggleCheckbox
           value={this.props.gridShown}
           onChange={this.props.toggleGrid.bind(this)}>
           Show grid
-        </ToggleCheckbox>
+        </ToggleCheckbox>*/}
       </ModalWindow>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  dimensions: {
+    flexDirection: 'row',
+    // marginBottom: 7,
+    // paddingBottom: 20,
+    // borderBottomWidth: 1,
+    // borderColor: '#e0e0e0',
+  },
+  dimensionsEdit: {
+    flex: 1,
+    marginRight: 15,
+    borderRightWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  dimensionsInputs: {
+    minHeight: 100,
+  },
+  dimensionsInputsError: {
+    paddingTop: 10,
+    fontSize: 8,
+    color: '#9a1000',
+  },
+  dimensionsEditRatio: {
+    paddingTop: 20,
+  },
+  dimensionsModifiers: {},
+  dimensionsModifiersAnchors: {
+    marginVertical: 0,
+    marginHorizontal: 10,
+  },
+  dimensionsModifiersStretch: {
+    paddingTop: 17,
+  },
+  input: {
+    flexDirection: 'row',
+  },
+  inputlabel: {
+    width: 60,
+    textAlignVertical: 'bottom',
+  },
+  inputinline: {
+    width: 70,
+    height: 50,
+    marginLeft: 10,
+    textAlign: 'center',
+    fontFamily: 'robotothin',
+    fontSize: 20,
+    borderBottomWidth: 2,
+    color: '#264653',
+    backgroundColor: 'transparent',
+  },
+});
 
 export default SettingsModal;

@@ -8,7 +8,7 @@ import AppToolButton from '../apptoolbutton/Apptoolbutton';
 import NewProjectModal from '../../containers/modals/Newproject';
 import DownloadProjectModal from '../../containers/modals/Downloadproject';
 import CustomizePanelsModal from '../../containers/modals/Customizepanels';
-// import SettingsModal from '../../containers/modals/Settings';
+import SettingsModal from '../../containers/modals/Settings';
 
 import StateLoader from '../../statemanager/StateLoader';
 
@@ -156,14 +156,14 @@ class Apptoolbox extends Component {
             icon={require('../../images/panels.png')}
             doAction={this.openCustomizePanels}
           />
-          {/*<AppToolButton
+          <AppToolButton
             btnTooltip="Settings"
             btnShortcut="(ALT + S)"
             width={30}
             height={30}
             icon={require('../../images/settings.png')}
             doAction={this.openSettings}
-          />*/}
+          />
         </View>
 
         {(this.state.newProjectShow ||
@@ -186,10 +186,10 @@ class Apptoolbox extends Component {
           closeModal={this.closeModal}
         />
 
-        {/*        <SettingsModal
+        <SettingsModal
           isShown={this.state.settingsShow}
           closeModal={this.closeModal}
-        />*/}
+        />
       </View>
     );
   }

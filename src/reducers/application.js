@@ -35,7 +35,7 @@ const initialState = {
   },
   resetPalette: false,
   grid: false,
-  stretch: false,
+  stretch: true,
   anchor: 'oo',
   downloadOptions: {
     includeGif: true,
