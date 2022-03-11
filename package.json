@@ -82,7 +82,6 @@
     "@flyskywhy/react-native-gcanvas": "2.3.20",
     "@minar-kotonoha/react-native-threads": "0.0.22",
     "@react-native-community/slider": "4.2.0",
-    "btoa": "1.2.1",
     "es6-promise": "^4.1.0",
     "expo-checkbox": "2.0.0",
     "file-saver": "^1.3.2",
@@ -108,7 +107,6 @@
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.0.1",
     "File": "^0.10.2",
-    "atob": "^2.0.3",
     "blue-tape": "^1.0.0",
     "classnames": "^2.2.5",
     "codegen.macro": "4.1.0",
