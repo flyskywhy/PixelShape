@@ -93,7 +93,9 @@ function application(state = initialState, action) {
         pixelSize = constraints.height / state.size.height;
       }
 
-      pixelSize |= 0;
+      if (pixelSize > 1) {
+        pixelSize |= 0;
+      }
 
       return {
         ...state,
