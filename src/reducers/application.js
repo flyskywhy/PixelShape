@@ -17,7 +17,7 @@ import {uuid} from '../utils/uuid';
 const defaultConsts = {
   margins: {
     vertical: 300,
-    horizontal: 120,
+    horizontal: 100,
   },
 };
 

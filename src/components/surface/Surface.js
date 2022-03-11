@@ -62,6 +62,13 @@ class Surface extends Component {
     this.updateCanvasMainRendering();
   };
 
+  onCanvasMainRenderingResize = ({width, height, canvas}) => {
+    canvas.width = width;
+    canvas.height = height;
+    this.applyAllContextInformation(this.props);
+    this.updateCanvasMainRendering();
+  };
+
   initCanvasBuffer = (canvas) => {
     if (this._buffer) {
       return;
@@ -80,6 +87,13 @@ class Surface extends Component {
     this.updateCanvasBuffer();
   };
 
+  onCanvasBufferResize = ({width, height, canvas}) => {
+    canvas.width = width;
+    canvas.height = height;
+    this.applyAllContextInformation(this.props);
+    this.updateCanvasBuffer();
+  };
+
   initCanvasGrid = (canvas) => {
     if (this._grid) {
       return;
@@ -93,6 +107,12 @@ class Surface extends Component {
     }
     this.grid = this._grid.getContext('2d');
 
+    this.updateCanvasGrid();
+  };
+
+  onCanvasGridResize = ({width, height, canvas}) => {
+    canvas.width = width;
+    canvas.height = height;
     this.updateCanvasGrid();
   };
 
@@ -323,18 +343,21 @@ class Surface extends Component {
             <GCanvasView
               style={canvasStyleMainRendering}
               onCanvasCreate={this.initCanvasMainRendering}
+              onCanvasResize={this.onCanvasMainRenderingResize}
               isGestureResponsible={false}
               isAutoClearRectBeforePutImageData={true}
             />
             <GCanvasView
               style={canvasStyleOther}
               onCanvasCreate={this.initCanvasBuffer}
+              onCanvasResize={this.onCanvasBufferResize}
               isGestureResponsible={false}
             />
             {this.shouldShowGrid() && (
               <GCanvasView
                 style={canvasStyleOther}
                 onCanvasCreate={this.initCanvasGrid}
+                onCanvasResize={this.onCanvasGridResize}
                 isGestureResponsible={false}
               />
             )}
