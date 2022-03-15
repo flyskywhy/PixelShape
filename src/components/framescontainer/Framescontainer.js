@@ -59,6 +59,13 @@ class FramesContainer extends Component {
       if (event.data.currentPart === event.data.partsTotal - 1) {
         this.endLoading();
         gif = this.getOrderedGif();
+
+        this.context.onGifGeneratePost &&
+          this.context.onGifGeneratePost({
+            fps: this.props.fps,
+            gif,
+          });
+
         this.setState({
           gifImgSrc: `data:image/gif;base64,${btoa(gif)}`,
         });
