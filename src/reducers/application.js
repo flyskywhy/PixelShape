@@ -9,9 +9,11 @@ import {
   TOGGLE_INCLUDE_SPRITESHEET,
   TOGGLE_INCLUDE_PROJECT,
   TOGGLE_INCLUDE_PALETTE,
+  SET_ANIMATION_NAME,
 } from '../actions/application';
 
 import {uuid} from '../utils/uuid';
+import {Files} from '../defaults/constants';
 
 // TODO: move this to defaults
 const defaultConsts = {
@@ -43,6 +45,7 @@ const initialState = {
     includeProject: false,
     includePalette: false,
   },
+  animationName: Files.NAME.ANIMATION,
 };
 
 function getActualConstraints(width, height) {
@@ -138,6 +141,8 @@ function application(state = initialState, action) {
         includeProject: !state.downloadOptions.includeProject,
       };
       return {...state, downloadOptions};
+    case SET_ANIMATION_NAME:
+      return {...state, animationName: action.name};
     default:
       return state;
   }

@@ -71,3 +71,7 @@ export function getProjectDownloadOption(state) {
 export function getPaletteDownloadOption(state) {
   return getApplication(state).downloadOptions.includePalette;
 }
+
+export function getAnimationName(state) {
+  return getApplication(state).animationName;
+}

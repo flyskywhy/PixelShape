@@ -1,8 +1,16 @@
 import {connect} from 'react-redux';
 
-import {getResetPaletteState, getImageSize} from '../../selectors';
+import {
+  getResetPaletteState,
+  getImageSize,
+  getAnimationName,
+} from '../../selectors';
 
-import {toggleResetPalette, uploadStore} from '../../actions/application';
+import {
+  toggleResetPalette,
+  uploadStore,
+  setAnimationName,
+} from '../../actions/application';
 import {resetUserColors} from '../../actions/palette';
 import {resetFramesState} from '../../actions/frames';
 
@@ -11,6 +19,7 @@ import NewProjectModal from '../../components/modals/Newproject/Newproject';
 const mapStateToProps = (state) => ({
   resetPaletteOn: getResetPaletteState(state),
   imageSize: getImageSize(state),
+  animationName: getAnimationName(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -25,6 +34,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   uploadProject(data) {
     return dispatch(uploadStore(data));
+  },
+  setAnimationName(name) {
+    return dispatch(setAnimationName(name));
   },
 });
 

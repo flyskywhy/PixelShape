@@ -8,6 +8,7 @@ import {
   getGifDownloadOption,
   getProjectDownloadOption,
   getPaletteDownloadOption,
+  getAnimationName,
 } from '../../selectors';
 
 import {
@@ -16,6 +17,7 @@ import {
   toggleIncludeSpritesheet,
   toggleIncludeProject,
   toggleIncludePalette,
+  setAnimationName,
 } from '../../actions/application';
 
 import DownloadProjectModal from '../../components/modals/Downloadproject/Downloadproject';
@@ -28,6 +30,7 @@ const mapStateToProps = (state) => ({
   includeGif: getGifDownloadOption(state),
   includeProject: getProjectDownloadOption(state),
   includePalette: getPaletteDownloadOption(state),
+  animationName: getAnimationName(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -45,6 +48,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   toggleIncludePalette() {
     return dispatch(toggleIncludePalette());
+  },
+  setAnimationName(name) {
+    return dispatch(setAnimationName(name));
   },
 });
 

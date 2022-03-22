@@ -5,6 +5,7 @@ export const TOGGLE_GRID = 'APP:TOGGLE_GRID';
 export const TOGGLE_STRETCH = 'APP:TOGGLE_STRETCH';
 export const SET_EXPAND_ANCHOR = 'APP:SET_EXPAND_ANCHOR';
 export const UPLOAD_STORE = 'APP:UPLOAD_STORE';
+export const SET_ANIMATION_NAME = 'APP:SET_ANIMATION_NAME';
 
 export const TOGGLE_INCLUDE_GIF = 'APP:TOGGLE_INCLUDE_GIF';
 export const TOGGLE_INCLUDE_SPRITESHEET = 'APP:TOGGLE_INCLUDE_SPRITESHEET';
@@ -73,4 +74,9 @@ export const getStore = () => (dispatch, getState) => getState();
 export const uploadStore = (state) => ({
   type: UPLOAD_STORE,
   state,
+});
+
+export const setAnimationName = (name) => ({
+  type: SET_ANIMATION_NAME,
+  name,
 });

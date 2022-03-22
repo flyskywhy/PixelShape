@@ -8,6 +8,9 @@ import {
   View,
 } from 'react-native';
 import RNSystemFileBrower from 'react-native-system-file-browser';
+if (Platform.OS !== 'web') {
+  var RNFetchBlob = require('rn-fetch-blob').default;
+}
 
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
@@ -26,9 +29,16 @@ class NewProjectModal extends Component {
     };
   }
 
-  onFileLoaded(data) {
+  async onFileLoaded(data) {
+    let importedFileName = this.props.animationName;
+    if (Platform.OS === 'web') {
+      importedFileName = data.file.name || importedFileName;
+    } else {
+      let stat = await RNFetchBlob.fs.stat(data.file);
+      importedFileName = stat.filename || importedFileName;
+    }
     this.setState({
-      importedFileName: data.file.name || 'gif',
+      importedFileName,
       importedData: data.json,
       loading: false,
       progress: 0,
@@ -123,6 +133,7 @@ class NewProjectModal extends Component {
 
   confirm() {
     if (this.state.importedData) {
+      this.props.setAnimationName(this.state.importedFileName);
       this.props.uploadProject(this.state.importedData);
     } else {
       if (this.props.resetPaletteOn) {

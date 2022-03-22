@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import {ActionCreators} from 'redux-undo';
 
 import Apptoolbox from '../../components/apptoolbox/Apptoolbox';
-import {uploadStore} from '../../actions/application';
+import {setAnimationName, uploadStore} from '../../actions/application';
 import {canRedo, canUndo} from '../../selectors/timetravel';
 
 const mapStateToProps = (state) => ({
@@ -13,6 +13,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   uploadProject(data) {
     return dispatch(uploadStore(data));
+  },
+  setAnimationName(name) {
+    return dispatch(setAnimationName(name));
   },
   undo() {
     return dispatch(ActionCreators.undo());
