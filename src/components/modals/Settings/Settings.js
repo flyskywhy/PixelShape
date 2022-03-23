@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginLeft: 10,
     textAlign: 'center',
-    fontFamily: 'robotothin',
+    // fontFamily: 'robotothin',
     fontSize: 20,
     borderBottomWidth: 2,
     color: '#264653',

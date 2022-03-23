@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     height: 20,
     paddingLeft: 3,
     marginTop: 15,
-    fontFamily: 'robotothin',
+    // fontFamily: 'robotothin',
     fontSize: 9,
     borderBottomWidth: 2,
     color: '#fff',
