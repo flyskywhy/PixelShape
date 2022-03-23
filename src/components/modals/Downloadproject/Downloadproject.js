@@ -17,7 +17,7 @@ import Downloader from '../../../fileloaders/Downloader';
 import {combineImageDataToCanvas} from '../../../utils/canvasUtils';
 import {getAllActiveColors} from '../../../utils/colorUtils';
 import StateLoader from '../../../statemanager/StateLoader';
-
+import {PixelShapeContext} from '../../../context';
 import {Files} from '../../../defaults/constants';
 
 import generatePalette from '../../../htmlgenerators/paletteGenerator';
@@ -26,6 +26,8 @@ const errorColor = '#9a1000';
 const regularColor = '#eee';
 
 class DownloadProjectModal extends Component {
+  static contextType = PixelShapeContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -124,6 +126,8 @@ class DownloadProjectModal extends Component {
         if (Platform.OS === 'web') {
           blobs.push(this.prepareGif(fileName));
           Downloader.asFiles(blobs);
+          this.context.onGifFileSaved &&
+            this.context.onGifFileSaved({fileName});
           this.props.closeModal();
         } else {
           const combinedData = this.combineGifData();
@@ -155,9 +159,13 @@ class DownloadProjectModal extends Component {
             }
 
             RNFS.stat(this.directoryPath)
-              .then((success) => {
+              .then(() => {
                 RNFS.writeFile(fullPath, combinedData, 'ascii')
-                  .then(this.props.closeModal)
+                  .then(() => {
+                    this.context.onGifFileSaved &&
+                      this.context.onGifFileSaved({fileName});
+                    this.props.closeModal();
+                  })
                   .catch((err) => {
                     this.setState({saveError: err.message});
                   });
@@ -166,7 +174,11 @@ class DownloadProjectModal extends Component {
                 RNFS.mkdir(this.directoryPath)
                   .then(() => {
                     RNFS.writeFile(fullPath, combinedData, 'ascii')
-                      .then(this.props.closeModal)
+                      .then(() => {
+                        this.context.onGifFileSaved &&
+                          this.context.onGifFileSaved({fileName});
+                        this.props.closeModal();
+                      })
                       .catch((err) => {
                         this.setState({saveError: err.message});
                       });
