@@ -72,7 +72,9 @@ class Apptoolbox extends Component {
     RNSystemFileBrower.openFileBrower(params).then((res) => {
       if (res && typeof res.url === 'string') {
         const callback = async (data) => {
-          let stat = await RNFetchBlob.fs.stat(data.file);
+          let stat = await RNFetchBlob.fs.stat(
+            data.file.replace(/^file:\/\//, ''),
+          );
           this.props.setAnimationName(stat.filename);
           this.props.uploadProject(data.json);
         };
