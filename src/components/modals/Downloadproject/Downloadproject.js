@@ -149,7 +149,7 @@ class DownloadProjectModal extends Component {
                   return false;
                 }
               } catch (err) {
-                this.setState({saveError: JSON.stringify(err)});
+                this.setState({saveError: err.message});
                 return false;
               }
             }
@@ -159,7 +159,7 @@ class DownloadProjectModal extends Component {
                 RNFS.writeFile(fullPath, combinedData, 'ascii')
                   .then(this.props.closeModal)
                   .catch((err) => {
-                    this.setState({saveError: JSON.stringify(err)});
+                    this.setState({saveError: err.message});
                   });
               })
               .catch(() => {
@@ -168,11 +168,11 @@ class DownloadProjectModal extends Component {
                     RNFS.writeFile(fullPath, combinedData, 'ascii')
                       .then(this.props.closeModal)
                       .catch((err) => {
-                        this.setState({saveError: JSON.stringify(err)});
+                        this.setState({saveError: err.message});
                       });
                   })
                   .catch((err) => {
-                    this.setState({saveError: JSON.stringify(err)});
+                    this.setState({saveError: err.message});
                   });
               });
           } else {
