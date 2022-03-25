@@ -10,6 +10,10 @@ import {colors as stylesColors} from '../../styles/variables.js';
 class Colorbar extends Component {
   static contextType = PixelShapeContext;
 
+  componentDidMount() {
+    this.context.initialColor && this.props.setColor(this.context.initialColor);
+  }
+
   getPalette(colors) {
     return colors.map((colorObj) => (
       <Coloritem
