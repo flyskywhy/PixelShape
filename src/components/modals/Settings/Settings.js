@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {PixelShapeContext} from '../../../context';
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 // import CanvasAnchors from '../../../containers/canvasanchors/Canvasanchors';
@@ -11,6 +12,8 @@ const maxVal = 600,
   regularColor = '#eee';
 
 class SettingsModal extends Component {
+  static contextType = PixelShapeContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -19,6 +22,15 @@ class SettingsModal extends Component {
       widthError: false,
       heightError: false,
     };
+  }
+
+  componentDidMount() {
+    this.context.initialSize &&
+      this.props.setImageSize(
+        this.context.initialSize.width,
+        this.context.initialSize.height,
+        this.props.stretchOn,
+      );
   }
 
   resetErrors() {
