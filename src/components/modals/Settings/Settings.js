@@ -16,9 +16,13 @@ class SettingsModal extends Component {
 
   constructor(props) {
     super(props);
+    let width = props.imageSize.width;
+    let height = props.imageSize.height;
     this.state = {
-      widthText: '' + props.imageSize.width,
-      heightText: '' + props.imageSize.height,
+      width,
+      height,
+      widthText: '' + width,
+      heightText: '' + height,
       widthError: false,
       heightError: false,
     };
@@ -31,6 +35,24 @@ class SettingsModal extends Component {
         this.context.initialSize.height,
         this.props.stretchOn,
       );
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      prevState.width !== nextProps.imageSize.width ||
+      prevState.height !== nextProps.imageSize.height
+    ) {
+      let width = nextProps.imageSize.width;
+      let height = nextProps.imageSize.height;
+      return {
+        width,
+        height,
+        widthText: '' + width,
+        heightText: '' + height,
+      };
+    }
+
+    return null;
   }
 
   resetErrors() {
