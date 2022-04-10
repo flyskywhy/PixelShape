@@ -24,7 +24,7 @@ Android iOS Web pixel drawing editor APP and sub-app that comes in handy when cr
 ## Web
 `npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser.
 
-`npm run build-web` to generate files in `build/` for production, and can use `npx http-server build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser.
+`npm run build-web` to generate files in `build/` for production, and can use `npx http-server@13.0.2 build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser.
 
 ## be embeded as sub-app
 Ref to [Isolating Redux Sub-Apps](https://redux.js.org/usage/isolating-redux-sub-apps) and [Breaking out of Redux paradigm to isolate apps](https://gist.github.com/gaearon/eeee2f619620ab7b55673a4ee2bf8400), PixelShapeRN can be embeded into other react-native APP easily.
