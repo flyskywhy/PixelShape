@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "PixelShapeRN/static/js/main.b043a6c7.js",
-    "static/js/266.4616625c.chunk.js": "PixelShapeRN/static/js/266.4616625c.chunk.js",
-    "index.html": "PixelShapeRN/index.html",
-    "main.b043a6c7.js.map": "PixelShapeRN/static/js/main.b043a6c7.js.map",
-    "266.4616625c.chunk.js.map": "PixelShapeRN/static/js/266.4616625c.chunk.js.map"
+    "main.js": "/PixelShapeRN/static/js/main.03cca831.js",
+    "static/js/266.4616625c.chunk.js": "/PixelShapeRN/static/js/266.4616625c.chunk.js",
+    "index.html": "/PixelShapeRN/index.html",
+    "main.03cca831.js.map": "/PixelShapeRN/static/js/main.03cca831.js.map",
+    "266.4616625c.chunk.js.map": "/PixelShapeRN/static/js/266.4616625c.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.b043a6c7.js"
+    "static/js/main.03cca831.js"
   ]
 }
