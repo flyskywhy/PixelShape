@@ -12,7 +12,7 @@
     "web": "cross-env PLATFORM_OS=web DISABLE_ESLINT_PLUGIN=true react-app-rewired start",
     "web-fresh": "rm -fr node_modules/.cache/* && cross-env PLATFORM_OS=web DISABLE_ESLINT_PLUGIN=true react-app-rewired start",
     "build-web": "cross-env PLATFORM_OS=web DISABLE_ESLINT_PLUGIN=true react-app-rewired build",
-    "build-web-PixelShapeRN": "cross-env PUBLIC_URL=PixelShapeRN PLATFORM_OS=web DISABLE_ESLINT_PLUGIN=true react-app-rewired build",
+    "build-web-PixelShapeRN": "cross-env PUBLIC_URL=/PixelShapeRN PLATFORM_OS=web DISABLE_ESLINT_PLUGIN=true react-app-rewired build",
     "build-worker-ios": "node node_modules/react-native/local-cli/cli.js bundle --dev false --assets-dest ./ios --entry-file generateGif.worker.js --platform ios --bundle-output ./ios/generateGif.worker.jsbundle",
     "build-worker-android": "mkdir -p ./android/app/src/main/assets/threads; node node_modules/react-native/local-cli/cli.js bundle --dev false --assets-dest ./android/app/src/main/res/ --entry-file generateGif.worker.js --platform android --bundle-output ./android/app/src/main/assets/threads/generateGif.worker.bundle",
     "build-android": "cross-env ./android/gradlew assembleRelease --offline -x lint -x lintVitalRelease -p ./android/",
