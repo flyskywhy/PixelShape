@@ -7,7 +7,7 @@
 
 Android iOS Web pixel drawing editor APP and sub-app that comes in handy when creating pixel art images and gif animations.
 
-### [origin convicted202's Live Web demo](https://convicted202.github.io/PixelShape/)
+### [Live Web demo](https://flyskywhy.github.io/PixelShapeRN/)
 
 ## Android
 `npm run android` to generate `android/app/build/outputs/apk/debug/app-debug.apk` for development.
