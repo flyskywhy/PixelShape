@@ -168,6 +168,10 @@ class FramesContainer extends Component {
     ];
   }
 
+  onClickGifImage() {
+    this.context.onClickGifImage && this.context.onClickGifImage();
+  }
+
   generateGif(
     modified = this.props.modifiedFrames,
     collection = this.props.framesCollection,
@@ -235,9 +239,11 @@ class FramesContainer extends Component {
   render() {
     return this.props.hidden ? null : (
       <View style={styles.container}>
-        <View style={styles.gifContainer}>
+        <TouchableOpacity
+          style={styles.gifContainer}
+          onPress={this.onClickGifImage.bind(this)}>
           <View style={styles.gif}>{this.getGifImage()}</View>
-        </View>
+        </TouchableOpacity>
         <ScrollView
           style={styles.frames}
           horizontal={true}
