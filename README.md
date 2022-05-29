@@ -7,6 +7,8 @@
 
 Android iOS Web pixel drawing editor APP and sub-app that comes in handy when creating pixel art images and gif animations.
 
+<img src="https://raw.githubusercontent.com/flyskywhy/PixelShapeRN/master/assets/PixelShapeRN.gif" width="480">
+
 ### [Live Web demo](https://flyskywhy.github.io/PixelShapeRN/)
 
 ## Android
