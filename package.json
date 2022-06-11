@@ -106,7 +106,7 @@
     "rn-fetch-blob": "0.12.0"
   },
   "devDependencies": {
-    "@react-native-community/eslint-config": "^3.0.1",
+    "@react-native-community/eslint-config": "3.0.1",
     "File": "^0.10.2",
     "blue-tape": "^1.0.0",
     "classnames": "^2.2.5",
