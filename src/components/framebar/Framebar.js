@@ -39,7 +39,9 @@ class Framebar extends Component {
   }
 
   removeCurrentFrame() {
-    this.props.removeFrame(this.props.currentFrameUUID);
+    if (this.props.framesOrder.length > 1) {
+      this.props.removeFrame(this.props.currentFrameUUID);
+    }
   }
 
   moveCurrentFrameRight() {
