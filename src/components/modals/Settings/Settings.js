@@ -184,11 +184,11 @@ class SettingsModal extends Component {
             </ToggleCheckbox>
           </View>
         </View>
-        {/*<ToggleCheckbox
+        <ToggleCheckbox
           value={this.props.gridShown}
           onChange={this.props.toggleGrid.bind(this)}>
           Show grid
-        </ToggleCheckbox>*/}
+        </ToggleCheckbox>
       </ModalWindow>
     );
   }

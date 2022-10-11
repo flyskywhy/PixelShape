@@ -207,7 +207,10 @@ class Surface extends Component {
     this.applyImageData();
     this.updateCanvasBuffer();
     // redraw grid if imageSize changed
-    if (this.detectImageSizeChanged(this.props, prevProps)) {
+    if (
+      this.detectImageSizeChanged(this.props, prevProps) ||
+      this.props.gridShown !== prevProps.gridShown
+    ) {
       this.updateCanvasGrid();
     }
   }
