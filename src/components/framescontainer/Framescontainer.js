@@ -158,6 +158,7 @@ class FramesContainer extends Component {
         <ImageBackground
           style={styles.gifImg}
           source={require('../../images/tile-light-16.png')}
+          resizeMethod="resize"
           resizeMode="repeat">
           <Image style={styles.gifImg} source={{uri: this.state.gifImgSrc}} />
         </ImageBackground>

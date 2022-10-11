@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import {ImageBackground, Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import {GCanvasView} from '@flyskywhy/react-native-gcanvas';
 import toolsMap from '../../modules/toolsmap';
 import {
   disableImageSmoothing,
   drawGrid,
+  drawTile,
   resizeImageData,
   copyImageData,
 } from '../../utils/canvasUtils';
+import tileLight13ImageData from '../../images/tile-light-13-ImageData.js';
 
 const minPixelGridSize = 9,
   LEFT_CLICK = 0;
@@ -156,7 +158,33 @@ class Surface extends Component {
 
   updateCanvasGrid = () => {
     if (this.grid) {
-      drawGrid(this.grid, this.props.pixelSize | 0, 0.5);
+      // // here is how tile-light-13-ImageData.js be converted from tile-light.png
+      // const tileLightImage = new Image();
+      // tileLightImage.onload = () => {
+      //   const space = 13;
+      //   this.grid.drawImage(tileLightImage, 0, 0, tileLightImage.width, tileLightImage.height, 0, 0, space, space);
+      //   setTimeout(() => {
+      //     const imageData = this.grid.getImageData(0, 0, space, space);
+      //     console.warn(imageData);
+      //   }, 16);
+      // };
+      // // base64 of '../../images/tile-light.png'
+      // tileLightImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAAAAACo4kLRAAAAIElEQVR42mN8zwADAnAWEwMWMFQEGf/DmR8GiZMoFAQATUsDFTL1pGoAAAAASUVORK5CYII=';
+
+      let imageData = new ImageData(
+        new Uint8ClampedArray(tileLight13ImageData),
+        13,
+        13,
+      );
+      const space = this.props.pixelSize | 0;
+      if (space !== 13) {
+        imageData = resizeImageData(imageData, space, space);
+      }
+      drawTile(this.grid, space, imageData);
+
+      if (this.shouldShowGrid()) {
+        drawGrid(this.grid, space, 0.5, true);
+      }
     }
   };
 
@@ -266,67 +294,40 @@ class Surface extends Component {
 
   render() {
     const {surfaceWidth, surfaceHeight} = this.props;
-    let canvasStyleMainRendering = {
+    let canvasStyleFirst = {
       width: surfaceWidth,
       height: surfaceHeight,
     };
-    let canvasStyleOther = {
+    let canvasStyleMargin = {
       width: surfaceWidth,
       height: surfaceHeight,
       marginTop: -surfaceHeight,
     };
 
-    let imageTile = require('../../images/tile-light-12.png');
-    switch (this.props.pixelSize) {
-      case 16:
-        imageTile = require('../../images/tile-light-16.png');
-        break;
-      case 20:
-        imageTile = require('../../images/tile-light.png');
-        break;
-      default:
-        break;
-    }
-
-    if (surfaceWidth > 300) {
-      // There is a bug that when style.width in ImageBackground bigger
-      // than 300 and resizeMode="repeat": can't repeat any more
-      // console.warn(
-      //   'surfaceWidth > 300 will cause ImageBackground bug, please \
-      //   change defaultConsts.margins.horizontal in reducers/application.js \
-      //   to automatically change this.props.pixelSize thus surfaceWidth',
-      // );
-    }
-
     return (
       <View style={styles.container} ref={(s) => (this._surface = s)}>
         {Platform.OS === 'web' ? (
-          <ImageBackground
-            style={canvasStyleMainRendering}
-            source={imageTile}
-            resizeMode="repeat">
+          <View style={canvasStyleFirst}>
             <canvas
-              style={canvasStyleMainRendering}
+              style={canvasStyleFirst}
+              ref={this.initCanvasGrid}
+              height={this.props.surfaceHeight}
+              width={this.props.surfaceWidth}
+            />
+            <canvas
+              style={canvasStyleMargin}
               ref={this.initCanvasMainRendering}
               height={this.props.surfaceHeight}
               width={this.props.surfaceWidth}
             />
             <canvas
-              style={canvasStyleOther}
+              style={canvasStyleMargin}
               ref={this.initCanvasBuffer}
               height={this.props.surfaceHeight}
               width={this.props.surfaceWidth}
             />
-            {this.shouldShowGrid() && (
-              <canvas
-                style={canvasStyleOther}
-                ref={this.initCanvasGrid}
-                height={this.props.surfaceHeight}
-                width={this.props.surfaceWidth}
-              />
-            )}
             <canvas
-              style={canvasStyleOther}
+              style={canvasStyleMargin}
               ref={this.initCanvasHandleLayer}
               height={this.props.surfaceHeight}
               width={this.props.surfaceWidth}
@@ -334,42 +335,37 @@ class Surface extends Component {
               onMouseMove={this.onMouseMove.bind(this)}
               onMouseUp={this.onMouseUp.bind(this)}
             />
-          </ImageBackground>
+          </View>
         ) : (
-          <ImageBackground
-            style={canvasStyleMainRendering}
-            source={require('../../images/tile-light-16.png')}
-            resizeMode="repeat">
+          <View style={canvasStyleFirst}>
             <GCanvasView
-              style={canvasStyleMainRendering}
+              style={canvasStyleFirst}
+              onCanvasCreate={this.initCanvasGrid}
+              onCanvasResize={this.onCanvasGridResize}
+              isGestureResponsible={false}
+            />
+            <GCanvasView
+              style={canvasStyleMargin}
               onCanvasCreate={this.initCanvasMainRendering}
               onCanvasResize={this.onCanvasMainRenderingResize}
               isGestureResponsible={false}
               isAutoClearRectBeforePutImageData={true}
             />
             <GCanvasView
-              style={canvasStyleOther}
+              style={canvasStyleMargin}
               onCanvasCreate={this.initCanvasBuffer}
               onCanvasResize={this.onCanvasBufferResize}
               isGestureResponsible={false}
             />
-            {this.shouldShowGrid() && (
-              <GCanvasView
-                style={canvasStyleOther}
-                onCanvasCreate={this.initCanvasGrid}
-                onCanvasResize={this.onCanvasGridResize}
-                isGestureResponsible={false}
-              />
-            )}
             <GCanvasView
-              style={canvasStyleOther}
+              style={canvasStyleMargin}
               onCanvasCreate={this.initCanvasHandleLayer}
               isGestureResponsible={true}
               onMouseDown={this.onMouseDown.bind(this)}
               onMouseMove={this.onMouseMove.bind(this)}
               onMouseUp={this.onMouseUp.bind(this)}
             />
-          </ImageBackground>
+          </View>
         )}
       </View>
     );

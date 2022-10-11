@@ -79,7 +79,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@flyskywhy/react-native-gcanvas": "2.3.20",
+    "@flyskywhy/react-native-gcanvas": "2.3.27",
     "@minar-kotonoha/react-native-threads": "0.0.22",
     "@react-native-community/slider": "4.2.0",
     "es6-promise": "^4.1.0",

@@ -79,6 +79,7 @@ class Frame extends Component {
           <ImageBackground
             style={canvasStyle}
             source={require('../../images/tile-light-16.png')}
+            resizeMethod="resize"
             resizeMode="repeat">
             {Platform.OS === 'web' ? (
               <canvas

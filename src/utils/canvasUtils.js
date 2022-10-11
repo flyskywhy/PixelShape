@@ -23,22 +23,37 @@ export const disableImageSmoothing = (context) => {
   context.msImageSmoothingEnabled = false;
 };
 
-export const drawGrid = (context, space, gutter) => {
-  let i = 0;
+export const drawTile = async (context, space, imageData) => {
   const width = context.canvas.width,
     height = context.canvas.height;
 
   context.clearRect(0, 0, width, height);
 
+  for (let i = 0; i < width; i += space) {
+    for (let j = 0; j < height; j += space) {
+      context.putImageData(imageData, i, j);
+    }
+  }
+};
+
+export const drawGrid = (context, space, gutter, noClearRect) => {
+  let i = 0;
+  const width = context.canvas.width,
+    height = context.canvas.height;
+
+  if (!noClearRect) {
+    context.clearRect(0, 0, width, height);
+  }
+
   context.beginPath();
-  while (i < width) {
+  while (i <= width) {
     context.moveTo(i, 0);
     context.lineTo(i, height);
     i += space;
   }
 
   i = 0;
-  while (i < height) {
+  while (i <= height) {
     context.moveTo(0, i);
     context.lineTo(width, i);
     i += space;
