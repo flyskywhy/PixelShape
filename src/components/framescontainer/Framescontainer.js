@@ -281,6 +281,8 @@ const styles = StyleSheet.create({
   gif: {
     width: '100%',
     height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     textAlign: 'center',
     backgroundColor: '#1b2631',
     borderWidth: 4,
