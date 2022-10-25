@@ -17,6 +17,10 @@ const minPixelGridSize = 9,
 class Surface extends Component {
   constructor(...args) {
     super(...args);
+    this.state = {
+      hasOc1: false,
+      hasOc2: false,
+    };
     this.tool = toolsMap.get(this.props.tool);
   }
 
@@ -158,6 +162,35 @@ class Surface extends Component {
 
   updateCanvasGrid = () => {
     if (this.grid) {
+// const canvas = document.createElement('canvas');
+// canvas.width = 260;
+// canvas.height = 260;
+// const ctx = canvas.getContext('2d');
+// // console.warn(global.createCanvasElements.length)
+
+// ctx.fillStyle = 'orange';
+// ctx.fillRect(0, 0, 50, 50);
+
+// this.grid.drawImage(canvas, 0, 0, 50, 50, 0, 0, 13, 13);
+// return;
+
+// const testImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+// this.grid.putImageData(testImageData, 0, 0);
+// return;
+
+// const tileLightImage = new Image();
+// tileLightImage.onload = () => {
+//   const space = 13;
+//   ctx.drawImage(tileLightImage, 0, 0, tileLightImage.width, tileLightImage.height, 0, 0, space, space);
+//   setTimeout(() => {
+//     const imageData = ctx.getImageData(0, 0, space, space);
+//     console.warn(imageData);
+//   }, 16);
+// };
+// // base64 of '../../images/tile-light.png'
+// tileLightImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAAAAACo4kLRAAAAIElEQVR42mN8zwADAnAWEwMWMFQEGf/DmR8GiZMoFAQATUsDFTL1pGoAAAAASUVORK5CYII=';
+// return;
+
       // // here is how tile-light-13-ImageData.js be converted from tile-light.png
       // const tileLightImage = new Image();
       // tileLightImage.onload = () => {
@@ -342,32 +375,62 @@ class Surface extends Component {
         ) : (
           <View style={canvasStyleFirst}>
             <GCanvasView
-              style={canvasStyleFirst}
-              onCanvasCreate={this.initCanvasGrid}
-              onCanvasResize={this.onCanvasGridResize}
-              isGestureResponsible={false}
+             style={{
+               width: 1000, // 1000 should enough for offscreen canvas usage
+               height: 1000,
+               position: 'absolute',
+               left: 1000, // 1000 should enough to not display on screen means offscreen canvas :P
+               top: 0,
+               zIndex: -100, // -100 should enough to not bother onscreen canvas
+             }}
+             onCanvasCreate={(canvas) => {global.createCanvasElements.push(canvas); this.setState({hasOc1: true})}}
+             // devicePixelRatio={1}
+             isGestureResponsible={false}
             />
             <GCanvasView
-              style={canvasStyleMargin}
-              onCanvasCreate={this.initCanvasMainRendering}
-              onCanvasResize={this.onCanvasMainRenderingResize}
-              isGestureResponsible={false}
-              isAutoClearRectBeforePutImageData={true}
+             style={{
+               width: 1000, // 1000 should enough for offscreen canvas usage
+               height: 1000,
+               position: 'absolute',
+               left: 1000, // 1000 should enough to not display on screen means offscreen canvas :P
+               top: 300,
+               zIndex: -100, // -100 should enough to not bother onscreen canvas
+             }}
+             onCanvasCreate={(canvas) => {global.createCanvasElements.push(canvas); this.setState({hasOc2: true})}}
+             // devicePixelRatio={1}
+             isGestureResponsible={false}
             />
-            <GCanvasView
-              style={canvasStyleMargin}
-              onCanvasCreate={this.initCanvasBuffer}
-              onCanvasResize={this.onCanvasBufferResize}
-              isGestureResponsible={false}
-            />
-            <GCanvasView
-              style={canvasStyleMargin}
-              onCanvasCreate={this.initCanvasHandleLayer}
-              isGestureResponsible={true}
-              onMouseDown={this.onMouseDown.bind(this)}
-              onMouseMove={this.onMouseMove.bind(this)}
-              onMouseUp={this.onMouseUp.bind(this)}
-            />
+            {this.state.hasOc1 && this.state.hasOc2 &&
+              <>
+                <GCanvasView
+                  style={canvasStyleFirst}
+                  onCanvasCreate={this.initCanvasGrid}
+                  onCanvasResize={this.onCanvasGridResize}
+                  isGestureResponsible={false}
+                />
+                <GCanvasView
+                  style={canvasStyleMargin}
+                  onCanvasCreate={this.initCanvasMainRendering}
+                  onCanvasResize={this.onCanvasMainRenderingResize}
+                  isGestureResponsible={false}
+                  isAutoClearRectBeforePutImageData={true}
+                />
+                <GCanvasView
+                  style={canvasStyleMargin}
+                  onCanvasCreate={this.initCanvasBuffer}
+                  onCanvasResize={this.onCanvasBufferResize}
+                  isGestureResponsible={false}
+                />
+                <GCanvasView
+                  style={canvasStyleMargin}
+                  onCanvasCreate={this.initCanvasHandleLayer}
+                  isGestureResponsible={true}
+                  onMouseDown={this.onMouseDown.bind(this)}
+                  onMouseMove={this.onMouseMove.bind(this)}
+                  onMouseUp={this.onMouseUp.bind(this)}
+                />
+              </>
+            }
           </View>
         )}
       </View>
