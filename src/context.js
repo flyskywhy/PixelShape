@@ -11,5 +11,6 @@ export const PixelShapeContext = React.createContext({
   onGifGeneratePre: null,
   onGifGeneratePost: null,
   onClickGifImage: null,
+  refApptoolbox: null, // e.g. `(ref) => (this.apptoolbox = ref)` to this.apptoolbox.openDownloadProject()
   onGifFileSaved: null,
 });
