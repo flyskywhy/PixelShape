@@ -10,15 +10,38 @@ import {
   copyImageData,
 } from '../../utils/canvasUtils';
 import tileLight13ImageData from '../../images/tile-light-13-ImageData.js';
+import {PixelShapeContext} from '../../context';
+import StateLoader from '../../statemanager/StateLoader';
 
 const minPixelGridSize = 9,
   LEFT_CLICK = 0;
 
 class Surface extends Component {
+  static contextType = PixelShapeContext;
+
   constructor(...args) {
     super(...args);
+    this.initializeImageSource();
     this.tool = toolsMap.get(this.props.tool);
   }
+
+  initializeImageSource = () => {
+    if (
+      this.context.initialImageSource.uri &&
+      this.context.initialImageSource.fileName
+    ) {
+      const callback = (data) => {
+        this.props.setAnimationName(this.context.initialImageSource.fileName);
+        this.props.uploadProject(data.json);
+      };
+      const stepCallback = () => {};
+      StateLoader.uploadGif(
+        this.context.initialImageSource.uri,
+        callback,
+        stepCallback,
+      );
+    }
+  };
 
   applyAllContextInformation(props) {
     this.tool.applyState(Object.assign({}, props.toolSettings));
