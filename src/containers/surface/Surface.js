@@ -12,7 +12,6 @@ import {
   getGridState,
   getProjectGuid,
 } from '../../selectors';
-import {setAnimationName, uploadStore} from '../../actions/application';
 import {setTempColor} from '../../actions/palette';
 import {updateFrameImageData} from '../../actions/frames';
 
@@ -32,12 +31,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  uploadProject(data) {
-    return dispatch(uploadStore(data));
-  },
-  setAnimationName(name) {
-    return dispatch(setAnimationName(name));
-  },
   setTempColor(color) {
     return dispatch(setTempColor(color));
   },
