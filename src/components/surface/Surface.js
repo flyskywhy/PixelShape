@@ -27,6 +27,7 @@ class Surface extends Component {
 
   initializeImageSource = () => {
     if (
+      this.context.initialImageSource &&
       this.context.initialImageSource.uri &&
       this.context.initialImageSource.fileName
     ) {
