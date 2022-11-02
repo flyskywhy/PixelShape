@@ -17,7 +17,7 @@ import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
 import StateLoader from '../../../statemanager/StateLoader';
 import {PixelShapeContext} from '../../../context';
-import {projectExtension} from '../../../defaults/constants';
+import {Files, projectExtension} from '../../../defaults/constants';
 
 class NewProjectModal extends Component {
   static contextType = PixelShapeContext;
@@ -50,6 +50,7 @@ class NewProjectModal extends Component {
         );
       }
     } else {
+      this.props.setAnimationName(Files.NAME.ANIMATION);
       this.props.resetFramesState(
         this.props.imageSize.width,
         this.props.imageSize.height,
