@@ -215,6 +215,7 @@ class DownloadProjectModal extends Component {
   cancel() {
     this.setState({saveError: ''});
     this.props.closeModal();
+    this.context.onGifFileSaveCanceled && this.context.onGifFileSaveCanceled();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
