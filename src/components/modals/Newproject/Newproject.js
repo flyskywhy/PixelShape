@@ -50,7 +50,7 @@ class NewProjectModal extends Component {
         );
       }
     } else {
-      this.props.setAnimationName(Files.NAME.ANIMATION);
+      this.props.setAnimationName(this.context.initialAnimationName || Files.NAME.ANIMATION);
       this.props.resetFramesState(
         this.props.imageSize.width,
         this.props.imageSize.height,
