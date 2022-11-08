@@ -252,6 +252,12 @@ class DownloadProjectModal extends Component {
   }
 
   render() {
+    let path =
+      Platform.OS === 'android'
+        ? this.directoryPath.replace(/^\/storage\/emulated\/0\//, '')
+        : this.directoryPath;
+    path += '/';
+
     return (
       <ModalWindow
         title="Download project"
@@ -260,9 +266,7 @@ class DownloadProjectModal extends Component {
         isShown={this.props.isShown}>
         <View style={styles.container}>
           {typeof this.directoryPath === 'string' && (
-            <Text style={styles.directorylabel}>
-              {this.directoryPath + '/'}
-            </Text>
+            <Text style={styles.directorylabel}>{path}</Text>
           )}
           <View key="width" style={styles.input}>
             <TextInput
