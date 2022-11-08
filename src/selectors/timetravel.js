@@ -5,3 +5,7 @@ export function canUndo(state) {
 export function canRedo(state) {
   return state.undoables.future.length > 0;
 }
+
+export function undoLength(state) {
+  return state.undoables.past.length;
+}
