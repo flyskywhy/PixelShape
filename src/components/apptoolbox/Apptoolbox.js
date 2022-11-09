@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Dimensions, Platform, StyleSheet, View} from 'react-native';
 import RNSystemFileBrower from 'react-native-system-file-browser';
 if (Platform.OS !== 'web') {
-  var RNFetchBlob = require('rn-fetch-blob').default;
+  var ReactNativeBlobUtil = require('react-native-blob-util').default;
 }
 // import decorateWithKeyBindings from '../../helpers/KeyBindings';
 
@@ -78,7 +78,7 @@ class Apptoolbox extends Component {
     RNSystemFileBrower.openFileBrower(params).then((res) => {
       if (res && typeof res.url === 'string') {
         const callback = async (data) => {
-          let stat = await RNFetchBlob.fs.stat(
+          let stat = await ReactNativeBlobUtil.fs.stat(
             data.file.replace(/^file:\/\//, ''),
           );
           this.props.setAnimationName(stat.filename);
