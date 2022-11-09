@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import RNSystemFileBrower from 'react-native-system-file-browser';
 if (Platform.OS !== 'web') {
-  var RNFetchBlob = require('rn-fetch-blob').default;
+  var ReactNativeBlobUtil = require('react-native-blob-util').default;
 }
 
 import ModalWindow from '../../modalwindow/Modalwindow';
@@ -34,7 +34,7 @@ class NewProjectModal extends Component {
     if (Platform.OS === 'web') {
       importedFileName = data.file.name || importedFileName;
     } else {
-      let stat = await RNFetchBlob.fs.stat(data.file);
+      let stat = await ReactNativeBlobUtil.fs.stat(data.file);
       importedFileName = stat.filename || importedFileName;
     }
     this.setState({
