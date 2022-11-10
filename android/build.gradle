@@ -20,16 +20,16 @@ buildscript {
 
 allprojects {
     repositories {
-       exclusiveContent {
-           filter {
-               includeGroup "com.facebook.react"
-           }
-           forRepository {
-               maven {
-                   url "$rootDir/../node_modules/react-native/android"
-               }
-           }
-       }
+        exclusiveContent {
+            filter {
+                includeGroup "com.facebook.react"
+            }
+            forRepository {
+                maven {
+                    url "$rootDir/../node_modules/react-native/android"
+                }
+            }
+        }
 
         // maven { url 'https://maven.aliyun.com/repository/google' }
         // maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
