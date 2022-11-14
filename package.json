@@ -79,7 +79,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@flyskywhy/react-native-gcanvas": "2.3.27",
+    "@flyskywhy/react-native-gcanvas": "2.3.28",
     "@minar-kotonoha/react-native-threads": "0.0.22",
     "@react-native-community/slider": "4.2.0",
     "es6-promise": "^4.1.0",
@@ -93,6 +93,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-blob-util": "0.16.3",
     "react-native-fast-image": "8.5.11",
     "react-native-fs": "2.18.0",
     "react-native-system-file-browser": "1.1.0",
@@ -102,8 +103,7 @@
     "redux-logger": "^2.10.2",
     "redux-thunk": "^2.2.0",
     "redux-undo": "^1.0.0-beta9-7",
-    "resize-image-data": "0.3.1",
-    "react-native-blob-util": "0.16.3"
+    "resize-image-data": "0.3.1"
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "3.0.1",
