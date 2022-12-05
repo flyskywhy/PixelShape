@@ -3,11 +3,12 @@ import {ActionCreators} from 'redux-undo';
 
 import Apptoolbox from '../../components/apptoolbox/Apptoolbox';
 import {setAnimationName, uploadStore} from '../../actions/application';
-import {canRedo, canUndo} from '../../selectors/timetravel';
+import {canRedo, canUndo, undoLength} from '../../selectors/timetravel';
 
 const mapStateToProps = (state) => ({
   canRedo: canRedo(state),
   canUndo: canUndo(state),
+  undoLength: undoLength(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

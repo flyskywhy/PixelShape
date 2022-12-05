@@ -25,6 +25,21 @@ import generatePalette from '../../../htmlgenerators/paletteGenerator';
 const errorColor = '#9a1000';
 const regularColor = '#eee';
 
+// just like if 'file.gif' exist then rename to 'file (1).gif' when not want overwrite
+function autoRenameLikeWeb(namesInDir, fileName) {
+  if (namesInDir.includes(fileName)) {
+    const matchResult = fileName.match(/ \((\d+)\)\.gif$/);
+    const newSeq = parseInt(matchResult[1], 10) + 1;
+    const newFileName = fileName.replace(
+      / \(\d+\)\.gif$/,
+      ' (' + newSeq + ').gif',
+    );
+    return autoRenameLikeWeb(namesInDir, newFileName);
+  } else {
+    return fileName;
+  }
+}
+
 class DownloadProjectModal extends Component {
   static contextType = PixelShapeContext;
 
@@ -33,7 +48,7 @@ class DownloadProjectModal extends Component {
     this.state = {
       animationName: props.animationName,
 
-      gifName: props.animationName.replace(/(.gif$)/, ''),
+      gifName: props.animationName.replace(/\.gif$/, ''),
       saveError: '',
     };
 
@@ -44,6 +59,13 @@ class DownloadProjectModal extends Component {
           : RNFS.DocumentDirectoryPath
       }/gifs`;
     }
+
+    this.needRename = false;
+  }
+
+  componentDidMount() {
+    // this.context.initialImageSource means import file not new file so want overwrite I think
+    this.needRename = this.context.initialImageSource ? false : true;
   }
 
   combineGifData() {
@@ -118,22 +140,20 @@ class DownloadProjectModal extends Component {
         //   now.getSeconds() < 10
         //     ? '0' + now.getSeconds()
         //     : '' + now.getSeconds();
-        // const fileName =
+        // let fileName =
         //   year + month + date + hour + minute + second + '.gif';
-        const fileName = this.state.gifName + '.gif';
-        this.props.setAnimationName(fileName);
+        let fileName = this.state.gifName + '.gif';
 
         if (Platform.OS === 'web') {
           blobs.push(this.prepareGif(fileName));
           Downloader.asFiles(blobs);
           this.context.onGifFileSaved &&
             this.context.onGifFileSaved({fileName});
+          this.props.setAnimationName(fileName);
           this.props.closeModal();
         } else {
           const combinedData = this.combineGifData();
           if (combinedData) {
-            const fullPath = `${this.directoryPath}/${fileName}`;
-
             if (Platform.OS === 'android') {
               try {
                 const granted = await PermissionsAndroid.request(
@@ -158,35 +178,37 @@ class DownloadProjectModal extends Component {
               }
             }
 
-            RNFS.stat(this.directoryPath)
-              .then(() => {
-                RNFS.writeFile(fullPath, combinedData, 'ascii')
-                  .then(() => {
-                    this.context.onGifFileSaved &&
-                      this.context.onGifFileSaved({fileName});
-                    this.props.closeModal();
-                  })
-                  .catch((err) => {
-                    this.setState({saveError: err.message});
-                  });
-              })
-              .catch(() => {
-                RNFS.mkdir(this.directoryPath)
-                  .then(() => {
-                    RNFS.writeFile(fullPath, combinedData, 'ascii')
-                      .then(() => {
-                        this.context.onGifFileSaved &&
-                          this.context.onGifFileSaved({fileName});
-                        this.props.closeModal();
-                      })
-                      .catch((err) => {
-                        this.setState({saveError: err.message});
-                      });
-                  })
-                  .catch((err) => {
-                    this.setState({saveError: err.message});
-                  });
-              });
+            try {
+              await RNFS.stat(this.directoryPath);
+            } catch (err) {
+              try {
+                await RNFS.mkdir(this.directoryPath);
+              } catch (err) {
+                this.setState({saveError: err.message});
+                return;
+              }
+            }
+
+            try {
+              const namesInDir = await RNFS.readdir(this.directoryPath);
+              if (this.needRename && namesInDir.includes(fileName)) {
+                fileName = autoRenameLikeWeb(
+                  namesInDir,
+                  fileName.replace(/\.gif$/, '').replace(/ \(\d+\)$/, '') +
+                    ' (1).gif',
+                );
+              }
+              const fullPath = `${this.directoryPath}/${fileName}`;
+              await RNFS.writeFile(fullPath, combinedData, 'ascii');
+              this.needRename = false;
+              this.context.onGifFileSaved &&
+                this.context.onGifFileSaved({fileName});
+              this.props.setAnimationName(fileName);
+              this.props.closeModal();
+            } catch (err) {
+              this.setState({saveError: err.message});
+              return;
+            }
           } else {
             this.setState({saveError: 'Please draw some pixels first'});
           }
@@ -215,6 +237,7 @@ class DownloadProjectModal extends Component {
   cancel() {
     this.setState({saveError: ''});
     this.props.closeModal();
+    this.context.onGifFileSaveCanceled && this.context.onGifFileSaveCanceled();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -229,6 +252,12 @@ class DownloadProjectModal extends Component {
   }
 
   render() {
+    let path =
+      Platform.OS === 'android'
+        ? this.directoryPath.replace(/^\/storage\/emulated\/0\//, '')
+        : this.directoryPath;
+    path += '/';
+
     return (
       <ModalWindow
         title="Download project"
@@ -237,9 +266,7 @@ class DownloadProjectModal extends Component {
         isShown={this.props.isShown}>
         <View style={styles.container}>
           {typeof this.directoryPath === 'string' && (
-            <Text style={styles.directorylabel}>
-              {this.directoryPath + '/'}
-            </Text>
+            <Text style={styles.directorylabel}>{path}</Text>
           )}
           <View key="width" style={styles.input}>
             <TextInput

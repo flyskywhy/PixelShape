@@ -15,6 +15,8 @@ import SettingsModal from '../../containers/modals/Settings';
 
 import StateLoader from '../../statemanager/StateLoader';
 
+import {PixelShapeContext} from '../../context';
+
 const {width, height} = Dimensions.get('window');
 
 const MODALS = {
@@ -25,6 +27,8 @@ const MODALS = {
 };
 
 class Apptoolbox extends Component {
+  static contextType = PixelShapeContext;
+
   constructor(...args) {
     super(...args);
     this.initialModalState = {
@@ -65,6 +69,8 @@ class Apptoolbox extends Component {
     //   'alt + s': this.openSettings,
     //   esc: this.closeModal,
     // });
+
+    this.context.refApptoolbox && this.context.refApptoolbox(this);
   }
 
   importFile() {
