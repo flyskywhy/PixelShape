@@ -8,9 +8,6 @@ import {
   View,
 } from 'react-native';
 import RNSystemFileBrower from 'react-native-system-file-browser';
-if (Platform.OS !== 'web') {
-  var ReactNativeBlobUtil = require('react-native-blob-util').default;
-}
 
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
@@ -62,16 +59,9 @@ class NewProjectModal extends Component {
     }
   }
 
-  async onFileLoaded(data) {
-    let importedFileName = this.props.animationName;
-    if (Platform.OS === 'web') {
-      importedFileName = data.file.name || importedFileName;
-    } else {
-      let stat = await ReactNativeBlobUtil.fs.stat(data.file);
-      importedFileName = stat.filename || importedFileName;
-    }
+  onFileLoaded(data) {
     this.setState({
-      importedFileName,
+      importedFileName: data.file.name || this.props.animationName,
       importedData: data.json,
       loading: false,
       progress: 0,
@@ -100,7 +90,7 @@ class NewProjectModal extends Component {
         if (res && typeof res.url === 'string') {
           const callback = this.onFileLoaded.bind(this),
             stepCallback = this.onStep.bind(this);
-          StateLoader.uploadGif(res.url, callback, stepCallback);
+          StateLoader.uploadGif(res, callback, stepCallback);
         }
       });
     }

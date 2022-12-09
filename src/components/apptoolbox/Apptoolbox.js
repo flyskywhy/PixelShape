@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import {Dimensions, Platform, StyleSheet, View} from 'react-native';
 import RNSystemFileBrower from 'react-native-system-file-browser';
-if (Platform.OS !== 'web') {
-  var ReactNativeBlobUtil = require('react-native-blob-util').default;
-}
 // import decorateWithKeyBindings from '../../helpers/KeyBindings';
 
 import AppToolButton from '../apptoolbutton/Apptoolbutton';
@@ -77,15 +74,12 @@ class Apptoolbox extends Component {
     const params = Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
     RNSystemFileBrower.openFileBrower(params).then((res) => {
       if (res && typeof res.url === 'string') {
-        const callback = async (data) => {
-          let stat = await ReactNativeBlobUtil.fs.stat(
-            data.file.replace(/^file:\/\//, ''),
-          );
-          this.props.setAnimationName(stat.filename);
+        const callback = (data) => {
+          this.props.setAnimationName(data.file.name);
           this.props.uploadProject(data.json);
         };
         const stepCallback = () => {};
-        StateLoader.uploadGif(res.url, callback, stepCallback);
+        StateLoader.uploadGif(res, callback, stepCallback);
       }
     });
   }
