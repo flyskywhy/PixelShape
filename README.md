@@ -30,6 +30,9 @@ Android iOS Web pixel drawing editor APP and sub-app that comes in handy when cr
 
 `npm run build-web-PixelShapeRN` to generate files in `build/` for production to deploy to `https://foo.bar.com/PixelShapeRN/`, e.g. [https://flyskywhy.github.io/PixelShapeRN/](https://flyskywhy.github.io/PixelShapeRN/) .
 
+## permission
+To import gif file, you need manually allow storage permission with PixelShapeRN APP in OS settings. To let your APP has chance to choose which permission lib e.g. `react-native-permissions` or `expo-permissions` and which version, there is no permission lib in PixelShapeRN, so for your APP embeded PixelShapeRN as sub-app, you APP need request permission e.g. `android.permission.READ_EXTERNAL_STORAGE` with [react-native-permissions](https://github.com/zoontek/react-native-permissions).
+
 ## be embeded as sub-app
 Ref to [Isolating Redux Sub-Apps](https://redux.js.org/usage/isolating-redux-sub-apps) and [Breaking out of Redux paradigm to isolate apps](https://gist.github.com/gaearon/eeee2f619620ab7b55673a4ee2bf8400), PixelShapeRN can be embeded into other react-native APP easily.
 
