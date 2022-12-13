@@ -1,4 +1,7 @@
+// even this line can be removed, ref to polyfill like by babel-plugin described in
+// https://github.com/flyskywhy/react-native-filereader/blob/master/README.md
 import FileReader from 'react-native-filereader';
+
 import ImageDataExtended from '../utils/imageData';
 
 // Generic functions

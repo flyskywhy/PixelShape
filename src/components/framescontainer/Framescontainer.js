@@ -153,7 +153,7 @@ class FramesContainer extends Component {
       return <View style={styles.gifLoading} />;
     }
 
-    return [
+    let elements = [
       <View key="image" style={this.stylesToCenter()}>
         <ImageBackground
           style={styles.gifImg}
@@ -163,10 +163,17 @@ class FramesContainer extends Component {
           <Image style={styles.gifImg} source={{uri: this.state.gifImgSrc}} />
         </ImageBackground>
       </View>,
-      <Text key="fps" style={styles.gifFps}>
-        {this.props.fps}fps
-      </Text>,
     ];
+
+    if (!this.context.fpsController) {
+      elements.push(
+        <Text key="fps" style={styles.gifFps}>
+          {this.props.fps}fps
+        </Text>,
+      );
+    }
+
+    return elements;
   }
 
   onClickGifImage() {

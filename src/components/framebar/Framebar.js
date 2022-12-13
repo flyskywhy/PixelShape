@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import Slider from '@react-native-community/slider';
 // import decorateWithKeyBindings from '../../helpers/KeyBindings';
 
+import {PixelShapeContext} from '../../context';
 import FrameButton from '../framebutton/Framebutton';
 // import FrameButtonBig from '../framebutton/Framebuttonbig';
 import FramesContainer from '../../containers/framescontainer/Framescontainer';
@@ -11,14 +12,35 @@ import debounce from '../../utils/debounce';
 import {colors as stylesColors} from '../../styles/variables.js';
 
 const {width} = Dimensions.get('window');
+const FPS_MIN = 1;
+const FPS_MAX = 24;
+function getFpsStepsIndex({fpsSteps, fps}) {
+  let index = fpsSteps.indexOf(fps);
+  return index === -1 ? 1 : index;
+}
 
 class Framebar extends Component {
+  static contextType = PixelShapeContext;
+
   constructor(...args) {
     super(...args);
+    let fps = 2;
+    let fpsSteps = [];
+    for (let i = FPS_MIN; i < FPS_MAX; i++) {
+      fpsSteps.push(i);
+    }
     this.state = {
-      fps: 2,
+      fps,
+      fpsSteps,
       maximized: true,
     };
+    this.state.fpsStepsIndex = getFpsStepsIndex({fpsSteps, fps});
+    if (this.context.fpsController) {
+      if (this.context.fpsController.steps) {
+        this.state.fpsSteps = this.context.fpsController.steps;
+        this.state.fpsStepsIndex = this.context.fpsController.stepsDefaultIndex;
+      }
+    }
     this.setFPS = debounce(this.props.setFPS, 300);
 
     this.goLeft = this.goLeft.bind(this);
@@ -30,9 +52,24 @@ class Framebar extends Component {
     // });
   }
 
+  componentDidMount() {
+    if (this.context.fpsController) {
+      let fpsStepsIndex = this.state.fpsStepsIndex;
+      let fps = this.state.fpsSteps[fpsStepsIndex];
+      if (fps !== this.state.fps) {
+        this.onFpsStepsIndexChange(fpsStepsIndex);
+      }
+    }
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.fps !== nextProps.fps) {
-      return {fps: nextProps.fps};
+      let fps = nextProps.fps;
+      let fpsSteps = prevState.fpsSteps;
+      return {
+        fps,
+        fpsStepsIndex: getFpsStepsIndex({fpsSteps, fps}),
+      };
     }
 
     return null;
@@ -71,6 +108,29 @@ class Framebar extends Component {
     this.setFPS(value);
   }
 
+  onFpsStepsIndexChange(fpsStepsIndex) {
+    let fps = this.state.fpsSteps[fpsStepsIndex];
+    this.setState({
+      fps,
+      fpsStepsIndex,
+    });
+    this.props.setFPS(fps);
+  }
+
+  fpsDown() {
+    let fpsStepsIndex = this.state.fpsStepsIndex;
+    if (fpsStepsIndex > 0) {
+      this.onFpsStepsIndexChange(fpsStepsIndex - 1);
+    }
+  }
+
+  fpsUp() {
+    let fpsStepsIndex = this.state.fpsStepsIndex;
+    if (fpsStepsIndex < this.state.fpsSteps.length - 1) {
+      this.onFpsStepsIndexChange(fpsStepsIndex + 1);
+    }
+  }
+
   saveCurrentFrameName() {
     this.props.updateFrameName(
       this.props.currentFrameUUID,
@@ -78,17 +138,43 @@ class Framebar extends Component {
     );
   }
 
-  getMaximizedControls() {
-    return [
-      <View style={styles.gifControls} key="maxgifcontrols">
+  getFpsController() {
+    if (this.context.fpsController) {
+      return (
+        <View style={styles.fpsController}>
+          <FrameButton
+            btnTooltip="Fps down"
+            icon={require('../../images/arrow-So.png')}
+            doAction={this.fpsDown.bind(this)}
+          />
+          <View style={styles.fpsTextContainer}>
+            <Text style={styles.fpsText}>{this.state.fps + 'fps'}</Text>
+          </View>
+          <FrameButton
+            btnTooltip="Fps up"
+            icon={require('../../images/arrow-No.png')}
+            doAction={this.fpsUp.bind(this)}
+          />
+        </View>
+      );
+    } else {
+      return (
         <Slider
           step={1}
-          minimumValue={1}
-          maximumValue={24}
+          minimumValue={FPS_MIN}
+          maximumValue={FPS_MAX}
           value={this.state.fps}
           thumbTintColor="#1b2631"
           onSlidingComplete={this.onChange.bind(this)}
         />
+      );
+    }
+  }
+
+  getMaximizedControls() {
+    return [
+      <View style={styles.gifControls} key="maxgifcontrols">
+        {this.getFpsController()}
       </View>,
 
       <View style={styles.framesControls} key="maxcontrols">
@@ -234,6 +320,26 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  fpsController: {
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  fpsTextContainer: {
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#264653',
+    borderRightWidth: 1,
+    borderColor: '#40606d',
+  },
+  fpsText: {
+    width: 42,
+    textAlign: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 5,
   },
   framename: {
     height: 50,
