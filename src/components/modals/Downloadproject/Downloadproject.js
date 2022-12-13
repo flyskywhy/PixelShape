@@ -148,7 +148,7 @@ class DownloadProjectModal extends Component {
           blobs.push(this.prepareGif(fileName));
           Downloader.asFiles(blobs);
           this.context.onGifFileSaved &&
-            this.context.onGifFileSaved({fileName});
+            this.context.onGifFileSaved({fileName, fps: this.props.fps});
           this.props.setAnimationName(fileName);
           this.props.closeModal();
         } else {
@@ -202,7 +202,7 @@ class DownloadProjectModal extends Component {
               await RNFS.writeFile(fullPath, combinedData, 'ascii');
               this.needRename = false;
               this.context.onGifFileSaved &&
-                this.context.onGifFileSaved({fileName});
+                this.context.onGifFileSaved({fileName, fps: this.props.fps});
               this.props.setAnimationName(fileName);
               this.props.closeModal();
             } catch (err) {
