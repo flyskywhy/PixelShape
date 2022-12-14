@@ -22,3 +22,11 @@ export const copyObj = (obj) => {
   }
   return clone;
 };
+
+export function asciiString2ByteArray(str) {
+  let arr = [];
+  for (let i in str) {
+    arr[i] = str.charCodeAt(i);
+  }
+  return arr;
+}
