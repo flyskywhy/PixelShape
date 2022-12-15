@@ -26,7 +26,7 @@ Android iOS Web pixel drawing editor APP and sub-app that comes in handy when cr
 ## Web
 `npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser.
 
-[Fix getUUID and URIUtil re-exports](https://github.com/RonRadtke/react-native-blob-util/pull/183) manually on `node_modules/react-native-blob-util/index.js` before `npm run build-web`, otherwise will `export 'URIUtil' (reexported as 'URIUtil') was not found in './utils/uri' (possible exports: default)`.
+[fix: with react-native-web product build](https://github.com/RonRadtke/react-native-blob-util/pull/201) manually that add `node_modules/react-native-blob-util/index.web.js` and edit `node_modules/react-native-blob-util/package.json` before `npm run build-web`, otherwise will `export 'URIUtil' (reexported as 'URIUtil') was not found in './utils/uri' (possible exports: default)`.
 
 `npm run build-web` to generate files in `build/` for production to deploy to `https://foo.bar.com/` , and can use `npx http-server@13.0.2 build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser.
 
