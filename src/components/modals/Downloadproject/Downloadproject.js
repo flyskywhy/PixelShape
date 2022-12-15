@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 if (Platform.OS !== 'web') {
-  var RNFS = require('react-native-fs');
+  var ReactNativeBlobUtil = require('react-native-blob-util').default;
 }
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
@@ -16,6 +16,7 @@ import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 import Downloader from '../../../fileloaders/Downloader';
 import {combineImageDataToCanvas} from '../../../utils/canvasUtils';
 import {getAllActiveColors} from '../../../utils/colorUtils';
+import {asciiString2ByteArray} from '../../../utils/helpers';
 import StateLoader from '../../../statemanager/StateLoader';
 import {PixelShapeContext} from '../../../context';
 import {Files} from '../../../defaults/constants';
@@ -55,8 +56,8 @@ class DownloadProjectModal extends Component {
     if (Platform.OS !== 'web') {
       this.directoryPath = `${
         Platform.OS === 'android'
-          ? RNFS.PicturesDirectoryPath
-          : RNFS.DocumentDirectoryPath
+          ? ReactNativeBlobUtil.fs.dirs.PictureDir
+          : ReactNativeBlobUtil.fs.dirs.DocumentDir
       }/gifs`;
     }
 
@@ -179,10 +180,10 @@ class DownloadProjectModal extends Component {
             }
 
             try {
-              await RNFS.stat(this.directoryPath);
+              await ReactNativeBlobUtil.fs.stat(this.directoryPath);
             } catch (err) {
               try {
-                await RNFS.mkdir(this.directoryPath);
+                await ReactNativeBlobUtil.fs.mkdir(this.directoryPath);
               } catch (err) {
                 this.setState({saveError: err.message});
                 return;
@@ -190,7 +191,9 @@ class DownloadProjectModal extends Component {
             }
 
             try {
-              const namesInDir = await RNFS.readdir(this.directoryPath);
+              const namesInDir = await ReactNativeBlobUtil.fs.ls(
+                this.directoryPath,
+              );
               if (this.needRename && namesInDir.includes(fileName)) {
                 fileName = autoRenameLikeWeb(
                   namesInDir,
@@ -199,7 +202,11 @@ class DownloadProjectModal extends Component {
                 );
               }
               const fullPath = `${this.directoryPath}/${fileName}`;
-              await RNFS.writeFile(fullPath, combinedData, 'ascii');
+              await ReactNativeBlobUtil.fs.writeFile(
+                fullPath,
+                asciiString2ByteArray(combinedData),
+                'ascii',
+              );
               this.needRename = false;
               this.context.onGifFileSaved &&
                 this.context.onGifFileSaved({fileName, fps: this.props.fps});

@@ -48,11 +48,15 @@ class Colorpicker extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const color = getInputColor(nextProps.tempColor);
-    return {
-      borderColor: color,
-      currentColor: color,
-    };
+    if (nextProps.tempColor) {
+      const color = getInputColor(nextProps.tempColor);
+      return {
+        borderColor: color,
+        currentColor: color,
+      };
+    }
+
+    return null
   }
 
   getUserColorsList() {
@@ -76,7 +80,7 @@ class Colorpicker extends Component {
         <TextInput
           style={styles.hexColor}
           maxLength={7}
-          value={this.state.currentColor}
+          defaultValue={this.state.currentColor}
           placeholder="Hex"
           placeholderTextColor="#ccc"
           onChangeText={this.onChange.bind(this)}
