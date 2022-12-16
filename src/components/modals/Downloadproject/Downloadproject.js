@@ -56,7 +56,7 @@ class DownloadProjectModal extends Component {
     if (Platform.OS !== 'web') {
       this.directoryPath = `${
         Platform.OS === 'android'
-          ? ReactNativeBlobUtil.fs.dirs.PictureDir
+          ? '/sdcard/Pictures' //ReactNativeBlobUtil.fs.dirs.PictureDir
           : ReactNativeBlobUtil.fs.dirs.DocumentDir
       }/gifs`;
     }
@@ -263,8 +263,8 @@ class DownloadProjectModal extends Component {
   render() {
     let path =
       Platform.OS === 'android'
-        ? this.directoryPath.replace(/^\/storage\/emulated\/0\//, '')
-        : this.directoryPath;
+        ? this.directoryPath
+        : this.directoryPath.replace(/^file:\/\//, '');
     path += '/';
 
     return (
