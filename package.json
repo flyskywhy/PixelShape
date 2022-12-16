@@ -1,6 +1,6 @@
 {
   "name": "pixelshapern",
-  "version": "1.1.25",
+  "version": "1.1.26",
   "private": false,
   "description": "Android iOS Web pixel drawing editor APP and sub-app that comes in handy when creating pixel art images and gif animations",
   "scripts": {
@@ -96,7 +96,7 @@
     "react-native": "0.63.2",
     "react-native-blob-util": "0.16.3",
     "react-native-fast-image": "8.5.11",
-    "react-native-filereader": "1.0.3",
+    "react-native-filereader": "1.0.5",
     "react-native-system-file-browser": "1.1.0",
     "react-native-web": "^0.17.5",
     "react-redux": "7.2.1",

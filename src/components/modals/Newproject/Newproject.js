@@ -88,6 +88,15 @@ class NewProjectModal extends Component {
         Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
       RNSystemFileBrower.openFileBrower(params).then((res) => {
         if (res && typeof res.url === 'string') {
+          if (Platform.OS === 'android') {
+            // ref to `primary:SOME_DIR/SOME.FILE`
+            // in https://github.com/flyskywhy/react-native-filereader/blob/master/README.md
+            res.url = decodeURIComponent(res.url).replace(
+              /^content:\/\/com.android.externalstorage.documents\/document\/primary:/,
+              '/sdcard/', // to match in ../Downloadproject/Downloadproject.js
+            );
+          }
+
           const callback = this.onFileLoaded.bind(this),
             stepCallback = this.onStep.bind(this);
           StateLoader.uploadGif(res, callback, stepCallback);

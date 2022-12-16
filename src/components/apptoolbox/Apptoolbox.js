@@ -102,6 +102,15 @@ class Apptoolbox extends Component {
     const params = Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
     RNSystemFileBrower.openFileBrower(params).then((res) => {
       if (res && typeof res.url === 'string') {
+        if (Platform.OS === 'android') {
+          // ref to `primary:SOME_DIR/SOME.FILE`
+          // in https://github.com/flyskywhy/react-native-filereader/blob/master/README.md
+          res.url = decodeURIComponent(res.url).replace(
+            /^content:\/\/com.android.externalstorage.documents\/document\/primary:/,
+            '/sdcard/', // to match in ../modals/Downloadproject/Downloadproject.js
+          );
+        }
+
         const callback = (data) => {
           this.props.setAnimationName(data.file.name);
           this.props.uploadProject(data.json);
