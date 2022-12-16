@@ -80,7 +80,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@flyskywhy/react-native-gcanvas": "2.3.36",
+    "@flyskywhy/react-native-gcanvas": "2.3.37",
     "@minar-kotonoha/react-native-threads": "0.0.22",
     "@react-native-community/slider": "4.2.0",
     "es6-promise": "^4.1.0",
@@ -96,7 +96,7 @@
     "react-native": "0.63.2",
     "react-native-blob-util": "0.16.3",
     "react-native-fast-image": "8.5.11",
-    "react-native-filereader": "1.0.2",
+    "react-native-filereader": "1.0.3",
     "react-native-system-file-browser": "1.1.0",
     "react-native-web": "^0.17.5",
     "react-redux": "7.2.1",
