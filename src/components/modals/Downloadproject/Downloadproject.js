@@ -56,7 +56,7 @@ class DownloadProjectModal extends Component {
     if (Platform.OS !== 'web') {
       this.directoryPath = `${
         Platform.OS === 'android'
-          ? '/sdcard/Pictures' //ReactNativeBlobUtil.fs.dirs.PictureDir
+          ? '/sdcard/Pictures' // not ReactNativeBlobUtil.fs.dirs.PictureDir, to match in ../../apptoolbox/Apptoolbox.js
           : ReactNativeBlobUtil.fs.dirs.DocumentDir
       }/gifs`;
     }
