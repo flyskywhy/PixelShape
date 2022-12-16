@@ -26,12 +26,14 @@ Android iOS Web pixel drawing editor APP and sub-app that comes in handy when cr
 ## Web
 `npm run web` for development, then view it at [http://localhost:3000](http://localhost:3000) in web browser.
 
+[fix: with react-native-web product build](https://github.com/RonRadtke/react-native-blob-util/pull/201) manually that add `node_modules/react-native-blob-util/index.web.js` and edit `node_modules/react-native-blob-util/package.json` before `npm run build-web`, otherwise will `export 'URIUtil' (reexported as 'URIUtil') was not found in './utils/uri' (possible exports: default)`.
+
 `npm run build-web` to generate files in `build/` for production to deploy to `https://foo.bar.com/` , and can use `npx http-server@13.0.2 build` to simply test it at [http://127.0.0.1:8080](http://127.0.0.1:8080) in web browser.
 
 `npm run build-web-PixelShapeRN` to generate files in `build/` for production to deploy to `https://foo.bar.com/PixelShapeRN/`, e.g. [https://flyskywhy.github.io/PixelShapeRN/](https://flyskywhy.github.io/PixelShapeRN/) .
 
 ## permission
-To import gif file, you need manually allow storage permission with PixelShapeRN APP in OS settings. To let your APP has chance to choose which permission lib e.g. `react-native-permissions` or `expo-permissions` and which version, there is no permission lib in PixelShapeRN, so for your APP embeded PixelShapeRN as sub-app, you APP need request permission e.g. `android.permission.READ_EXTERNAL_STORAGE` with [react-native-permissions](https://github.com/zoontek/react-native-permissions).
+PixelShapeRN will automatically request `('react-native').PermissionsAndroid` on Android when import or save file, so your iOS APP embeded PixelShapeRN as sub-app maybe need request permission with e.g. `react-native-permissions` or `expo-permissions`.
 
 ## be embeded as sub-app
 Ref to [Isolating Redux Sub-Apps](https://redux.js.org/usage/isolating-redux-sub-apps) and [Breaking out of Redux paradigm to isolate apps](https://gist.github.com/gaearon/eeee2f619620ab7b55673a4ee2bf8400), PixelShapeRN can be embeded into other react-native APP easily.

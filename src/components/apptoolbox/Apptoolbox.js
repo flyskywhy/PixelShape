@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {Dimensions, Platform, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import RNSystemFileBrower from 'react-native-system-file-browser';
 // import decorateWithKeyBindings from '../../helpers/KeyBindings';
 
@@ -70,7 +76,29 @@ class Apptoolbox extends Component {
     this.context.refApptoolbox && this.context.refApptoolbox(this);
   }
 
-  importFile() {
+  async importFile() {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          {
+            // if user allow fisrt in APP, then manually disallow in OS setting,
+            // then will show below message
+            title: 'Read External Storage Permission',
+            message: 'Your app needs this permission to import file.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          return false;
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+
     const params = Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
     RNSystemFileBrower.openFileBrower(params).then((res) => {
       if (res && typeof res.url === 'string') {

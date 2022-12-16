@@ -160,6 +160,8 @@ class DownloadProjectModal extends Component {
                 const granted = await PermissionsAndroid.request(
                   PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                   {
+                    // if user allow fisrt in APP, then manually disallow in OS setting,
+                    // then will show below message
                     title: 'Write External Storage Permission',
                     message: 'Your app needs this permission to save file.',
                     buttonNeutral: 'Ask Me Later',
