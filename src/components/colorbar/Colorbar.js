@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     borderColor: stylesColors.greyblue,
   },
   userPalette: {
+    alignItems: 'center',
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: stylesColors.greyblue,
