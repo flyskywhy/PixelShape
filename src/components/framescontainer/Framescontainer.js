@@ -8,23 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import base64 from 'base64-js';
 import Frame from '../frame/Frame';
 import {PixelShapeContext} from '../../context';
-
-import WorkerPool from '../../workers/workerPool';
+import GifEncoder from '../../libs/GifEncoder';
 
 if (Platform.OS === 'web') {
   var Image = require('react-native').Image;
-  var WebWorker = 'generateGif.worker.js';
 } else {
   var Image = require('react-native-fast-image');
-
-  // in dev mode, bundler only picks up js files from project root,
-  // ref to https://github.com/joltup/react-native-threads/issues/125#issuecomment-939343110
-  var NativeWorker = 'generateGif.worker.js';
 }
-
-const Worker = Platform.OS === 'web' ? WebWorker : NativeWorker;
 
 class FramesContainer extends Component {
   static contextType = PixelShapeContext;
@@ -32,7 +25,6 @@ class FramesContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.initializeGifWorker();
     this.state = {
       modifiedFrames: props.modifiedFrames,
 
@@ -40,43 +32,6 @@ class FramesContainer extends Component {
       loading: false,
       gifImgSrc: '',
     };
-  }
-
-  initializeGifWorker() {
-    this.workerPool = new WorkerPool({
-      amount: 5,
-      worker: Worker,
-    });
-
-    this.workerPool.spawnWorkers();
-
-    this.workerPool.addEventListener('message', (event) => {
-      let gif = '';
-
-      this.props.updateFrameGIFData(event.data.frameUUID, event.data.frameData);
-
-      // update the actual gif image when all parts processed
-      if (event.data.currentPart === event.data.partsTotal - 1) {
-        this.endLoading();
-        gif = this.getOrderedGif();
-
-        this.context.onGifGeneratePost &&
-          this.context.onGifGeneratePost({
-            fps: this.props.fps,
-            gif,
-          });
-
-        this.setState({
-          gifImgSrc: `data:image/gif;base64,${btoa(gif)}`,
-        });
-      }
-    });
-  }
-
-  getOrderedGif() {
-    return this.props.framesOrder
-      .map((el) => this.props.gifFramesData[el])
-      .join('');
   }
 
   getFrames() {
@@ -188,27 +143,23 @@ class FramesContainer extends Component {
     height = this.props.imageSize.height,
     fps = this.props.fps,
   ) {
-    const gifLength = order.length;
+    const gif = GifEncoder({
+      collection,
+      order,
+      width,
+      height,
+      fps,
+    });
 
-    this.workerPool.startOver(modified.length);
-
-    modified.forEach((frameObj) => {
-      const id = Object.keys(frameObj)[0];
-      this.workerPool.postMessage({
-        frameUUID: id,
-        frameNum: frameObj[id],
-        framesLength: gifLength,
-        // need this [...] otherwise will be object like {"0":0} after
-        // JSON.stringify(Uint8ClampedArray naturalImageData.data) ,
-        // for postMessage() and onmessage() only eat string in
-        // react-native-threads, and since [] instead of Uint8ClampedArray
-        // also works well in getImagePixels() of `src/libs/gif/GIFEncoder.js`,
-        // so [...] here is ok
-        imageData: [...collection[id].naturalImageData.data],
-        height,
-        width,
-        fps,
+    this.context.onGifGeneratePost &&
+      this.context.onGifGeneratePost({
+        fps: this.props.fps,
+        gif,
       });
+
+    this.setState({
+      loading: false,
+      gifImgSrc: `data:image/gif;base64,${base64.fromByteArray(gif)}`,
     });
   }
 

@@ -16,12 +16,12 @@ import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 import Downloader from '../../../fileloaders/Downloader';
 import {combineImageDataToCanvas} from '../../../utils/canvasUtils';
 import {getAllActiveColors} from '../../../utils/colorUtils';
-import {asciiString2ByteArray} from '../../../utils/helpers';
 import StateLoader from '../../../statemanager/StateLoader';
 import {PixelShapeContext} from '../../../context';
 import {Files} from '../../../defaults/constants';
 
 import generatePalette from '../../../htmlgenerators/paletteGenerator';
+import GifEncoder from '../../../libs/GifEncoder';
 
 const errorColor = '#9a1000';
 const regularColor = '#eee';
@@ -70,9 +70,13 @@ class DownloadProjectModal extends Component {
   }
 
   combineGifData() {
-    return this.props.framesOrder
-      .map((el) => this.props.gifFramesData[el])
-      .join('');
+    return GifEncoder({
+      collection: this.props.framesCollection,
+      order: this.props.framesOrder,
+      width: this.props.imageSize.width,
+      height: this.props.imageSize.height,
+      fps: this.props.fps,
+    });
   }
 
   prepareProject() {
@@ -206,7 +210,7 @@ class DownloadProjectModal extends Component {
               const fullPath = `${this.directoryPath}/${fileName}`;
               await ReactNativeBlobUtil.fs.writeFile(
                 fullPath,
-                asciiString2ByteArray(combinedData),
+                Array.from(combinedData),
                 'ascii',
               );
               this.needRename = false;
@@ -262,9 +266,9 @@ class DownloadProjectModal extends Component {
 
   render() {
     let path =
-      Platform.OS === 'android'
-        ? this.directoryPath
-        : this.directoryPath.replace(/^file:\/\//, '');
+      Platform.OS === 'ios'
+        ? this.directoryPath.replace(/^file:\/\//, '')
+        : this.directoryPath;
     path += '/';
 
     return (
