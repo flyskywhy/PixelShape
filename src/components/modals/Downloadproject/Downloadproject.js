@@ -262,9 +262,9 @@ class DownloadProjectModal extends Component {
 
   render() {
     let path =
-      Platform.OS === 'android'
-        ? this.directoryPath
-        : this.directoryPath.replace(/^file:\/\//, '');
+      Platform.OS === 'ios'
+        ? this.directoryPath.replace(/^file:\/\//, '')
+        : this.directoryPath;
     path += '/';
 
     return (
