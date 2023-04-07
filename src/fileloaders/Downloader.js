@@ -33,17 +33,8 @@ const toBlob = (canvas) => {
 export default class Downloader {
   static prepareGIFBlobAsync(data, name) {
     return new Promise((resolve) => {
-      const len = data.length,
-        bytes = [];
-
-      let i = 0;
-
-      for (; i < len; i++) {
-        bytes[i] = data.charCodeAt(i);
-      }
-
       resolve({
-        blob: new Blob([new Uint8Array(bytes)], {type: Files.MIMETYPE.GIF}),
+        blob: new Blob([data], {type: Files.MIMETYPE.GIF}),
         name,
       });
     });
