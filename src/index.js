@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import {Platform} from 'react-native';
+if (Platform.OS === 'web') {
+  global.Buffer = require('buffer').Buffer;
+}
 import {Provider} from 'react-redux';
 
 import createStore from './store';

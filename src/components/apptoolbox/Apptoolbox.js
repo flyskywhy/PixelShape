@@ -99,7 +99,13 @@ class Apptoolbox extends Component {
       }
     }
 
-    const params = Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
+    const ext = this.props.animationName.substring(
+      this.props.animationName.lastIndexOf('.') + 1,
+    );
+    const params =
+      Platform.OS === 'android'
+        ? {types: ext === 'bmp' ? 'image/x-ms-bmp' : 'image/gif'}
+        : undefined;
     RNSystemFileBrower.openFileBrower(params).then((res) => {
       if (res && typeof res.url === 'string') {
         if (Platform.OS === 'android') {
@@ -112,11 +118,18 @@ class Apptoolbox extends Component {
         }
 
         const callback = (data) => {
-          this.props.setAnimationName(data.file.name);
+          this.props.setAnimationName(
+            data.file.name || this.props.animationName,
+          );
           this.props.uploadProject(data.json);
         };
         const stepCallback = () => {};
-        StateLoader.uploadGif(res, callback, stepCallback);
+        if (ext === 'gif') {
+          StateLoader.uploadGif(res, callback, stepCallback);
+        }
+        if (ext === 'bmp') {
+          StateLoader.uploadBmp(res, callback, stepCallback);
+        }
       }
     });
   }

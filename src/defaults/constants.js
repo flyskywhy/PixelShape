@@ -5,6 +5,7 @@ export const Files = {
     JSON: 'application/json',
     HTML: 'text/html',
     GIF: 'image/gif',
+    BMP: 'image/x-ms-bmp',
     PNG: 'image/png',
   },
   NAME: {

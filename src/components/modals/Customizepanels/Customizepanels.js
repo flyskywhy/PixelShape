@@ -16,6 +16,10 @@ class CustomizePanelModal extends Component {
   }
 
   render() {
+    const ext = this.props.animationName.substring(
+      this.props.animationName.lastIndexOf('.') + 1,
+    );
+
     return (
       <ModalWindow
         title="Customize panels"
@@ -32,11 +36,13 @@ class CustomizePanelModal extends Component {
           onChange={this.props.toggleSidebar.bind(this)}>
           Show sidebar
         </ToggleCheckbox>
-        <ToggleCheckbox
-          value={this.props.framebarVisible}
-          onChange={this.props.toggleFramebar.bind(this)}>
-          Show framebar
-        </ToggleCheckbox>
+        {ext === 'gif' && (
+          <ToggleCheckbox
+            value={this.props.framebarVisible}
+            onChange={this.props.toggleFramebar.bind(this)}>
+            Show framebar
+          </ToggleCheckbox>
+        )}
       </ModalWindow>
     );
   }

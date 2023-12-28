@@ -4,6 +4,7 @@ import {
   getToolbarVisibility,
   getSidebarVisibility,
   getFramebarVisibility,
+  getAnimationName,
 } from '../../selectors';
 
 import {
@@ -18,6 +19,7 @@ const mapStateToProps = (state) => ({
   toolbarVisible: getToolbarVisibility(state),
   sidebarVisible: getSidebarVisibility(state),
   framebarVisible: getFramebarVisibility(state),
+  animationName: getAnimationName(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

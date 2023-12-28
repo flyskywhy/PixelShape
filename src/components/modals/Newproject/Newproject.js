@@ -47,7 +47,9 @@ class NewProjectModal extends Component {
         );
       }
     } else {
-      this.props.setAnimationName(this.context.initialAnimationName || Files.NAME.ANIMATION);
+      this.props.setAnimationName(
+        this.context.initialAnimationName || this.props.animationName,
+      );
       this.props.resetFramesState(
         this.props.imageSize.width,
         this.props.imageSize.height,
@@ -84,8 +86,13 @@ class NewProjectModal extends Component {
     if (Platform.OS === 'web') {
       document.getElementById('project-import').click();
     } else {
+      const ext = this.props.animationName.substring(
+        this.props.animationName.lastIndexOf('.') + 1,
+      );
       const params =
-        Platform.OS === 'android' ? {types: 'image/gif'} : undefined;
+        Platform.OS === 'android'
+          ? {types: ext === 'bmp' ? 'image/x-ms-bmp' : 'image/gif'}
+          : undefined;
       RNSystemFileBrower.openFileBrower(params).then((res) => {
         if (res && typeof res.url === 'string') {
           if (Platform.OS === 'android') {
@@ -99,7 +106,12 @@ class NewProjectModal extends Component {
 
           const callback = this.onFileLoaded.bind(this),
             stepCallback = this.onStep.bind(this);
-          StateLoader.uploadGif(res, callback, stepCallback);
+          if (ext === 'gif') {
+            StateLoader.uploadGif(res, callback, stepCallback);
+          }
+          if (ext === 'bmp') {
+            StateLoader.uploadBmp(res, callback, stepCallback);
+          }
         }
       });
     }
@@ -118,6 +130,9 @@ class NewProjectModal extends Component {
     this.startLoading();
     if (file.type.match(/image\/gif/)) {
       StateLoader.uploadGif(file, callback, stepCallback);
+    }
+    if (file.type.match(/image\/bmp/)) {
+      StateLoader.uploadBmp(file, callback, stepCallback);
     }
     if (file.name.match(projectExtension)) {
       StateLoader.upload(file, callback);
@@ -186,6 +201,24 @@ class NewProjectModal extends Component {
   }
 
   render() {
+    const ext = this.props.animationName.substring(
+      this.props.animationName.lastIndexOf('.') + 1,
+    );
+    const accept =
+      ext === 'gif' ? [projectExtension, '.gif'].join() : '.' + ext;
+
+    let hint = 'You are allowed to load only files of `.' + ext + '`';
+
+    if (Platform.OS === 'web') {
+      if (ext === 'gif') {
+        hint += ' and `.pxlsh` formats';
+      } else {
+        hint += ' format';
+      }
+    } else {
+      hint += ' format';
+    }
+
     return (
       <ModalWindow
         title="New project"
@@ -203,7 +236,7 @@ class NewProjectModal extends Component {
             <input
               id="project-import"
               type="file"
-              accept={[projectExtension, '.gif'].join()}
+              accept={accept}
               ref={(input) => (this._input = input)}
               style={{display: 'none'}}
               onChange={this.handleUpload.bind(this)}
@@ -223,10 +256,7 @@ class NewProjectModal extends Component {
           <View style={styles.info}>{this.getFileNotification()}</View>
         </View>
 
-        <Text>
-          {'You are allowed to load only files of `.gif`' +
-            (Platform.OS === 'web' ? ' and `.pxlsh` formats' : 'format')}
-        </Text>
+        <Text>{hint}</Text>
       </ModalWindow>
     );
   }

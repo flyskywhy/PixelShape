@@ -7,6 +7,7 @@ export const PixelShapeContext = React.createContext({
   // when pixelshapern is a sub-app and PixelShapeContext.Provider value={some_object} and
   //     there is no initialImageSource in some_object, this.context.initialImageSource is undefined,
   //     so that below is meaningless
+  // so the default value is set in src/components/app/App.js e.g. `this.context.fileExtension = `
   //
   //
   // initialImageSource: {
@@ -27,4 +28,5 @@ export const PixelShapeContext = React.createContext({
   //   steps: [1, 3, 6, 8],
   //   stepsDefaultIndex: 1,
   // },
+  // fileExtension: 'bmp', // default is 'gif'
 });
