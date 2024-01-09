@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import isEqual from 'react-fast-compare';
 if (Platform.OS !== 'web') {
   var ReactNativeBlobUtil = require('react-native-blob-util').default;
 }
@@ -43,8 +44,8 @@ function autoRenameLikeWeb(namesInDir, fileName, fileExt) {
 class DownloadProjectModal extends Component {
   static contextType = PixelShapeContext;
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.state = {
       animationName: props.animationName,
 
@@ -67,11 +68,22 @@ class DownloadProjectModal extends Component {
     }
 
     this.needRename = false;
+
+    this.lastSavedData = [];
+    this.context.refDownloadProject && this.context.refDownloadProject(this);
   }
 
   componentDidMount() {
     // this.context.initialImageSource means import file not new file so want overwrite I think
     this.needRename = this.context.initialImageSource ? false : true;
+  }
+
+  isModifiedAfterLastSave() {
+    if (this.props.canUndo || this.props.canRedo) {
+      return !isEqual(this.lastSavedData, this.combineGifData());
+    } else {
+      return false;
+    }
   }
 
   combineGifData() {
@@ -194,6 +206,7 @@ class DownloadProjectModal extends Component {
             this.context.onGifFileSaved({fileName, fps: this.props.fps});
           this.props.setAnimationName(fileName);
           this.props.closeModal();
+          this.lastSavedData = blobs[0];
         } else {
           const combinedData = this.combineGifData();
           if (combinedData) {
@@ -260,6 +273,7 @@ class DownloadProjectModal extends Component {
                 this.context.onGifFileSaved({fileName, fps: this.props.fps});
               this.props.setAnimationName(fileName);
               this.props.closeModal();
+              this.lastSavedData = combinedData;
             } catch (err) {
               this.setState({saveError: err.message});
               return;
@@ -287,6 +301,7 @@ class DownloadProjectModal extends Component {
     }
     Downloader.asZIP(blobs, Files.NAME.PACKAGE);
     this.props.closeModal();
+    this.lastSavedData = blobs[0];
   }
 
   cancel() {

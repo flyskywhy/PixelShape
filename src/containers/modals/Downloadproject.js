@@ -12,6 +12,7 @@ import {
   getPaletteDownloadOption,
   getAnimationName,
 } from '../../selectors';
+import {canRedo, canUndo} from '../../selectors/timetravel';
 
 import {
   getStore,
@@ -25,6 +26,8 @@ import {
 import DownloadProjectModal from '../../components/modals/Downloadproject/Downloadproject';
 
 const mapStateToProps = (state) => ({
+  canRedo: canRedo(state),
+  canUndo: canUndo(state),
   gifFramesData: getGifFramesData(state),
   framesOrder: getFramesOrder(state),
   framesCollection: getAllFrames(state),

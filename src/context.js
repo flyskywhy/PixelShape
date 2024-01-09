@@ -22,6 +22,7 @@ export const PixelShapeContext = React.createContext({
   // onGifGeneratePost: null,
   // onClickGifImage: null,
   // refApptoolbox: null, // e.g. `(ref) => (this.apptoolbox = ref)` to this.apptoolbox.openDownloadProject()
+  // refDownloadProject: null, // e.g. `(ref) => (this.downloadProject = ref)` to this.downloadProject.isModifiedAfterLastSave()
   // onGifFileSaved: null,
   // onGifFileSaveCanceled: null,
   // fpsController: { // if no fpsController, will use fps slider, otherwise use steps up down buttons
