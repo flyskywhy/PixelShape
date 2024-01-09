@@ -29,4 +29,5 @@ export const PixelShapeContext = React.createContext({
   //   stepsDefaultIndex: 1,
   // },
   // fileExtension: 'bmp', // default is 'gif'
+  // filterImageName: null, // .e.g `(imageName) => imageName.replace(/^foobar/, '_foobar')`
 });
