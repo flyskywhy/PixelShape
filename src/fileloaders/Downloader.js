@@ -40,6 +40,15 @@ export default class Downloader {
     });
   }
 
+  static prepareBMPBlobAsync(data, name) {
+    return new Promise((resolve) => {
+      resolve({
+        blob: new Blob([data], {type: Files.MIMETYPE.BMP}),
+        name,
+      });
+    });
+  }
+
   static prepareJSONBlobAsync(data, name) {
     return new Promise((resolve) => {
       const json = JSON.stringify(data);

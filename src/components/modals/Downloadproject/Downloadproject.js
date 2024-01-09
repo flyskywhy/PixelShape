@@ -7,15 +7,17 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import isEqual from 'react-fast-compare';
 if (Platform.OS !== 'web') {
   var ReactNativeBlobUtil = require('react-native-blob-util').default;
 }
+import bmp from 'bmp-ts';
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
 import Downloader from '../../../fileloaders/Downloader';
 import {combineImageDataToCanvas} from '../../../utils/canvasUtils';
-import {getAllActiveColors} from '../../../utils/colorUtils';
+import {getAllActiveColors, rgbaToAbgr} from '../../../utils/colorUtils';
 import StateLoader from '../../../statemanager/StateLoader';
 import {PixelShapeContext} from '../../../context';
 import {Files} from '../../../defaults/constants';
@@ -27,41 +29,48 @@ const errorColor = '#9a1000';
 const regularColor = '#eee';
 
 // just like if 'file.gif' exist then rename to 'file (1).gif' when not want overwrite
-function autoRenameLikeWeb(namesInDir, fileName) {
-  if (namesInDir.includes(fileName)) {
-    const matchResult = fileName.match(/ \((\d+)\)\.gif$/);
+function autoRenameLikeWeb(namesInDir, fileName, fileExt) {
+  const fullName = fileName + '.' + fileExt;
+  if (namesInDir.includes(fullName)) {
+    const matchResult = fileName.match(/ \((\d+)\)$/);
     const newSeq = parseInt(matchResult[1], 10) + 1;
-    const newFileName = fileName.replace(
-      / \(\d+\)\.gif$/,
-      ' (' + newSeq + ').gif',
-    );
-    return autoRenameLikeWeb(namesInDir, newFileName);
+    const newFileName = fileName.replace(/ \(\d+\)$/, ' (' + newSeq + ')');
+    return autoRenameLikeWeb(namesInDir, newFileName, fileExt);
   } else {
-    return fileName;
+    return fullName;
   }
 }
 
 class DownloadProjectModal extends Component {
   static contextType = PixelShapeContext;
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.state = {
       animationName: props.animationName,
 
-      gifName: props.animationName.replace(/\.gif$/, ''),
+      gifName: props.animationName.substring(
+        0,
+        props.animationName.lastIndexOf('.'),
+      ),
       saveError: '',
     };
 
     if (Platform.OS !== 'web') {
+      const ext = props.animationName.substring(
+        props.animationName.lastIndexOf('.') + 1,
+      );
       this.directoryPath = `${
         Platform.OS === 'android'
           ? '/sdcard/Pictures' // not ReactNativeBlobUtil.fs.dirs.PictureDir, to match in ../../apptoolbox/Apptoolbox.js
           : ReactNativeBlobUtil.fs.dirs.DocumentDir
-      }/gifs`;
+      }/${ext}s`;
     }
 
     this.needRename = false;
+
+    this.lastSavedData = [];
+    this.context.refDownloadProject && this.context.refDownloadProject(this);
   }
 
   componentDidMount() {
@@ -69,14 +78,38 @@ class DownloadProjectModal extends Component {
     this.needRename = this.context.initialImageSource ? false : true;
   }
 
+  isModifiedAfterLastSave() {
+    if (this.props.canUndo || this.props.canRedo) {
+      return !isEqual(this.lastSavedData, this.combineGifData());
+    } else {
+      return false;
+    }
+  }
+
   combineGifData() {
-    return GifEncoder({
-      collection: this.props.framesCollection,
-      order: this.props.framesOrder,
-      width: this.props.imageSize.width,
-      height: this.props.imageSize.height,
-      fps: this.props.fps,
-    });
+    const ext = this.props.animationName.substring(
+      this.props.animationName.lastIndexOf('.') + 1,
+    );
+    if (ext === 'bmp') {
+      const frameUUID = this.props.framesOrder[0];
+      const rawData = bmp.encode({
+        data: rgbaToAbgr(
+          this.props.framesCollection[frameUUID].naturalImageData.data,
+        ),
+        bitPP: 24,
+        width: this.props.imageSize.width,
+        height: this.props.imageSize.height,
+      });
+      return rawData.data;
+    } else {
+      return GifEncoder({
+        collection: this.props.framesCollection,
+        order: this.props.framesOrder,
+        width: this.props.imageSize.width,
+        height: this.props.imageSize.height,
+        fps: this.props.fps,
+      });
+    }
   }
 
   prepareProject() {
@@ -86,10 +119,20 @@ class DownloadProjectModal extends Component {
 
   prepareGif(fileName) {
     const combinedData = this.combineGifData();
-    return Downloader.prepareGIFBlobAsync(
-      combinedData,
-      fileName || Files.NAME.ANIMATION,
+    const ext = this.props.animationName.substring(
+      this.props.animationName.lastIndexOf('.') + 1,
     );
+    if (ext === 'bmp') {
+      return Downloader.prepareBMPBlobAsync(
+        combinedData,
+        fileName || Files.NAME.ANIMATION,
+      );
+    } else {
+      return Downloader.prepareGIFBlobAsync(
+        combinedData,
+        fileName || Files.NAME.ANIMATION,
+      );
+    }
   }
 
   prepareSpritesheet() {
@@ -119,6 +162,9 @@ class DownloadProjectModal extends Component {
 
   async confirm() {
     const blobs = [];
+    const ext = this.props.animationName.substring(
+      this.props.animationName.lastIndexOf('.') + 1,
+    );
 
     if (this.props.includeGif) {
       if (
@@ -147,7 +193,11 @@ class DownloadProjectModal extends Component {
         //     : '' + now.getSeconds();
         // let fileName =
         //   year + month + date + hour + minute + second + '.gif';
-        let fileName = this.state.gifName + '.gif';
+        let fileName = this.state.gifName + '.' + ext;
+
+        if (this.context.filterImageName) {
+          fileName = this.context.filterImageName(fileName);
+        }
 
         if (Platform.OS === 'web') {
           blobs.push(this.prepareGif(fileName));
@@ -156,6 +206,7 @@ class DownloadProjectModal extends Component {
             this.context.onGifFileSaved({fileName, fps: this.props.fps});
           this.props.setAnimationName(fileName);
           this.props.closeModal();
+          this.lastSavedData = blobs[0];
         } else {
           const combinedData = this.combineGifData();
           if (combinedData) {
@@ -187,7 +238,7 @@ class DownloadProjectModal extends Component {
 
             try {
               await ReactNativeBlobUtil.fs.stat(this.directoryPath);
-            } catch (err) {
+            } catch (e) {
               try {
                 await ReactNativeBlobUtil.fs.mkdir(this.directoryPath);
               } catch (err) {
@@ -201,10 +252,14 @@ class DownloadProjectModal extends Component {
                 this.directoryPath,
               );
               if (this.needRename && namesInDir.includes(fileName)) {
+                const nameWithoutExt = this.props.animationName.substring(
+                  0,
+                  this.props.animationName.lastIndexOf('.'),
+                );
                 fileName = autoRenameLikeWeb(
                   namesInDir,
-                  fileName.replace(/\.gif$/, '').replace(/ \(\d+\)$/, '') +
-                    ' (1).gif',
+                  nameWithoutExt.replace(/ \(\d+\)$/, '') + ' (1)',
+                  ext,
                 );
               }
               const fullPath = `${this.directoryPath}/${fileName}`;
@@ -218,6 +273,7 @@ class DownloadProjectModal extends Component {
                 this.context.onGifFileSaved({fileName, fps: this.props.fps});
               this.props.setAnimationName(fileName);
               this.props.closeModal();
+              this.lastSavedData = combinedData;
             } catch (err) {
               this.setState({saveError: err.message});
               return;
@@ -245,6 +301,7 @@ class DownloadProjectModal extends Component {
     }
     Downloader.asZIP(blobs, Files.NAME.PACKAGE);
     this.props.closeModal();
+    this.lastSavedData = blobs[0];
   }
 
   cancel() {
@@ -257,7 +314,10 @@ class DownloadProjectModal extends Component {
     if (prevState.animationName !== nextProps.animationName) {
       return {
         animationName: nextProps.animationName,
-        gifName: nextProps.animationName.replace(/(.gif$)/, ''),
+        gifName: nextProps.animationName.substring(
+          0,
+          nextProps.animationName.lastIndexOf('.'),
+        ),
       };
     }
 
@@ -270,6 +330,9 @@ class DownloadProjectModal extends Component {
         ? this.directoryPath.replace(/^file:\/\//, '')
         : this.directoryPath;
     path += '/';
+    const ext = this.props.animationName.substring(
+      this.props.animationName.lastIndexOf('.') + 1,
+    );
 
     return (
       <ModalWindow
@@ -294,7 +357,7 @@ class DownloadProjectModal extends Component {
               value={this.state.gifName}
               onChangeText={(value) => this.setState({gifName: value})}
             />
-            <Text style={styles.inputlabel}>.gif</Text>
+            <Text style={styles.inputlabel}>{`.${ext}`}</Text>
           </View>
           {this.state.saveError !== '' && (
             <Text style={styles.saveError}>{this.state.saveError}</Text>

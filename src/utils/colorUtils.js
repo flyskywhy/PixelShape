@@ -20,6 +20,16 @@ export const hexToRGBA = (hex) => {
 
 export const stringToRGBA = (str) => hexToRGBA(stringToHex(str));
 
+export const rgbaToAbgr = (src) => {
+  return src.reduce((a, c, i, t) => {
+    if (i % 4 === 0) {
+      let [R, G, B, A] = t.slice(i, i + 4);
+      a.push(A, B, G, R);
+    }
+    return a;
+  }, []);
+};
+
 export const getPixelFromImageData = (imageData, x, y) =>
   (y * imageData.width + x) * RGBA;
 

@@ -7,6 +7,7 @@ export const PixelShapeContext = React.createContext({
   // when pixelshapern is a sub-app and PixelShapeContext.Provider value={some_object} and
   //     there is no initialImageSource in some_object, this.context.initialImageSource is undefined,
   //     so that below is meaningless
+  // so the default value is set in src/components/app/App.js e.g. `this.context.fileExtension = `
   //
   //
   // initialImageSource: {
@@ -21,10 +22,13 @@ export const PixelShapeContext = React.createContext({
   // onGifGeneratePost: null,
   // onClickGifImage: null,
   // refApptoolbox: null, // e.g. `(ref) => (this.apptoolbox = ref)` to this.apptoolbox.openDownloadProject()
+  // refDownloadProject: null, // e.g. `(ref) => (this.downloadProject = ref)` to this.downloadProject.isModifiedAfterLastSave()
   // onGifFileSaved: null,
   // onGifFileSaveCanceled: null,
   // fpsController: { // if no fpsController, will use fps slider, otherwise use steps up down buttons
   //   steps: [1, 3, 6, 8],
   //   stepsDefaultIndex: 1,
   // },
+  // fileExtension: 'bmp', // default is 'gif'
+  // filterImageName: null, // .e.g `(imageName) => imageName.replace(/^foobar/, '_foobar')`
 });
