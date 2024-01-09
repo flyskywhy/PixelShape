@@ -40,11 +40,24 @@ class NewProjectModal extends Component {
           this.props.uploadProject(data.json);
         };
         const stepCallback = () => {};
-        StateLoader.uploadGif(
-          this.context.initialImageSource.uri,
-          callback,
-          stepCallback,
+
+        const ext = this.context.initialImageSource.fileName.substring(
+          this.context.initialImageSource.fileName.lastIndexOf('.') + 1,
         );
+        if (ext === 'gif') {
+          StateLoader.uploadGif(
+            this.context.initialImageSource.uri,
+            callback,
+            stepCallback,
+          );
+        }
+        if (ext === 'bmp') {
+          StateLoader.uploadBmp(
+            this.context.initialImageSource.uri,
+            callback,
+            stepCallback,
+          );
+        }
       }
     } else {
       this.props.setAnimationName(
