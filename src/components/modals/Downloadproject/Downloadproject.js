@@ -221,7 +221,7 @@ class DownloadProjectModal extends Component {
 
             try {
               await ReactNativeBlobUtil.fs.stat(this.directoryPath);
-            } catch (err) {
+            } catch (e) {
               try {
                 await ReactNativeBlobUtil.fs.mkdir(this.directoryPath);
               } catch (err) {
