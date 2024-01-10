@@ -54,11 +54,7 @@ class Framebar extends Component {
 
   componentDidMount() {
     if (this.context.fpsController) {
-      let fpsStepsIndex = this.state.fpsStepsIndex;
-      let fps = this.state.fpsSteps[fpsStepsIndex];
-      if (fps !== this.state.fps) {
-        this.onFpsStepsIndexChange(fpsStepsIndex);
-      }
+      this.onFpsStepsIndexChange(this.state.fpsStepsIndex);
     }
   }
 
