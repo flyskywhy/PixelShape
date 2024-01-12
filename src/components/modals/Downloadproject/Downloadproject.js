@@ -193,7 +193,8 @@ class DownloadProjectModal extends Component {
         //     : '' + now.getSeconds();
         // let fileName =
         //   year + month + date + hour + minute + second + '.gif';
-        let fileName = this.state.gifName + '.' + ext;
+        let fileName =
+          (this.state.gifName ? this.state.gifName : 'blank') + '.' + ext;
 
         if (this.context.filterImageName) {
           fileName = this.context.filterImageName(fileName);
