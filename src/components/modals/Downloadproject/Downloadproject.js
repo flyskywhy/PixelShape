@@ -79,11 +79,7 @@ class DownloadProjectModal extends Component {
   }
 
   isModifiedAfterLastSave() {
-    if (this.props.canUndo || this.props.canRedo) {
-      return !isEqual(this.lastSavedData, this.combineGifData());
-    } else {
-      return false;
-    }
+    return !isEqual(this.lastSavedData, this.combineGifData());
   }
 
   combineGifData() {
