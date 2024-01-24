@@ -8,6 +8,9 @@ import {
   View,
 } from 'react-native';
 import RNSystemFileBrower from 'react-native-system-file-browser';
+if (Platform.OS !== 'web') {
+  var ReactNativeBlobUtil = require('react-native-blob-util').default;
+}
 
 import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
@@ -106,15 +109,25 @@ class NewProjectModal extends Component {
         Platform.OS === 'android'
           ? {types: ext === 'bmp' ? 'image/x-ms-bmp' : 'image/gif'}
           : undefined;
-      RNSystemFileBrower.openFileBrower(params).then((res) => {
+      RNSystemFileBrower.openFileBrower(params).then(async (res) => {
         if (res && typeof res.url === 'string') {
           if (Platform.OS === 'android') {
-            // ref to `primary:SOME_DIR/SOME.FILE`
-            // in https://github.com/flyskywhy/react-native-filereader/blob/master/README.md
-            res.url = decodeURIComponent(res.url).replace(
-              /^content:\/\/com.android.externalstorage.documents\/document\/primary:/,
-              '/sdcard/', // to match in ../Downloadproject/Downloadproject.js
-            );
+            if (
+              res.url.startsWith('content://media/') || // fix can't import BMP from category "Gallery" in RNSystemFileBrower
+              res.url.startsWith(
+                'content://com.android.providers.media.documents/document/image', // fix can't import BMP from category "Images" in RNSystemFileBrower
+              )
+            ) {
+              const stat = await ReactNativeBlobUtil.fs.stat(res.url);
+              res.url = stat.path;
+            } else {
+              // ref to `primary:SOME_DIR/SOME.FILE`
+              // in https://github.com/flyskywhy/react-native-filereader/blob/master/README.md
+              res.url = decodeURIComponent(res.url).replace(
+                /^content:\/\/com.android.externalstorage.documents\/document\/primary:/,
+                '/sdcard/', // to match in ../Downloadproject/Downloadproject.js
+              );
+            }
           }
 
           const callback = this.onFileLoaded.bind(this),
