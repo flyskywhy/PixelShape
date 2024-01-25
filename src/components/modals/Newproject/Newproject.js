@@ -16,12 +16,9 @@ import ModalWindow from '../../modalwindow/Modalwindow';
 import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
 import StateLoader from '../../../statemanager/StateLoader';
-import {PixelShapeContext} from '../../../context';
 import {Files, projectExtension} from '../../../defaults/constants';
 
 class NewProjectModal extends Component {
-  static contextType = PixelShapeContext;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -32,51 +29,6 @@ class NewProjectModal extends Component {
     };
   }
 
-  componentDidMount() {
-    if (this.context.initialImageSource) {
-      if (
-        this.context.initialImageSource.uri &&
-        this.context.initialImageSource.fileName
-      ) {
-        const callback = (data) => {
-          this.props.setAnimationName(this.context.initialImageSource.fileName);
-          this.props.uploadProject(data.json);
-        };
-        const stepCallback = () => {};
-
-        const ext = this.context.initialImageSource.fileName.substring(
-          this.context.initialImageSource.fileName.lastIndexOf('.') + 1,
-        );
-        if (ext === 'gif') {
-          StateLoader.uploadGif(
-            this.context.initialImageSource.uri,
-            callback,
-            stepCallback,
-          );
-        }
-        if (ext === 'bmp') {
-          StateLoader.uploadBmp(
-            this.context.initialImageSource.uri,
-            callback,
-            stepCallback,
-          );
-        }
-      }
-    } else {
-      this.props.setAnimationName(
-        this.context.initialAnimationName || this.props.animationName,
-      );
-      this.props.resetFramesState(
-        this.props.imageSize.width,
-        this.props.imageSize.height,
-      );
-
-      // TODO: how to resetUndoHistory after resetFramesState success without setTimeout?
-      // BUG: the first draw on Surface can't let canUndo in Apptoolbox.js be true
-      setTimeout(this.props.resetUndoHistory);
-    }
-  }
-
   onFileLoaded(data) {
     this.setState({
       importedFileName: data.file.name || this.props.animationName,
@@ -84,6 +36,7 @@ class NewProjectModal extends Component {
       loading: false,
       progress: 0,
     });
+    this.props.setIsImported(true);
   }
 
   onStep(current, total) {

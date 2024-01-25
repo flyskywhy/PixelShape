@@ -75,3 +75,7 @@ export function getPaletteDownloadOption(state) {
 export function getAnimationName(state) {
   return getApplication(state).animationName;
 }
+
+export function getIsImported(state) {
+  return getApplication(state).isImported;
+}
