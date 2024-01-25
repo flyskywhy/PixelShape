@@ -1,5 +1,4 @@
 import {connect} from 'react-redux';
-import {ActionCreators} from 'redux-undo';
 
 import {
   getResetPaletteState,
@@ -33,9 +32,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   resetFramesState(width, height) {
     return dispatch(resetFramesState(width, height));
-  },
-  resetUndoHistory() {
-    return dispatch(ActionCreators.clearHistory());
   },
   uploadProject(data) {
     return dispatch(uploadStore(data));

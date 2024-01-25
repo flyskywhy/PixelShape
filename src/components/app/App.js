@@ -2,6 +2,7 @@ import styles from './app.style.js';
 
 import React, {Component} from 'react';
 import {Dimensions, View} from 'react-native';
+import StateLoader from '../../statemanager/StateLoader';
 import {PixelShapeContext} from '../../context';
 import Toolbar from '../../containers/toolbar/Toolbar';
 import Surface from '../../containers/surface/Surface';
@@ -17,17 +18,59 @@ class App extends Component {
 
     props.setIsImported(false);
 
-    this.context.fileExtension = this.context.fileExtension || 'gif';
+    if (context.initialImageSource) {
+      if (
+        context.initialImageSource.uri &&
+        context.initialImageSource.fileName
+      ) {
+        const callback = (data) => {
+          props.setAnimationName(context.initialImageSource.fileName);
+          props.uploadProject(data.json);
+        };
+        const stepCallback = () => {};
 
-    const ext = props.animationName.substring(
-      props.animationName.lastIndexOf('.') + 1,
-    );
-    if (ext !== this.context.fileExtension) {
-      const stringWithoutExt = props.animationName.substring(
-        0,
+        const ext = context.initialImageSource.fileName.substring(
+          context.initialImageSource.fileName.lastIndexOf('.') + 1,
+        );
+        if (ext === 'gif') {
+          StateLoader.uploadGif(
+            context.initialImageSource.uri,
+            callback,
+            stepCallback,
+          );
+        }
+        if (ext === 'bmp') {
+          StateLoader.uploadBmp(
+            context.initialImageSource.uri,
+            callback,
+            stepCallback,
+          );
+        }
+      }
+    } else {
+      context.fileExtension = context.fileExtension || 'gif';
+
+      const ext = props.animationName.substring(
         props.animationName.lastIndexOf('.') + 1,
       );
-      props.setAnimationName(stringWithoutExt + this.context.fileExtension);
+
+      if (context.initialAnimationName) {
+        props.setAnimationName(context.initialAnimationName);
+      } else if (ext !== context.fileExtension) {
+        const stringWithoutExt = props.animationName.substring(
+          0,
+          props.animationName.lastIndexOf('.') + 1,
+        );
+        props.setAnimationName(stringWithoutExt + context.fileExtension);
+      } else {
+        props.setAnimationName(props.animationName);
+      }
+
+      props.resetFramesState(props.imageSize.width, props.imageSize.height);
+
+      // TODO: how to resetUndoHistory after resetFramesState success without setTimeout?
+      // BUG: the first draw on Surface can't let canUndo in Apptoolbox.js be true
+      setTimeout(props.resetUndoHistory);
     }
   }
 

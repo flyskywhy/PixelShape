@@ -1,16 +1,20 @@
 import {connect} from 'react-redux';
+import {ActionCreators} from 'redux-undo';
 
 import {
   setSurfaceConstraints,
   setAnimationName,
   setIsImported,
+  uploadStore,
 } from '../../actions/application';
-import {getProjectGuid, getAnimationName} from '../../selectors';
+import {getProjectGuid, getImageSize, getAnimationName} from '../../selectors';
+import {resetFramesState} from '../../actions/frames';
 
 import App from '../../components/app/App';
 
 const mapStateToProps = (state) => ({
   guid: getProjectGuid(state),
+  imageSize: getImageSize(state),
   animationName: getAnimationName(state),
 });
 
@@ -23,6 +27,15 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setIsImported(isImported) {
     return dispatch(setIsImported(isImported));
+  },
+  resetFramesState(width, height) {
+    return dispatch(resetFramesState(width, height));
+  },
+  resetUndoHistory() {
+    return dispatch(ActionCreators.clearHistory());
+  },
+  uploadProject(data) {
+    return dispatch(uploadStore(data));
   },
 });
 
