@@ -11,6 +11,7 @@ import {
   toggleResetPalette,
   uploadStore,
   setAnimationName,
+  setIsImported,
 } from '../../actions/application';
 import {resetUserColors} from '../../actions/palette';
 import {resetFramesState} from '../../actions/frames';
@@ -41,6 +42,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setAnimationName(name) {
     return dispatch(setAnimationName(name));
+  },
+  setIsImported(isImported) {
+    return dispatch(setIsImported(isImported));
   },
 });
 

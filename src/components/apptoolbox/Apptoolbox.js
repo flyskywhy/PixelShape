@@ -134,6 +134,7 @@ class Apptoolbox extends Component {
           this.props.setAnimationName(
             data.file.name || this.props.animationName,
           );
+          this.props.setIsImported(true);
           this.props.uploadProject(data.json);
         };
         const stepCallback = () => {};

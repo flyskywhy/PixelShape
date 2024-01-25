@@ -15,6 +15,8 @@ class App extends Component {
   constructor(props, context) {
     super(props, context);
 
+    props.setIsImported(false);
+
     this.context.fileExtension = this.context.fileExtension || 'gif';
 
     const ext = props.animationName.substring(

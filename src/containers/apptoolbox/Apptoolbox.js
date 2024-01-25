@@ -2,7 +2,11 @@ import {connect} from 'react-redux';
 import {ActionCreators} from 'redux-undo';
 
 import Apptoolbox from '../../components/apptoolbox/Apptoolbox';
-import {setAnimationName, uploadStore} from '../../actions/application';
+import {
+  setAnimationName,
+  setIsImported,
+  uploadStore,
+} from '../../actions/application';
 import {canRedo, canUndo, undoLength} from '../../selectors/timetravel';
 import {getAnimationName} from '../../selectors';
 
@@ -19,6 +23,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setAnimationName(name) {
     return dispatch(setAnimationName(name));
+  },
+  setIsImported(isImported) {
+    return dispatch(setIsImported(isImported));
   },
   undo() {
     return dispatch(ActionCreators.undo());

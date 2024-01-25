@@ -10,6 +10,7 @@ import {
   TOGGLE_INCLUDE_PROJECT,
   TOGGLE_INCLUDE_PALETTE,
   SET_ANIMATION_NAME,
+  SET_IS_IMPORTED,
 } from '../actions/application';
 
 import {uuid} from '../utils/uuid';
@@ -46,6 +47,7 @@ const initialState = {
     includePalette: false,
   },
   animationName: Files.NAME.ANIMATION,
+  isImported: false,
 };
 
 function getActualConstraints(width, height) {
@@ -143,6 +145,8 @@ function application(state = initialState, action) {
       return {...state, downloadOptions};
     case SET_ANIMATION_NAME:
       return {...state, animationName: action.name};
+    case SET_IS_IMPORTED:
+      return {...state, isImported: action.isImported};
     default:
       return state;
   }

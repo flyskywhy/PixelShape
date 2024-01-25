@@ -84,6 +84,7 @@ class NewProjectModal extends Component {
       loading: false,
       progress: 0,
     });
+    this.props.setIsImported(true);
   }
 
   onStep(current, total) {

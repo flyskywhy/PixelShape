@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {
   setSurfaceConstraints,
   setAnimationName,
+  setIsImported,
 } from '../../actions/application';
 import {getProjectGuid, getAnimationName} from '../../selectors';
 
@@ -19,6 +20,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setAnimationName(name) {
     return dispatch(setAnimationName(name));
+  },
+  setIsImported(isImported) {
+    return dispatch(setIsImported(isImported));
   },
 });
 

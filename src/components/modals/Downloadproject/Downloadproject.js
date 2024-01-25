@@ -74,12 +74,16 @@ class DownloadProjectModal extends Component {
   }
 
   componentDidMount() {
-    // this.context.initialImageSource means import file not new file so want overwrite I think
+    // this.context.initialImageSource means feed file from parent APP not new file so want overwrite I think
     this.needRename = this.context.initialImageSource ? false : true;
   }
 
   isModifiedAfterLastSave() {
-    return !isEqual(this.lastSavedData, this.combineGifData());
+    if (this.props.isImported || this.props.canUndo || this.props.canRedo) {
+      return !isEqual(this.lastSavedData, this.combineGifData());
+    } else {
+      return false;
+    }
   }
 
   combineGifData() {

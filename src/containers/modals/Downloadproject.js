@@ -11,6 +11,7 @@ import {
   getProjectDownloadOption,
   getPaletteDownloadOption,
   getAnimationName,
+  getIsImported,
 } from '../../selectors';
 import {canRedo, canUndo} from '../../selectors/timetravel';
 
@@ -38,6 +39,7 @@ const mapStateToProps = (state) => ({
   includeProject: getProjectDownloadOption(state),
   includePalette: getPaletteDownloadOption(state),
   animationName: getAnimationName(state),
+  isImported: getIsImported(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
