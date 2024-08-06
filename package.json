@@ -1,6 +1,6 @@
 {
   "name": "pixelshapern",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "private": false,
   "description": "Android iOS Web pixel drawing editor APP and sub-app that comes in handy when creating pixel art images and gif animations",
   "scripts": {
@@ -100,7 +100,7 @@
     "resize-image-data": "0.3.1"
   },
   "devDependencies": {
-    "@flyskywhy/react-native-gcanvas": "6.0.6",
+    "@flyskywhy/react-native-gcanvas": "6.0.12",
     "@react-native-community/eslint-config": "3.0.1",
     "@react-native-community/slider": "4.2.0",
     "blue-tape": "^1.0.0",
