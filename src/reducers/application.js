@@ -100,6 +100,8 @@ function application(state = initialState, action) {
 
       if (pixelSize > 1) {
         pixelSize |= 0;
+      } else {
+        pixelSize = 1;
       }
 
       return {
