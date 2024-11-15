@@ -15,8 +15,9 @@ export const PixelShapeContext = React.createContext({
   //   fileName: '', // e.g. 'animation7.gif' will auto be setAnimationName()
   // },
   // initialAnimationName: null, // if no initialImageSource, then also can initialAnimationName to auto be setAnimationName()
-  // initialSize: null,
-  // initialColor: null,
+  // initialSize: null, // e.g. {width: 32, height: 32}
+  // maxSize: null, // e.g. 80 means max size of width and height in Settings dialog is 80
+  // initialColor: null, // e.g. '#ff0000'
   // defaultsPalette: require('./defaults/palette').default,
   // onGifGeneratePre: null,
   // onGifGeneratePost: null,

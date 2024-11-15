@@ -7,15 +7,15 @@ import ToggleCheckbox from '../../togglecheckbox/Togglecheckbox';
 
 // TODO: take styles from apptoolbox and push in separate related stylesheets
 
-const maxVal = 600,
-  errorColor = '#9a1000',
+const errorColor = '#9a1000',
   regularColor = '#eee';
 
 class SettingsModal extends Component {
   static contextType = PixelShapeContext;
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
+    this.maxVal = context.maxSize || 600;
     let width = props.imageSize.width;
     let height = props.imageSize.height;
     this.state = {
@@ -63,7 +63,7 @@ class SettingsModal extends Component {
   }
 
   isInputValid(input) {
-    return input <= maxVal;
+    return input <= this.maxVal;
   }
 
   checkErrors() {
@@ -84,7 +84,7 @@ class SettingsModal extends Component {
     if (this.state.widthError || this.state.heightError) {
       return (
         <Text style={styles.dimensionsInputsError}>
-          {'Sorry, max allowed value is ' + maxVal}
+          {'Sorry, max allowed value is ' + this.maxVal}
         </Text>
       );
     }
