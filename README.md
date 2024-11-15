@@ -33,6 +33,7 @@ PixelShapeRN will automatically request `('react-native').PermissionsAndroid` on
 ## be embeded as sub-app
 Ref to [Isolating Redux Sub-Apps](https://redux.js.org/usage/isolating-redux-sub-apps) and [Breaking out of Redux paradigm to isolate apps](https://gist.github.com/gaearon/eeee2f619620ab7b55673a4ee2bf8400), PixelShapeRN can be embeded into other react-native APP easily.
 
+* Ref to <https://github.com/flyskywhy/GCanvasRNExamples/commit/c24cd12>
 * `npm install pixelshapern` in `otherAPP/`.
 * Add `dependencies` in `pixelshapern/react-native.config.js` into `otherAPP/react-native.config.js`.
 * Add native component name e.g. `"@flyskywhy/react-native-gcanvas": "6.0.12 OR_OTHER_VERSION",` into `otherAPP/package.json` so that they can be automatically linked by react-native. PS: The reason why "@flyskywhy/react-native-gcanvas" even "react-native" is writen in "devDependencies" no "dependencies" in `pixelshapern/package.json` is, if version here mismatch (e.g. `6.0.6` and `6.0.5`) between `pixelshapern/package.json` and `otherAPP/package.json`, will cause e.g. `Invariant Violation: Tried to register two views with the same name RCTGCanvasView`, if "react-native" mismatch (e.g. `0.63.2` and `0.63.3`) will cause `React Native version mismatch. JavaScript version: 0.63.2 Native version: 0.63.3`.
