@@ -25,7 +25,9 @@ class Toolbar extends Component {
 
   render() {
     return this.props.visible ? (
-      <View style={styles.container}>{this.getButtons()}</View>
+      <View style={[styles.container, this.props.style]}>
+        {this.getButtons()}
+      </View>
     ) : null;
   }
 }
