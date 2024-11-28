@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   inputlabel: {
+    color: 'black',
     width: 60,
     textAlignVertical: 'bottom',
   },
