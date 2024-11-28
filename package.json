@@ -1,6 +1,6 @@
 {
   "name": "pixelshapern",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "private": false,
   "description": "Android iOS Web pixel drawing editor APP and sub-app that comes in handy when creating pixel art images and gif animations",
   "scripts": {
