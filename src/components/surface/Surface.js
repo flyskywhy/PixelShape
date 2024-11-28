@@ -17,11 +17,14 @@ const minPixelGridSize = 9,
 class Surface extends Component {
   constructor(...args) {
     super(...args);
+    this.tool = toolsMap.get(this.props.tool);
     this.state = {
       hasOc1: false,
       hasOc2: false,
+      canvasGrid: false,
+      canvasMainRendering: false,
+      canvasBuffer: false,
     };
-    this.tool = toolsMap.get(this.props.tool);
   }
 
   applyAllContextInformation(props) {
@@ -63,6 +66,8 @@ class Surface extends Component {
     }
     this.ctx = this._canvas.getContext('2d');
 
+    this.setState({canvasMainRendering: true});
+
     this.applyAllContextInformation(this.props);
 
     this.updateCanvasMainRendering();
@@ -88,6 +93,8 @@ class Surface extends Component {
     }
     this.buffer = this._buffer.getContext('2d');
 
+    this.setState({canvasBuffer: true});
+
     this.applyAllContextInformation(this.props);
 
     this.updateCanvasBuffer();
@@ -112,6 +119,8 @@ class Surface extends Component {
       this._grid.height = this._grid.clientHeight;
     }
     this.grid = this._grid.getContext('2d');
+
+    this.setState({canvasGrid: true});
 
     this.updateCanvasGrid();
   };
@@ -414,27 +423,33 @@ class Surface extends Component {
                   onCanvasResize={this.onCanvasGridResize}
                   isGestureResponsible={false}
                 />
-                <GCanvasView
-                  style={canvasStyleMargin}
-                  onCanvasCreate={this.initCanvasMainRendering}
-                  onCanvasResize={this.onCanvasMainRenderingResize}
-                  isGestureResponsible={false}
-                  isAutoClearRectBeforePutImageData={true}
-                />
-                <GCanvasView
-                  style={canvasStyleMargin}
-                  onCanvasCreate={this.initCanvasBuffer}
-                  onCanvasResize={this.onCanvasBufferResize}
-                  isGestureResponsible={false}
-                />
-                <GCanvasView
-                  style={canvasStyleMargin}
-                  onCanvasCreate={this.initCanvasHandleLayer}
-                  isGestureResponsible={true}
-                  onMouseDown={this.onMouseDown.bind(this)}
-                  onMouseMove={this.onMouseMove.bind(this)}
-                  onMouseUp={this.onMouseUp.bind(this)}
-                />
+                {this.state.canvasGrid && (
+                  <GCanvasView
+                    style={canvasStyleMargin}
+                    onCanvasCreate={this.initCanvasMainRendering}
+                    onCanvasResize={this.onCanvasMainRenderingResize}
+                    isGestureResponsible={false}
+                    isAutoClearRectBeforePutImageData={true}
+                  />
+                )}
+                {this.state.canvasMainRendering && (
+                  <GCanvasView
+                    style={canvasStyleMargin}
+                    onCanvasCreate={this.initCanvasBuffer}
+                    onCanvasResize={this.onCanvasBufferResize}
+                    isGestureResponsible={false}
+                  />
+                )}
+                {this.state.canvasBuffer && (
+                  <GCanvasView
+                    style={canvasStyleMargin}
+                    onCanvasCreate={this.initCanvasHandleLayer}
+                    isGestureResponsible={true}
+                    onMouseDown={this.onMouseDown.bind(this)}
+                    onMouseMove={this.onMouseMove.bind(this)}
+                    onMouseUp={this.onMouseUp.bind(this)}
+                  />
+                )}
               </>
             )}
           </View>

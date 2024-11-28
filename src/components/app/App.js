@@ -10,6 +10,14 @@ import Sidebar from '../../containers/sidebar/Sidebar';
 import Framebar from '../../containers/framebar/Framebar';
 import Apptoolbox from '../../containers/apptoolbox/Apptoolbox';
 
+function isScreen18x9(x, y) {
+  if (x < y) {
+    return y / x > 17 / 9;
+  } else {
+    return x / y > 17 / 9;
+  }
+}
+
 class App extends Component {
   static contextType = PixelShapeContext;
 
@@ -94,13 +102,20 @@ class App extends Component {
       this.props.animationName.lastIndexOf('.') + 1,
     );
 
+    const is18x9 = isScreen18x9(
+      Dimensions.get('window').width,
+      Dimensions.get('window').height,
+    );
+
+    const needMargin = is18x9 || ext === 'gif';
+
     return (
       <View style={styles.app} data-guid={this.props.guid}>
         <Apptoolbox />
         <View style={styles.appContent}>
-          <Toolbar />
+          <Toolbar style={{marginTop: needMargin ? -50 : 0}} />
           <Surface />
-          <Sidebar />
+          <Sidebar style={{marginTop: needMargin ? -20 : 0}} />
         </View>
         {ext === 'gif' && <Framebar />}
       </View>

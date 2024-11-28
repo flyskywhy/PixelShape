@@ -8,7 +8,7 @@ import {colors as stylesColors} from '../../styles/variables.js';
 
 const Sidebar = (props) =>
   props.visible ? (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <Colorbar />
       {/*<Sizerangebar />
       <About />*/}
