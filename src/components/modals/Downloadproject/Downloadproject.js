@@ -96,7 +96,7 @@ class DownloadProjectModal extends Component {
         data: rgbaToAbgr(
           this.props.framesCollection[frameUUID].naturalImageData.data,
         ),
-        bitPP: 16,
+        bitPP: 24,
         width: this.props.imageSize.width,
         height: this.props.imageSize.height,
       });
